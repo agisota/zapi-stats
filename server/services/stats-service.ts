@@ -32,6 +32,7 @@ export interface LeaderboardEntry {
   outputRatio: number;
   peakHour: number;
   providerDiversity: number;
+  providerBreakdown: Array<{ provider: string; percent: number }>;
   activeDays: number;
   avgSessionMessages: number;
   longestSessionMessages: number;
@@ -185,6 +186,11 @@ export class StatsService {
         const totalTokens = row.tokensIn + row.tokensOut;
 
         const providerDiversity = this.computeShannonEntropy(providerRows, row.requests);
+        const provTotal = providerRows.reduce((s, p) => s + p.cnt, 0);
+        const providerBreakdown = providerRows
+          .map(p => ({ provider: p.provider, percent: provTotal > 0 ? (p.cnt / provTotal) * 100 : 0 }))
+          .sort((a, b) => b.percent - a.percent)
+          .slice(0, 4);
         const { avgSessionMessages, longestSessionMessages } = this.computeSessionStats(timestampRows);
 
         return {
@@ -217,6 +223,7 @@ export class StatsService {
           outputRatio: row.tokensIn > 0 ? row.tokensOut / row.tokensIn : 0,
           peakHour: peakHourRow ? parseInt(peakHourRow.h, 10) : 0,
           providerDiversity,
+          providerBreakdown,
           activeDays: row.activeDays,
           avgSessionMessages,
           longestSessionMessages,

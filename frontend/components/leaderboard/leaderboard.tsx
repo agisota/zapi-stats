@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getLeaderboard, getOverview, type LeaderboardEntry } from '../../lib/api.ts';
 import { formatNumber, formatCost, formatPercent, formatLatency, timeAgo, formatDate, formatHour, formatDecimal } from '../../lib/format.ts';
 import { Trophy, Zap, Coins, Users, Hash, ArrowUp, ArrowDown } from 'lucide-react';
+import { UserProfileModal } from './user-profile-modal.tsx';
 
 type SortKey = keyof LeaderboardEntry;
 type SortDir = 'asc' | 'desc';
@@ -12,6 +13,7 @@ export function Leaderboard() {
   const { data: ov } = useQuery({ queryKey: ['overview'], queryFn: getOverview });
   const [sortKey, setSortKey] = useState<SortKey>('requests');
   const [sortDir, setSortDir] = useState<SortDir>('desc');
+  const [selectedUser, setSelectedUser] = useState<string | null>(null);
 
   const overview = ov?.data;
   const entries = lb?.data ?? [];
@@ -126,7 +128,7 @@ export function Leaderboard() {
                   : e.displayName[0]?.toUpperCase();
 
                 return (
-                  <tr key={e.name} className="hover:bg-[#1f2937] transition-colors">
+                  <tr key={e.name} className="hover:bg-[#1f2937] transition-colors cursor-pointer" onClick={() => setSelectedUser(e.name)}>
                     <td className="px-4 py-3">
                       <span className={
                         i === 0 ? 'rank-gold font-bold text-lg' :
@@ -195,6 +197,9 @@ export function Leaderboard() {
           </table>
         </div>
       </div>
+      {selectedUser && (
+        <UserProfileModal name={selectedUser} onClose={() => setSelectedUser(null)} />
+      )}
     </div>
   );
 }

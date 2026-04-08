@@ -34,6 +34,10 @@ export async function getUserPublicStats(name: string) {
   return fetchJson<{ data: UserPublicStats }>(`/stats/user/${encodeURIComponent(name)}`);
 }
 
+export async function getUserProfile(name: string) {
+  return fetchJson<{ data: UserProfile }>(`/stats/user/${encodeURIComponent(name)}/profile`);
+}
+
 // Auth
 export async function validateApiKey(key: string) {
   return fetchJson<{ valid: boolean; keyName: string; keyId: string; noLog: boolean }>('/auth/validate', {
@@ -87,6 +91,7 @@ export interface LeaderboardEntry {
   outputRatio: number;
   peakHour: number;
   providerDiversity: number;
+  providerBreakdown: Array<{ provider: string; percent: number }>;
   activeDays: number;
   avgSessionMessages: number;
   longestSessionMessages: number;
@@ -127,6 +132,13 @@ export interface TimelinePoint {
   tokensIn: number;
   tokensOut: number;
   cost: number;
+}
+
+export interface UserProfile {
+  displayName: string;
+  patterns: string[];
+  recommendations: string[];
+  highlights: string[];
 }
 
 export interface UserPublicStats {

@@ -9,6 +9,8 @@ import { leaderboardRoutes } from './routes/leaderboard.ts';
 import { statsRoutes } from './routes/stats.ts';
 import { userRoutes } from './routes/user.ts';
 import { LogReader } from './services/log-reader.ts';
+import { LanguageAnalyzer } from './services/language-analyzer.ts';
+import { ToolAnalyzer } from './services/tool-analyzer.ts';
 import type { Database } from 'bun:sqlite';
 
 export function createApp(db: Database, logsPath?: string) {
@@ -18,6 +20,8 @@ export function createApp(db: Database, logsPath?: string) {
   const statsService = new StatsService(db);
   const authService = new AuthService(db);
   const logReader = logsPath ? new LogReader(logsPath) : undefined;
+  const languageAnalyzer = logsPath ? new LanguageAnalyzer(logsPath) : undefined;
+  const toolAnalyzer = logsPath ? new ToolAnalyzer(logsPath) : undefined;
 
   // Middleware
   app.use('*', cors());
@@ -26,7 +30,7 @@ export function createApp(db: Database, logsPath?: string) {
   // API routes
   app.route('/api', healthRoutes());
   app.route('/api', leaderboardRoutes(statsService));
-  app.route('/api', statsRoutes(statsService));
+  app.route('/api', statsRoutes(statsService, languageAnalyzer, toolAnalyzer));
   app.route('/api', userRoutes(statsService, authService, logReader));
 
   return app;
