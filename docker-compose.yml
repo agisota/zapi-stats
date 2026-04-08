@@ -1,0 +1,31 @@
+services:
+  stats:
+    build: .
+    container_name: omniroute-stats
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:20129:20129"
+    volumes:
+      - /mnt/volume_sfo3_01/omniroute/data:/data:ro
+    environment:
+      - PORT=20129
+      - DB_PATH=/data/storage.sqlite
+      - LOGS_PATH=/data/call_logs
+      - NODE_ENV=production
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+        reservations:
+          memory: 64M
+    healthcheck:
+      test: ["CMD-SHELL", "bun -e \"fetch('http://localhost:20129/api/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    logging:
+      driver: json-file
+      options:
+        max-size: "5m"
+        max-file: "3"
