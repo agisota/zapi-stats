@@ -6,7 +6,7 @@ services:
     ports:
       - "127.0.0.1:20129:20129"
     volumes:
-      - /mnt/volume_sfo3_01/omniroute/data:/data:ro
+      - /mnt/volume_sfo3_01/omniroute/data:/data
     environment:
       - PORT=20129
       - DB_PATH=/data/storage.sqlite
