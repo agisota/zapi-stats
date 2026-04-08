@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import type { StatsService } from '../services/stats-service.ts';
+import { generateUserProfile } from '../services/profile-service.ts';
 
 export function statsRoutes(statsService: StatsService) {
   const app = new Hono();
@@ -32,6 +33,17 @@ export function statsRoutes(statsService: StatsService) {
       return c.json({ error: { code: 'NOT_FOUND', message: `User "${name}" not found` } }, 404);
     }
     return c.json({ data });
+  });
+
+  app.get('/stats/user/:name/profile', (c) => {
+    const name = c.req.param('name');
+    const leaderboard = statsService.getLeaderboard();
+    const entry = leaderboard.find(e => e.name === name);
+    if (!entry) {
+      return c.json({ error: { code: 'NOT_FOUND', message: `User "${name}" not found` } }, 404);
+    }
+    const profile = generateUserProfile(entry, leaderboard);
+    return c.json({ data: profile });
   });
 
   return app;
