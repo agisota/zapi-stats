@@ -35,6 +35,7 @@ export interface LeaderboardEntry {
   activeDays: number;
   avgSessionMessages: number;
   longestSessionMessages: number;
+  hourlyActivity: number[];
 }
 
 export interface OverviewStats {
@@ -219,8 +220,19 @@ export class StatsService {
           activeDays: row.activeDays,
           avgSessionMessages,
           longestSessionMessages,
+          hourlyActivity: this.getHourlyActivity(row.name),
         };
       });
+    });
+  }
+
+  private getHourlyActivity(name: string): number[] {
+    const rows = this.db.prepare(
+      "SELECT CAST(strftime('%H', timestamp) AS INTEGER) as h, COUNT(*) as c FROM usage_history WHERE api_key_name = ? GROUP BY h ORDER BY h ASC"
+    ).all(name) as Array<{ h: number; c: number }>;
+    return Array.from({ length: 24 }, (_, i) => {
+      const found = rows.find(r => r.h === i);
+      return found ? found.c : 0;
     });
   }
 

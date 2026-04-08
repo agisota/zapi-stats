@@ -16,7 +16,6 @@ export function Leaderboard() {
   const overview = ov?.data;
   const entries = lb?.data ?? [];
 
-  // Sort
   const sorted = useMemo(() => {
     const arr = [...entries];
     arr.sort((a, b) => {
@@ -31,14 +30,13 @@ export function Leaderboard() {
     return arr;
   }, [entries, sortKey, sortDir]);
 
-  // Compute min/max per numeric column for traffic light
   const ranges = useMemo(() => {
     if (entries.length === 0) return {} as Record<string, { min: number; max: number }>;
     const numKeys: SortKey[] = [
       'requests', 'tokensIn', 'tokensOut', 'tokensCacheRead', 'tokensCacheCreation',
       'tokensReasoning', 'totalTokens', 'tokensPerRequest', 'cost', 'costPerRequest',
       'inputCost', 'outputCost', 'avgLatency', 'avgTtft', 'uniqueModels', 'uniqueProviders',
-      'requestsPerDay', 'outputRatio', 'peakHour', 'providerDiversity', 'activeDays',
+      'requestsPerDay', 'outputRatio', 'providerDiversity', 'activeDays',
       'avgSessionMessages', 'longestSessionMessages',
     ];
     const r: Record<string, { min: number; max: number }> = {};
@@ -58,7 +56,6 @@ export function Leaderboard() {
     }
   }
 
-  // Traffic light: low=blue, mid=white, high=green for "good" metrics; inverse for latency
   function trafficColor(key: string, value: number, inverse = false): string {
     const range = ranges[key];
     if (!range || range.max === range.min) return 'text-gray-300';
@@ -73,7 +70,6 @@ export function Leaderboard() {
 
   return (
     <div className="space-y-6">
-      {/* Overview cards */}
       {overview && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <StatCard icon={<Zap className="w-5 h-5 text-cyan-400" />} label="Requests" value={formatNumber(overview.totalRequests)} />
@@ -83,7 +79,6 @@ export function Leaderboard() {
         </div>
       )}
 
-      {/* Leaderboard table */}
       <div className="bg-[#111827] border border-[#1e293b] rounded-xl overflow-hidden">
         <div className="px-6 py-4 border-b border-[#1e293b] flex items-center gap-2">
           <Trophy className="w-5 h-5 text-amber-400" />
@@ -103,7 +98,6 @@ export function Leaderboard() {
                 <SortTh k="tokensCacheRead" label="Cache Read" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="tokensCacheCreation" label="Cache Write" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="tokensReasoning" label="Reasoning" current={sortKey} dir={sortDir} toggle={toggleSort} />
-                <SortTh k="totalTokens" label="Total Tok" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="tokensPerRequest" label="Tok/Req" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="cost" label="Cost" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="costPerRequest" label="$/Req" current={sortKey} dir={sortDir} toggle={toggleSort} />
@@ -115,14 +109,14 @@ export function Leaderboard() {
                 <SortTh k="uniqueProviders" label="Providers" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="requestsPerDay" label="Req/Day" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="outputRatio" label="Output %" current={sortKey} dir={sortDir} toggle={toggleSort} />
-                <SortTh k="peakHour" label="Peak Hr" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <Th>Activity</Th>
                 <SortTh k="providerDiversity" label="Diversity" current={sortKey} dir={sortDir} toggle={toggleSort} />
-                <SortTh k="activeDays" label="Active Days" current={sortKey} dir={sortDir} toggle={toggleSort} />
-                <SortTh k="avgSessionMessages" label="Msg/Session" current={sortKey} dir={sortDir} toggle={toggleSort} />
-                <SortTh k="longestSessionMessages" label="Max Session" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="activeDays" label="Days" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="avgSessionMessages" label="Msg/Sess" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="longestSessionMessages" label="Max Sess" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <Th>Top Model</Th>
-                <SortTh k="firstSeen" label="First Seen" current={sortKey} dir={sortDir} toggle={toggleSort} />
-                <SortTh k="lastSeen" label="Last Seen" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="firstSeen" label="First" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="lastSeen" label="Last" current={sortKey} dir={sortDir} toggle={toggleSort} />
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1e293b]">
@@ -139,9 +133,7 @@ export function Leaderboard() {
                         i === 1 ? 'rank-silver font-bold text-lg' :
                         i === 2 ? 'rank-bronze font-bold text-lg' :
                         'text-gray-500'
-                      }>
-                        {i + 1}
-                      </span>
+                      }>{i + 1}</span>
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
@@ -152,18 +144,24 @@ export function Leaderboard() {
                       </div>
                     </td>
                     <Td c={trafficColor('requests', e.requests)}>{formatNumber(e.requests)}</Td>
-                    <Td c={trafficColor('tokensIn', e.tokensIn)}>{formatNumber(e.tokensIn)}</Td>
+                    {/* Input tokens — inverse: lower per request = more efficient = green */}
+                    <Td c={trafficColor('tokensIn', e.tokensIn, true)}>{formatNumber(e.tokensIn)}</Td>
+                    {/* Output tokens — normal: more output = more productive = green */}
                     <Td c={trafficColor('tokensOut', e.tokensOut)}>{formatNumber(e.tokensOut)}</Td>
                     <Td c={trafficColor('tokensCacheRead', e.tokensCacheRead)}>{formatNumber(e.tokensCacheRead)}</Td>
                     <Td c={trafficColor('tokensCacheCreation', e.tokensCacheCreation)}>{formatNumber(e.tokensCacheCreation)}</Td>
                     <Td c={trafficColor('tokensReasoning', e.tokensReasoning)}>{formatNumber(e.tokensReasoning)}</Td>
-                    <Td c={trafficColor('totalTokens', e.totalTokens)}>{formatNumber(e.totalTokens)}</Td>
-                    <Td c={trafficColor('tokensPerRequest', e.tokensPerRequest)}>{formatNumber(e.tokensPerRequest)}</Td>
-                    <Td c={trafficColor('cost', e.cost)}>{formatCost(e.cost)}</Td>
-                    <Td c={trafficColor('costPerRequest', e.costPerRequest)}>{formatCost(e.costPerRequest)}</Td>
-                    <Td c={trafficColor('inputCost', e.inputCost)}>{formatCost(e.inputCost)}</Td>
+                    {/* Tok/Req — inverse: fewer tokens per request = more efficient = green */}
+                    <Td c={trafficColor('tokensPerRequest', e.tokensPerRequest, true)}>{formatNumber(e.tokensPerRequest)}</Td>
+                    {/* Cost — inverse: cheaper = green */}
+                    <Td c={trafficColor('cost', e.cost, true)}>{formatCost(e.cost)}</Td>
+                    {/* $/Req — inverse: cheaper per request = green */}
+                    <Td c={trafficColor('costPerRequest', e.costPerRequest, true)}>{formatCost(e.costPerRequest)}</Td>
+                    {/* Input $ — inverse: lower = green */}
+                    <Td c={trafficColor('inputCost', e.inputCost, true)}>{formatCost(e.inputCost)}</Td>
+                    {/* Output $ — normal: higher output = more productive */}
                     <Td c={trafficColor('outputCost', e.outputCost)}>{formatCost(e.outputCost)}</Td>
-                    {/* Latency — bold, inverse traffic light (lower=better=green) */}
+                    {/* Latency — bold, inverse */}
                     <td className={`px-4 py-3 text-right font-mono text-sm font-bold ${trafficColor('avgLatency', e.avgLatency, true)}`}>
                       {formatLatency(e.avgLatency)}
                     </td>
@@ -172,7 +170,17 @@ export function Leaderboard() {
                     <Td c={trafficColor('uniqueProviders', e.uniqueProviders)}>{e.uniqueProviders}</Td>
                     <Td c={trafficColor('requestsPerDay', e.requestsPerDay)}>{formatDecimal(e.requestsPerDay, 1)}</Td>
                     <Td c={trafficColor('outputRatio', e.outputRatio)}>{formatPercent(e.outputRatio)}</Td>
-                    <Td c={trafficColor('peakHour', e.peakHour)}>{formatHour(e.peakHour)}</Td>
+                    {/* Sparkline activity + peak hour */}
+                    <td className="px-4 py-2 text-center">
+                      {e.hourlyActivity ? (
+                        <>
+                          <MiniSparkline data={e.hourlyActivity} width={120} height={24} />
+                          <div className="text-[10px] text-gray-600 mt-0.5">peak {formatHour(e.peakHour)}</div>
+                        </>
+                      ) : (
+                        <span className="text-gray-500 text-sm">{formatHour(e.peakHour)}</span>
+                      )}
+                    </td>
                     <Td c={trafficColor('providerDiversity', e.providerDiversity)}>{formatDecimal(e.providerDiversity, 2)}</Td>
                     <Td c={trafficColor('activeDays', e.activeDays)}>{e.activeDays}</Td>
                     <Td c={trafficColor('avgSessionMessages', e.avgSessionMessages)}>{formatDecimal(e.avgSessionMessages, 1)}</Td>
@@ -188,6 +196,29 @@ export function Leaderboard() {
         </div>
       </div>
     </div>
+  );
+}
+
+function MiniSparkline({ data, width, height }: { data: number[]; width: number; height: number }) {
+  const max = Math.max(...data, 1);
+  const barW = width / data.length;
+  return (
+    <svg width={width} height={height} className="inline-block">
+      {data.map((v, i) => {
+        const barH = (v / max) * height;
+        return (
+          <rect
+            key={i}
+            x={i * barW}
+            y={height - barH}
+            width={Math.max(barW - 1, 1)}
+            height={barH}
+            fill="#06b6d4"
+            opacity={Math.max(0.15, v / max)}
+          />
+        );
+      })}
+    </svg>
   );
 }
 

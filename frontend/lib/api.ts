@@ -90,6 +90,7 @@ export interface LeaderboardEntry {
   activeDays: number;
   avgSessionMessages: number;
   longestSessionMessages: number;
+  hourlyActivity: number[];
 }
 
 export interface OverviewStats {
