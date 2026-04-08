@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getLeaderboard, getOverview, type LeaderboardEntry } from '../../lib/api.ts';
-import { formatNumber, formatCost, formatPercent, formatLatency, timeAgo, formatDate } from '../../lib/format.ts';
+import { formatNumber, formatCost, formatPercent, formatLatency, timeAgo, formatDate, formatHour, formatDecimal } from '../../lib/format.ts';
 import { Trophy, Zap, Coins, Users, Hash, ArrowUp, ArrowDown } from 'lucide-react';
 
 type SortKey = keyof LeaderboardEntry;
@@ -38,6 +38,8 @@ export function Leaderboard() {
       'requests', 'tokensIn', 'tokensOut', 'tokensCacheRead', 'tokensCacheCreation',
       'tokensReasoning', 'totalTokens', 'tokensPerRequest', 'cost', 'costPerRequest',
       'inputCost', 'outputCost', 'avgLatency', 'avgTtft', 'uniqueModels', 'uniqueProviders',
+      'requestsPerDay', 'outputRatio', 'peakHour', 'providerDiversity', 'activeDays',
+      'avgSessionMessages', 'longestSessionMessages',
     ];
     const r: Record<string, { min: number; max: number }> = {};
     for (const k of numKeys) {
@@ -111,6 +113,13 @@ export function Leaderboard() {
                 <SortTh k="avgTtft" label="TTFT" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="uniqueModels" label="Models" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="uniqueProviders" label="Providers" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="requestsPerDay" label="Req/Day" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="outputRatio" label="Output %" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="peakHour" label="Peak Hr" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="providerDiversity" label="Diversity" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="activeDays" label="Active Days" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="avgSessionMessages" label="Msg/Session" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="longestSessionMessages" label="Max Session" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <Th>Top Model</Th>
                 <SortTh k="firstSeen" label="First Seen" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="lastSeen" label="Last Seen" current={sortKey} dir={sortDir} toggle={toggleSort} />
@@ -161,6 +170,13 @@ export function Leaderboard() {
                     <Td c={trafficColor('avgTtft', e.avgTtft, true)}>{formatLatency(e.avgTtft)}</Td>
                     <Td c={trafficColor('uniqueModels', e.uniqueModels)}>{e.uniqueModels}</Td>
                     <Td c={trafficColor('uniqueProviders', e.uniqueProviders)}>{e.uniqueProviders}</Td>
+                    <Td c={trafficColor('requestsPerDay', e.requestsPerDay)}>{formatDecimal(e.requestsPerDay, 1)}</Td>
+                    <Td c={trafficColor('outputRatio', e.outputRatio)}>{formatPercent(e.outputRatio)}</Td>
+                    <Td c={trafficColor('peakHour', e.peakHour)}>{formatHour(e.peakHour)}</Td>
+                    <Td c={trafficColor('providerDiversity', e.providerDiversity)}>{formatDecimal(e.providerDiversity, 2)}</Td>
+                    <Td c={trafficColor('activeDays', e.activeDays)}>{e.activeDays}</Td>
+                    <Td c={trafficColor('avgSessionMessages', e.avgSessionMessages)}>{formatDecimal(e.avgSessionMessages, 1)}</Td>
+                    <Td c={trafficColor('longestSessionMessages', e.longestSessionMessages)}>{e.longestSessionMessages}</Td>
                     <td className="px-4 py-3 text-sm text-gray-400 max-w-[180px] truncate">{e.topModel}</td>
                     <Td c="text-gray-500">{formatDate(e.firstSeen)}</Td>
                     <Td c="text-gray-500">{timeAgo(e.lastSeen)}</Td>

@@ -29,3 +29,11 @@ export function timeAgo(isoDate: string): string {
 export function formatDate(isoDate: string): string {
   return new Date(isoDate).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' });
 }
+
+export function formatHour(h: number): string {
+  return `${String(h).padStart(2, '0')}:00`;
+}
+
+export function formatDecimal(n: number, digits: number): string {
+  return n.toFixed(digits);
+}

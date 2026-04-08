@@ -83,6 +83,13 @@ export interface LeaderboardEntry {
   topProvider: string;
   firstSeen: string;
   lastSeen: string;
+  requestsPerDay: number;
+  outputRatio: number;
+  peakHour: number;
+  providerDiversity: number;
+  activeDays: number;
+  avgSessionMessages: number;
+  longestSessionMessages: number;
 }
 
 export interface OverviewStats {

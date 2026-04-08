@@ -28,6 +28,13 @@ export interface LeaderboardEntry {
   topProvider: string;
   firstSeen: string;
   lastSeen: string;
+  requestsPerDay: number;
+  outputRatio: number;
+  peakHour: number;
+  providerDiversity: number;
+  activeDays: number;
+  avgSessionMessages: number;
+  longestSessionMessages: number;
 }
 
 export interface OverviewStats {
@@ -127,7 +134,8 @@ export class StatsService {
           COUNT(DISTINCT model) as uniqueModels,
           COUNT(DISTINCT provider) as uniqueProviders,
           MIN(timestamp) as firstSeen,
-          MAX(timestamp) as lastSeen
+          MAX(timestamp) as lastSeen,
+          COUNT(DISTINCT DATE(timestamp)) as activeDays
         FROM usage_history
         WHERE api_key_name IS NOT NULL AND api_key_name != ''
         GROUP BY api_key_name
@@ -148,6 +156,7 @@ export class StatsService {
         uniqueProviders: number;
         firstSeen: string;
         lastSeen: string;
+        activeDays: number;
       }>;
 
       return rows.map(row => {
@@ -159,8 +168,23 @@ export class StatsService {
           'SELECT provider, COUNT(*) as cnt FROM usage_history WHERE api_key_name = ? GROUP BY provider ORDER BY cnt DESC LIMIT 1'
         ).get(row.name) as { provider: string; cnt: number } | null;
 
+        const peakHourRow = this.db.prepare(
+          `SELECT strftime('%H', timestamp) as h, COUNT(*) as c FROM usage_history WHERE api_key_name = ? GROUP BY h ORDER BY c DESC LIMIT 1`
+        ).get(row.name) as { h: string; c: number } | null;
+
+        const providerRows = this.db.prepare(
+          'SELECT provider, COUNT(*) as cnt FROM usage_history WHERE api_key_name = ? GROUP BY provider'
+        ).all(row.name) as Array<{ provider: string; cnt: number }>;
+
+        const timestampRows = this.db.prepare(
+          'SELECT timestamp FROM usage_history WHERE api_key_name = ? ORDER BY timestamp ASC'
+        ).all(row.name) as Array<{ timestamp: string }>;
+
         const { cost, inputCost, outputCost } = this.calculateUserCostDetailed(row.name);
         const totalTokens = row.tokensIn + row.tokensOut;
+
+        const providerDiversity = this.computeShannonEntropy(providerRows, row.requests);
+        const { avgSessionMessages, longestSessionMessages } = this.computeSessionStats(timestampRows);
 
         return {
           name: row.name,
@@ -188,6 +212,13 @@ export class StatsService {
           topProvider: topProvider?.provider ?? 'unknown',
           firstSeen: row.firstSeen,
           lastSeen: row.lastSeen,
+          requestsPerDay: row.activeDays > 0 ? row.requests / row.activeDays : 0,
+          outputRatio: row.tokensIn > 0 ? row.tokensOut / row.tokensIn : 0,
+          peakHour: peakHourRow ? parseInt(peakHourRow.h, 10) : 0,
+          providerDiversity,
+          activeDays: row.activeDays,
+          avgSessionMessages,
+          longestSessionMessages,
         };
       });
     });
@@ -302,6 +333,45 @@ export class StatsService {
       providers: providers.map(p => ({ ...p, cost: 0, successRate: p.count > 0 ? p.successes / p.count : 0 })),
       firstSeen: row.firstSeen,
       lastSeen: row.lastSeen,
+    };
+  }
+
+  private computeShannonEntropy(providerRows: Array<{ provider: string; cnt: number }>, total: number): number {
+    if (total === 0 || providerRows.length === 0) return 0;
+    return providerRows.reduce((sum, r) => {
+      const p = r.cnt / total;
+      return sum - p * Math.log(p);
+    }, 0);
+  }
+
+  private computeSessionStats(timestampRows: Array<{ timestamp: string }>): { avgSessionMessages: number; longestSessionMessages: number } {
+    const SESSION_GAP_MS = 30 * 60 * 1000;
+    if (timestampRows.length === 0) return { avgSessionMessages: 0, longestSessionMessages: 0 };
+
+    let sessionCount = 1;
+    let currentSessionMessages = 1;
+    let longestSessionMessages = 1;
+
+    for (let i = 1; i < timestampRows.length; i++) {
+      const prev = new Date(timestampRows[i - 1]!.timestamp).getTime();
+      const curr = new Date(timestampRows[i]!.timestamp).getTime();
+      if (curr - prev > SESSION_GAP_MS) {
+        if (currentSessionMessages > longestSessionMessages) {
+          longestSessionMessages = currentSessionMessages;
+        }
+        sessionCount++;
+        currentSessionMessages = 1;
+      } else {
+        currentSessionMessages++;
+      }
+    }
+    if (currentSessionMessages > longestSessionMessages) {
+      longestSessionMessages = currentSessionMessages;
+    }
+
+    return {
+      avgSessionMessages: timestampRows.length / sessionCount,
+      longestSessionMessages,
     };
   }
 
