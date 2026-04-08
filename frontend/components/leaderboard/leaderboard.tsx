@@ -130,8 +130,9 @@ export function Leaderboard() {
                 <STh k="inputCost" s={sortKey} d={sortDir} t={toggleSort} label="Input $" />
                 <STh k="outputCost" s={sortKey} d={sortDir} t={toggleSort} label="Output $" />
                 {/* Activity + Providers after costs */}
-                <th className="px-4 py-3 text-center resizable-th" title={TOOLTIPS.activity}>Activity</th>
-                <th className="px-4 py-3 text-center resizable-th" style={{ minWidth: 160 }} title={TOOLTIPS.providers}>Providers</th>
+                <th className="px-3 py-2 text-center resizable-th" title={TOOLTIPS.activity}>Activity</th>
+                <th className="px-3 py-2 text-center resizable-th" title="Активность по дням за весь период">Daily</th>
+                <th className="px-3 py-2 text-center resizable-th" style={{ minWidth: 160 }} title={TOOLTIPS.providers}>Providers</th>
                 {/* Latency block */}
                 <STh k="avgLatency" s={sortKey} d={sortDir} t={toggleSort} label="Latency" bold />
                 <STh k="avgTtft" s={sortKey} d={sortDir} t={toggleSort} label="TTFT" />
@@ -142,7 +143,7 @@ export function Leaderboard() {
                 <STh k="activeDays" s={sortKey} d={sortDir} t={toggleSort} label="Days" />
                 <STh k="avgSessionMessages" s={sortKey} d={sortDir} t={toggleSort} label="Msg/Sess" />
                 <STh k="longestSessionMessages" s={sortKey} d={sortDir} t={toggleSort} label="Max Sess" />
-                <th className="px-4 py-3 text-left resizable-th" title={TOOLTIPS.topModel}>Top Model</th>
+                <th className="px-3 py-2 text-left resizable-th" title={TOOLTIPS.topModel}>Top Model</th>
                 <STh k="firstSeen" s={sortKey} d={sortDir} t={toggleSort} label="First" />
                 <STh k="lastSeen" s={sortKey} d={sortDir} t={toggleSort} label="Last" />
               </tr>
@@ -152,10 +153,10 @@ export function Leaderboard() {
                 const initial = e.displayName.startsWith('@') ? e.displayName[1]?.toUpperCase() : e.displayName[0]?.toUpperCase();
                 return (
                   <tr key={e.name} className="hover:bg-[#1f2937] transition-colors cursor-pointer" onClick={() => setSelectedUser(e.name)}>
-                    <td className="px-4 py-3 sticky left-0 bg-[#111827] z-10">
+                    <td className="px-3 py-2 sticky left-0 bg-[#111827] z-10">
                       <span className={i === 0 ? 'rank-gold font-bold text-lg' : i === 1 ? 'rank-silver font-bold text-lg' : i === 2 ? 'rank-bronze font-bold text-lg' : 'text-gray-500'}>{i + 1}</span>
                     </td>
-                    <td className="px-4 py-3 sticky left-10 bg-[#111827] z-10">
+                    <td className="px-3 py-2 sticky left-10 bg-[#111827] z-10">
                       <div className="flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0">{initial}</div>
                         <span className="font-medium text-white text-sm"><UserName name={e.displayName} /></span>
@@ -181,12 +182,18 @@ export function Leaderboard() {
                         </>
                       ) : <span className="text-gray-500 text-sm">{formatHour(e.peakHour)}</span>}
                     </td>
+                    {/* Daily sparkline */}
+                    <td className="px-4 py-2 text-center">
+                      {e.dailyActivity && e.dailyActivity.length > 0
+                        ? <MiniSparkline data={e.dailyActivity} width={100} height={20} />
+                        : <span className="text-gray-600 text-xs">—</span>}
+                    </td>
                     {/* Provider bar — wider */}
                     <td className="px-4 py-2">
                       <ProviderBar breakdown={e.providerBreakdown ?? []} />
                     </td>
                     {/* Latency — bold, inverse */}
-                    <td className={`px-4 py-3 text-right font-mono text-sm font-bold ${tc('avgLatency', e.avgLatency, true)}`}>{formatLatency(e.avgLatency)}</td>
+                    <td className={`px-3 py-2 text-right font-mono text-sm font-bold ${tc('avgLatency', e.avgLatency, true)}`}>{formatLatency(e.avgLatency)}</td>
                     <Td c={tc('avgTtft', e.avgTtft, true)}>{formatLatency(e.avgTtft)}</Td>
                     <Td c={tc('uniqueModels', e.uniqueModels)}>{e.uniqueModels}</Td>
                     <Td c={tc('requestsPerDay', e.requestsPerDay)}>{formatDecimal(e.requestsPerDay, 1)}</Td>
@@ -194,7 +201,7 @@ export function Leaderboard() {
                     <Td c={tc('activeDays', e.activeDays)}>{e.activeDays}</Td>
                     <Td c={tc('avgSessionMessages', e.avgSessionMessages)}>{formatDecimal(e.avgSessionMessages, 1)}</Td>
                     <Td c={tc('longestSessionMessages', e.longestSessionMessages)}>{e.longestSessionMessages}</Td>
-                    <td className="px-4 py-3 text-sm text-gray-400 max-w-[180px] truncate">{e.topModel}</td>
+                    <td className="px-3 py-2 text-sm text-gray-400 max-w-[180px] truncate">{e.topModel}</td>
                     <Td c="text-gray-500">{formatDate(e.firstSeen)}</Td>
                     <Td c="text-gray-500">{timeAgo(e.lastSeen)}</Td>
                   </tr>
@@ -251,7 +258,7 @@ function ProviderBar({ breakdown }: { breakdown: Array<{ provider: string; perce
 }
 
 function ThSticky({ children, left, tip }: { children: React.ReactNode; left: string; tip?: string }) {
-  return <th className={`px-4 py-3 text-left sticky ${left} bg-[#111827] z-10 resizable-th`} title={tip}>{children}</th>;
+  return <th className={`px-3 py-2 text-left sticky ${left} bg-[#111827] z-10 resizable-th`} title={tip}>{children}</th>;
 }
 
 function STh({ k, s, d, t, label, bold }: { k: SortKey; s: SortKey; d: SortDir; t: (k: SortKey) => void; label?: string; bold?: boolean }) {
@@ -259,7 +266,7 @@ function STh({ k, s, d, t, label, bold }: { k: SortKey; s: SortKey; d: SortDir; 
   const displayLabel = label ?? k.charAt(0).toUpperCase() + k.slice(1);
   return (
     <th
-      className={`px-4 py-3 text-right cursor-pointer select-none hover:text-cyan-400 transition-colors resizable-th ${isActive ? 'text-cyan-400' : ''} ${bold ? 'font-bold text-yellow-400' : ''}`}
+      className={`px-3 py-2 text-right cursor-pointer select-none hover:text-cyan-400 transition-colors resizable-th ${isActive ? 'text-cyan-400' : ''} ${bold ? 'font-bold text-yellow-400' : ''}`}
       onClick={() => t(k)}
       title={TOOLTIPS[k] ?? ''}
     >
@@ -272,7 +279,7 @@ function STh({ k, s, d, t, label, bold }: { k: SortKey; s: SortKey; d: SortDir; 
 }
 
 function Td({ children, c }: { children: React.ReactNode; c: string }) {
-  return <td className={`px-4 py-3 text-right font-mono text-sm ${c}`}>{children}</td>;
+  return <td className={`px-3 py-2 text-right font-mono text-sm ${c}`}>{children}</td>;
 }
 
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: React.ReactNode }) {

@@ -2,6 +2,7 @@ import type { LeaderboardEntry } from './stats-service.ts';
 
 export interface UserProfile {
   displayName: string;
+  summary: string;
   patterns: string[];
   antiPatterns: string[];
   pros: string[];
@@ -20,6 +21,27 @@ export function generateUserProfile(entry: LeaderboardEntry, allEntries: Leaderb
 
   const rank = allEntries.findIndex(e => e.name === entry.name) + 1;
   const total = allEntries.length;
+
+  // --- SUMMARY ---
+
+  let summary = '';
+  if (entry.requestsPerDay > 500 && entry.uniqueModels > 30) {
+    summary = 'Мультимодельный энергопользователь с широким покрытием провайдеров';
+  } else if (entry.requestsPerDay > 500) {
+    summary = 'Энергопользователь с высокой интенсивностью запросов';
+  } else if (entry.costPerRequest > 1.5 && entry.uniqueModels < 5) {
+    summary = 'Специалист по premium-моделям с фокусом на качество';
+  } else if (entry.avgLatency < 500 && entry.successRate > 0.95) {
+    summary = 'Эффективный пользователь с быстрыми и стабильными запросами';
+  } else if (entry.outputRatio < 0.005) {
+    summary = 'Агентный пользователь — преимущественно инструментальное использование';
+  } else if (entry.avgSessionMessages > 100) {
+    summary = 'Марафонец — длинные глубокие сессии с высокой вовлечённостью';
+  } else if (entry.successRate < 0.7) {
+    summary = 'Экспериментатор — высокая частота ошибок, возможно тестирует лимиты';
+  } else {
+    summary = 'Стабильный пользователь с умеренной активностью';
+  }
 
   // --- PATTERNS ---
 
@@ -74,6 +96,27 @@ export function generateUserProfile(entry: LeaderboardEntry, allEntries: Leaderb
   if (entry.uniqueProviders >= 5) patterns.push(`Диверсифицированный — ${entry.uniqueProviders} провайдеров`);
   else if (entry.uniqueProviders === 1) patterns.push(`Один провайдер — нет резервирования`);
 
+  // Model diversity analysis
+  if (entry.uniqueModels > 40) patterns.push(`Полиглот моделей — ${entry.uniqueModels} разных моделей, использует практически весь каталог`);
+  else if (entry.uniqueModels > 20) patterns.push(`Разнообразие моделей — ${entry.uniqueModels} моделей, широкий выбор под задачи`);
+  else if (entry.uniqueModels < 5) patterns.push(`Узкий фокус — только ${entry.uniqueModels} модели, предпочитает проверенные решения`);
+
+  // Cost structure
+  const inputCostRatio = entry.inputCost / (entry.cost || 1);
+  if (inputCostRatio > 0.9) patterns.push(`Затраты на input — ${(inputCostRatio * 100).toFixed(0)}% стоимости приходится на входные токены (большие промпты)`);
+  else if (inputCostRatio < 0.5) patterns.push(`Затраты на output — ${((1 - inputCostRatio) * 100).toFixed(0)}% стоимости приходится на генерацию ответов`);
+
+  // Efficiency metrics
+  const efficiency = entry.tokensOut > 0 ? entry.cost / entry.tokensOut * 1000 : 0;
+  if (efficiency > 0 && efficiency < 5) patterns.push(`Высокая эффективность — $${efficiency.toFixed(2)} за 1K выходных токенов`);
+  else if (efficiency > 20) patterns.push(`Низкая эффективность — $${efficiency.toFixed(2)} за 1K выходных токенов`);
+
+  // Session patterns
+  if (entry.longestSessionMessages > 1000) patterns.push(`Рекордные сессии — до ${entry.longestSessionMessages.toLocaleString()} сообщений в одной сессии`);
+
+  // Error pattern
+  if (entry.errorRate > 0.3 && entry.errorRate < 0.6) patterns.push(`Экспериментальный подход — ${(entry.errorRate * 100).toFixed(0)}% запросов с ошибками, возможно тестирование границ`);
+
   // --- ANTI-PATTERNS ---
 
   if (entry.successRate < 0.5) antiPatterns.push(`Критически низкий success rate (${(entry.successRate * 100).toFixed(1)}%) — больше половины запросов неудачны`);
@@ -82,6 +125,8 @@ export function generateUserProfile(entry: LeaderboardEntry, allEntries: Leaderb
   if (entry.uniqueProviders === 1 && entry.requests > 100) antiPatterns.push(`Vendor lock-in — все запросы через одного провайдера`);
   if (entry.avgLatency > 5000) antiPatterns.push(`Очень высокая latency (${(entry.avgLatency / 1000).toFixed(1)}s) — снижает продуктивность`);
   if (entry.tokensCacheRead === 0 && entry.tokensIn > 10_000_000) antiPatterns.push(`Упущенная экономия — ${(entry.tokensIn / 1_000_000).toFixed(0)}M input токенов без кэширования`);
+  if (entry.avgSessionMessages < 5 && entry.requests > 100) antiPatterns.push(`Фрагментированное использование — очень короткие сессии, мало контекста между запросами`);
+  if (entry.tokensPerRequest > 200000) antiPatterns.push(`Избыточные промпты — ${(entry.tokensPerRequest / 1000).toFixed(0)}K токенов/запрос, рассмотрите сжатие контекста`);
 
   // --- PROS ---
 
@@ -93,6 +138,8 @@ export function generateUserProfile(entry: LeaderboardEntry, allEntries: Leaderb
   if (entry.requestsPerDay > 200) pros.push(`Высокая продуктивность — ${Math.round(entry.requestsPerDay)} запросов/день`);
   if (entry.activeDays >= 14) pros.push(`Стабильная активность — ${entry.activeDays} дней подряд`);
   if (entry.costPerRequest < 0.5) pros.push(`Экономичность — $${entry.costPerRequest.toFixed(3)}/запрос`);
+  if (entry.tokensReasoning > 0) pros.push(`Использует reasoning-модели — глубокий анализ через chain-of-thought`);
+  if (entry.longestSessionMessages > 500 && entry.successRate > 0.9) pros.push(`Устойчивые длинные сессии — высокий success rate даже при марафонном использовании`);
 
   // --- CONS ---
 
@@ -101,6 +148,8 @@ export function generateUserProfile(entry: LeaderboardEntry, allEntries: Leaderb
   if (entry.costPerRequest > 1) cons.push(`Дорогие запросы — $${entry.costPerRequest.toFixed(2)} за запрос`);
   if (entry.uniqueProviders <= 2 && entry.requests > 500) cons.push(`Низкая диверсификация — только ${entry.uniqueProviders} провайдер(а)`);
   if (entry.outputRatio < 0.003) cons.push(`Крайне низкий output — возможно, не получает полезных ответов`);
+  if (entry.avgTtft > 5000) cons.push(`Долгое ожидание первого токена (${(entry.avgTtft / 1000).toFixed(1)}s) — снижает интерактивность`);
+  if (entry.activeDays < 5) cons.push(`Нестабильная активность — всего ${entry.activeDays} активных дней`);
 
   // --- RECOMMENDATIONS ---
 
@@ -132,5 +181,5 @@ export function generateUserProfile(entry: LeaderboardEntry, allEntries: Leaderb
   if (entry.longestSessionMessages > 500) highlights.push(`Рекорд сессии: ${entry.longestSessionMessages.toLocaleString()} сообщений`);
   if (entry.activeDays >= 14) highlights.push(`Активен ${entry.activeDays} дней — стабильное ежедневное использование`);
 
-  return { displayName: entry.displayName, patterns, antiPatterns, pros, cons, recommendations, highlights };
+  return { displayName: entry.displayName, summary, patterns, antiPatterns, pros, cons, recommendations, highlights };
 }

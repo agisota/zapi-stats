@@ -62,6 +62,12 @@ export function statsRoutes(statsService: StatsService, languageAnalyzer?: Langu
       const data = await toolAnalyzer.getUserToolStats(name);
       return c.json({ data });
     });
+
+    app.get('/stats/user/:name/artifacts', async (c) => {
+      const name = c.req.param('name');
+      const data = await toolAnalyzer.getUserArtifactStats(name);
+      return c.json({ data });
+    });
   }
 
   return app;

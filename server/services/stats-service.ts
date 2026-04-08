@@ -37,6 +37,7 @@ export interface LeaderboardEntry {
   avgSessionMessages: number;
   longestSessionMessages: number;
   hourlyActivity: number[];
+  dailyActivity: number[];
 }
 
 export interface OverviewStats {
@@ -228,8 +229,29 @@ export class StatsService {
           avgSessionMessages,
           longestSessionMessages,
           hourlyActivity: this.getHourlyActivity(row.name),
+          dailyActivity: this.getDailyActivity(row.name),
         };
       });
+    });
+  }
+
+  private getDailyActivity(name: string): number[] {
+    const rows = this.db.prepare(
+      "SELECT DATE(timestamp) as d, COUNT(*) as c FROM usage_history WHERE api_key_name = ? GROUP BY d ORDER BY d ASC"
+    ).all(name) as Array<{ d: string; c: number }>;
+
+    if (rows.length === 0) return [];
+
+    const first = rows[0]!.d;
+    const last = rows[rows.length - 1]!.d;
+    const startMs = new Date(first).getTime();
+    const endMs = new Date(last).getTime();
+    const totalDays = Math.round((endMs - startMs) / 86_400_000) + 1;
+
+    const byDate = new Map(rows.map(r => [r.d, r.c]));
+    return Array.from({ length: totalDays }, (_, i) => {
+      const date = new Date(startMs + i * 86_400_000).toISOString().slice(0, 10);
+      return byDate.get(date) ?? 0;
     });
   }
 

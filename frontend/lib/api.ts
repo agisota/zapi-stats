@@ -96,6 +96,7 @@ export interface LeaderboardEntry {
   avgSessionMessages: number;
   longestSessionMessages: number;
   hourlyActivity: number[];
+  dailyActivity: number[];
 }
 
 export interface OverviewStats {

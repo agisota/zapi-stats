@@ -81,7 +81,11 @@ export function UserProfileModal({ name, entry, onClose }: UserProfileModalProps
             <p className="text-white font-semibold text-base">
               {profile?.displayName ?? name}
             </p>
-            <p className="text-gray-500 text-xs">Профиль пользователя</p>
+            {profile?.summary ? (
+              <p className="text-gray-400 text-xs italic mt-0.5">{profile.summary}</p>
+            ) : (
+              <p className="text-gray-500 text-xs">Профиль пользователя</p>
+            )}
           </div>
         </div>
 
