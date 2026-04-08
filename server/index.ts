@@ -8,14 +8,16 @@ import { healthRoutes } from './routes/health.ts';
 import { leaderboardRoutes } from './routes/leaderboard.ts';
 import { statsRoutes } from './routes/stats.ts';
 import { userRoutes } from './routes/user.ts';
+import { LogReader } from './services/log-reader.ts';
 import type { Database } from 'bun:sqlite';
 
-export function createApp(db: Database) {
+export function createApp(db: Database, logsPath?: string) {
   const app = new Hono();
 
   // Services
   const statsService = new StatsService(db);
   const authService = new AuthService(db);
+  const logReader = logsPath ? new LogReader(logsPath) : undefined;
 
   // Middleware
   app.use('*', cors());
@@ -25,13 +27,13 @@ export function createApp(db: Database) {
   app.route('/api', healthRoutes());
   app.route('/api', leaderboardRoutes(statsService));
   app.route('/api', statsRoutes(statsService));
-  app.route('/api', userRoutes(statsService, authService));
+  app.route('/api', userRoutes(statsService, authService, logReader));
 
   return app;
 }
 
-export function createProductionApp(db: Database) {
-  const app = createApp(db);
+export function createProductionApp(db: Database, logsPath?: string) {
+  const app = createApp(db, logsPath);
 
   // Serve static frontend in production
   app.use('/assets/*', serveStatic({ root: './dist' }));
@@ -44,10 +46,11 @@ export function createProductionApp(db: Database) {
 async function startServer() {
   const { createDb } = await import('./db.ts');
   const dbPath = process.env.DB_PATH ?? '/data/storage.sqlite';
+  const logsPath = process.env.LOGS_PATH ?? '/data/call_logs';
   const port = parseInt(process.env.PORT ?? '20129', 10);
 
   const db = createDb(dbPath);
-  const app = createProductionApp(db);
+  const app = createProductionApp(db, logsPath);
 
   console.log(`OmniRoute Stats running on http://localhost:${port}`);
 
