@@ -1,14 +1,73 @@
+import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getLeaderboard, getOverview } from '../../lib/api.ts';
+import { getLeaderboard, getOverview, type LeaderboardEntry } from '../../lib/api.ts';
 import { formatNumber, formatCost, formatPercent, formatLatency, timeAgo, formatDate } from '../../lib/format.ts';
-import { Trophy, Zap, Coins, Users, Hash } from 'lucide-react';
+import { Trophy, Zap, Coins, Users, Hash, ArrowUp, ArrowDown } from 'lucide-react';
+
+type SortKey = keyof LeaderboardEntry;
+type SortDir = 'asc' | 'desc';
 
 export function Leaderboard() {
   const { data: lb } = useQuery({ queryKey: ['leaderboard'], queryFn: getLeaderboard });
   const { data: ov } = useQuery({ queryKey: ['overview'], queryFn: getOverview });
+  const [sortKey, setSortKey] = useState<SortKey>('requests');
+  const [sortDir, setSortDir] = useState<SortDir>('desc');
 
   const overview = ov?.data;
   const entries = lb?.data ?? [];
+
+  // Sort
+  const sorted = useMemo(() => {
+    const arr = [...entries];
+    arr.sort((a, b) => {
+      const av = a[sortKey];
+      const bv = b[sortKey];
+      if (typeof av === 'number' && typeof bv === 'number') {
+        return sortDir === 'asc' ? av - bv : bv - av;
+      }
+      const sa = String(av), sb = String(bv);
+      return sortDir === 'asc' ? sa.localeCompare(sb) : sb.localeCompare(sa);
+    });
+    return arr;
+  }, [entries, sortKey, sortDir]);
+
+  // Compute min/max per numeric column for traffic light
+  const ranges = useMemo(() => {
+    if (entries.length === 0) return {} as Record<string, { min: number; max: number }>;
+    const numKeys: SortKey[] = [
+      'requests', 'tokensIn', 'tokensOut', 'tokensCacheRead', 'tokensCacheCreation',
+      'tokensReasoning', 'totalTokens', 'tokensPerRequest', 'cost', 'costPerRequest',
+      'inputCost', 'outputCost', 'avgLatency', 'avgTtft', 'uniqueModels', 'uniqueProviders',
+    ];
+    const r: Record<string, { min: number; max: number }> = {};
+    for (const k of numKeys) {
+      const vals = entries.map(e => e[k] as number).filter(v => typeof v === 'number');
+      r[k] = { min: Math.min(...vals), max: Math.max(...vals) };
+    }
+    return r;
+  }, [entries]);
+
+  function toggleSort(key: SortKey) {
+    if (sortKey === key) {
+      setSortDir(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortKey(key);
+      setSortDir('desc');
+    }
+  }
+
+  // Traffic light: low=blue, mid=white, high=green for "good" metrics; inverse for latency
+  function trafficColor(key: string, value: number, inverse = false): string {
+    const range = ranges[key];
+    if (!range || range.max === range.min) return 'text-gray-300';
+    const ratio = (value - range.min) / (range.max - range.min);
+    const r = inverse ? 1 - ratio : ratio;
+    if (r >= 0.8) return 'text-emerald-400';
+    if (r >= 0.6) return 'text-green-300';
+    if (r >= 0.4) return 'text-gray-300';
+    if (r >= 0.2) return 'text-amber-400';
+    return 'text-red-400';
+  }
 
   return (
     <div className="space-y-6">
@@ -27,46 +86,45 @@ export function Leaderboard() {
         <div className="px-6 py-4 border-b border-[#1e293b] flex items-center gap-2">
           <Trophy className="w-5 h-5 text-amber-400" />
           <h2 className="text-lg font-semibold text-white">Leaderboard</h2>
+          <span className="text-xs text-gray-500 ml-2">click headers to sort</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full whitespace-nowrap">
             <thead>
               <tr className="text-xs text-gray-500 uppercase tracking-wider">
-                <th className="px-4 py-3 text-left sticky left-0 bg-[#111827] z-10">#</th>
-                <th className="px-4 py-3 text-left sticky left-10 bg-[#111827] z-10">User</th>
-                <th className="px-4 py-3 text-right">Requests</th>
-                <th className="px-4 py-3 text-right">Input Tok</th>
-                <th className="px-4 py-3 text-right">Output Tok</th>
-                <th className="px-4 py-3 text-right">Cache Read</th>
-                <th className="px-4 py-3 text-right">Cache Write</th>
-                <th className="px-4 py-3 text-right">Reasoning</th>
-                <th className="px-4 py-3 text-right">Total Tok</th>
-                <th className="px-4 py-3 text-right">Tok/Req</th>
-                <th className="px-4 py-3 text-right">Cost</th>
-                <th className="px-4 py-3 text-right">Cost/Req</th>
-                <th className="px-4 py-3 text-right">Input $</th>
-                <th className="px-4 py-3 text-right">Output $</th>
-                <th className="px-4 py-3 text-right">Avg Latency</th>
-                <th className="px-4 py-3 text-right">Avg TTFT</th>
-                <th className="px-4 py-3 text-right">Success</th>
-                <th className="px-4 py-3 text-right">Errors</th>
-                <th className="px-4 py-3 text-right">Models</th>
-                <th className="px-4 py-3 text-right">Providers</th>
-                <th className="px-4 py-3 text-left">Top Model</th>
-                <th className="px-4 py-3 text-right">First Seen</th>
-                <th className="px-4 py-3 text-right">Last Seen</th>
+                <Th>#</Th>
+                <Th>User</Th>
+                <SortTh k="requests" label="Requests" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="tokensIn" label="Input Tok" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="tokensOut" label="Output Tok" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="tokensCacheRead" label="Cache Read" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="tokensCacheCreation" label="Cache Write" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="tokensReasoning" label="Reasoning" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="totalTokens" label="Total Tok" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="tokensPerRequest" label="Tok/Req" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="cost" label="Cost" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="costPerRequest" label="$/Req" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="inputCost" label="Input $" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="outputCost" label="Output $" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="avgLatency" label="Latency" current={sortKey} dir={sortDir} toggle={toggleSort} bold />
+                <SortTh k="avgTtft" label="TTFT" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="uniqueModels" label="Models" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="uniqueProviders" label="Providers" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <Th>Top Model</Th>
+                <SortTh k="firstSeen" label="First Seen" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <SortTh k="lastSeen" label="Last Seen" current={sortKey} dir={sortDir} toggle={toggleSort} />
               </tr>
             </thead>
             <tbody className="divide-y divide-[#1e293b]">
-              {entries.map((e, i) => {
+              {sorted.map((e, i) => {
                 const initial = e.displayName.startsWith('@')
                   ? e.displayName[1]?.toUpperCase()
                   : e.displayName[0]?.toUpperCase();
 
                 return (
                   <tr key={e.name} className="hover:bg-[#1f2937] transition-colors">
-                    <td className="px-4 py-3 sticky left-0 bg-[#111827] group-hover:bg-[#1f2937]">
+                    <td className="px-4 py-3">
                       <span className={
                         i === 0 ? 'rank-gold font-bold text-lg' :
                         i === 1 ? 'rank-silver font-bold text-lg' :
@@ -76,7 +134,7 @@ export function Leaderboard() {
                         {i + 1}
                       </span>
                     </td>
-                    <td className="px-4 py-3 sticky left-10 bg-[#111827]">
+                    <td className="px-4 py-3">
                       <div className="flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
                           {initial}
@@ -84,31 +142,28 @@ export function Leaderboard() {
                         <span className="font-medium text-white text-sm">{e.displayName}</span>
                       </div>
                     </td>
-                    <Cell>{formatNumber(e.requests)}</Cell>
-                    <Cell>{formatNumber(e.tokensIn)}</Cell>
-                    <Cell>{formatNumber(e.tokensOut)}</Cell>
-                    <Cell dim>{formatNumber(e.tokensCacheRead)}</Cell>
-                    <Cell dim>{formatNumber(e.tokensCacheCreation)}</Cell>
-                    <Cell dim>{formatNumber(e.tokensReasoning)}</Cell>
-                    <Cell>{formatNumber(e.totalTokens)}</Cell>
-                    <Cell dim>{formatNumber(e.tokensPerRequest)}</Cell>
-                    <Cell color="amber">{formatCost(e.cost)}</Cell>
-                    <Cell dim>{formatCost(e.costPerRequest)}</Cell>
-                    <Cell dim>{formatCost(e.inputCost)}</Cell>
-                    <Cell dim>{formatCost(e.outputCost)}</Cell>
-                    <Cell>{formatLatency(e.avgLatency)}</Cell>
-                    <Cell dim>{formatLatency(e.avgTtft)}</Cell>
-                    <td className="px-4 py-3 text-right">
-                      <span className={e.successRate >= 0.95 ? 'text-emerald-400' : e.successRate >= 0.8 ? 'text-amber-400' : 'text-red-400'}>
-                        {formatPercent(e.successRate)}
-                      </span>
+                    <Td c={trafficColor('requests', e.requests)}>{formatNumber(e.requests)}</Td>
+                    <Td c={trafficColor('tokensIn', e.tokensIn)}>{formatNumber(e.tokensIn)}</Td>
+                    <Td c={trafficColor('tokensOut', e.tokensOut)}>{formatNumber(e.tokensOut)}</Td>
+                    <Td c={trafficColor('tokensCacheRead', e.tokensCacheRead)}>{formatNumber(e.tokensCacheRead)}</Td>
+                    <Td c={trafficColor('tokensCacheCreation', e.tokensCacheCreation)}>{formatNumber(e.tokensCacheCreation)}</Td>
+                    <Td c={trafficColor('tokensReasoning', e.tokensReasoning)}>{formatNumber(e.tokensReasoning)}</Td>
+                    <Td c={trafficColor('totalTokens', e.totalTokens)}>{formatNumber(e.totalTokens)}</Td>
+                    <Td c={trafficColor('tokensPerRequest', e.tokensPerRequest)}>{formatNumber(e.tokensPerRequest)}</Td>
+                    <Td c={trafficColor('cost', e.cost)}>{formatCost(e.cost)}</Td>
+                    <Td c={trafficColor('costPerRequest', e.costPerRequest)}>{formatCost(e.costPerRequest)}</Td>
+                    <Td c={trafficColor('inputCost', e.inputCost)}>{formatCost(e.inputCost)}</Td>
+                    <Td c={trafficColor('outputCost', e.outputCost)}>{formatCost(e.outputCost)}</Td>
+                    {/* Latency — bold, inverse traffic light (lower=better=green) */}
+                    <td className={`px-4 py-3 text-right font-mono text-sm font-bold ${trafficColor('avgLatency', e.avgLatency, true)}`}>
+                      {formatLatency(e.avgLatency)}
                     </td>
-                    <Cell color={e.errorCount > 0 ? 'red' : undefined}>{formatNumber(e.errorCount)}</Cell>
-                    <Cell>{e.uniqueModels}</Cell>
-                    <Cell>{e.uniqueProviders}</Cell>
+                    <Td c={trafficColor('avgTtft', e.avgTtft, true)}>{formatLatency(e.avgTtft)}</Td>
+                    <Td c={trafficColor('uniqueModels', e.uniqueModels)}>{e.uniqueModels}</Td>
+                    <Td c={trafficColor('uniqueProviders', e.uniqueProviders)}>{e.uniqueProviders}</Td>
                     <td className="px-4 py-3 text-sm text-gray-400 max-w-[180px] truncate">{e.topModel}</td>
-                    <Cell dim>{formatDate(e.firstSeen)}</Cell>
-                    <Cell dim>{timeAgo(e.lastSeen)}</Cell>
+                    <Td c="text-gray-500">{formatDate(e.firstSeen)}</Td>
+                    <Td c="text-gray-500">{timeAgo(e.lastSeen)}</Td>
                   </tr>
                 );
               })}
@@ -120,13 +175,30 @@ export function Leaderboard() {
   );
 }
 
-function Cell({ children, dim, color }: { children: React.ReactNode; dim?: boolean; color?: 'amber' | 'red' }) {
-  const textColor = color === 'amber' ? 'text-amber-400' : color === 'red' ? 'text-red-400' : dim ? 'text-gray-500' : 'text-gray-300';
+function Th({ children }: { children: React.ReactNode }) {
+  return <th className="px-4 py-3 text-left">{children}</th>;
+}
+
+function SortTh({ k, label, current, dir, toggle, bold }: {
+  k: SortKey; label: string; current: SortKey; dir: SortDir;
+  toggle: (k: SortKey) => void; bold?: boolean;
+}) {
+  const isActive = current === k;
   return (
-    <td className={`px-4 py-3 text-right font-mono text-sm ${textColor}`}>
-      {children}
-    </td>
+    <th
+      className={`px-4 py-3 text-right cursor-pointer select-none hover:text-cyan-400 transition-colors ${isActive ? 'text-cyan-400' : ''} ${bold ? 'font-bold text-yellow-400' : ''}`}
+      onClick={() => toggle(k)}
+    >
+      <span className="inline-flex items-center gap-1">
+        {label}
+        {isActive && (dir === 'asc' ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />)}
+      </span>
+    </th>
   );
+}
+
+function Td({ children, c }: { children: React.ReactNode; c: string }) {
+  return <td className={`px-4 py-3 text-right font-mono text-sm ${c}`}>{children}</td>;
 }
 
 function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
