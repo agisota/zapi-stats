@@ -17,13 +17,13 @@ export function App() {
     <div className="min-h-screen bg-[#0a0e1a]">
       {/* Header */}
       <header className="border-b border-[#1e293b] bg-[#0a0e1a]/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 h-auto md:h-14 py-2 md:py-0 flex flex-col md:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-cyan-400" />
             <span className="font-semibold text-white text-lg">API ZED</span>
           </div>
 
-          <nav className="flex items-center gap-1">
+          <nav className="flex items-center gap-1 flex-wrap">
             <NavBtn active={page === 'leaderboard'} onClick={() => setPage('leaderboard')}>
               <Activity className="w-4 h-4" />
               <span>Leaderboard</span>

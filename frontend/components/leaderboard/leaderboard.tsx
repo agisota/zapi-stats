@@ -8,6 +8,36 @@ import { UserProfileModal } from './user-profile-modal.tsx';
 type SortKey = keyof LeaderboardEntry;
 type SortDir = 'asc' | 'desc';
 
+const PROVIDER_COLORS: Record<string, string> = {
+  claude: '#8b5cf6',
+  antigravity: '#06b6d4',
+  codex: '#f59e0b',
+  xai: '#10b981',
+  groq: '#ef4444',
+  gemini: '#3b82f6',
+  fireworks: '#ec4899',
+  together: '#14b8a6',
+  mistral: '#6366f1',
+};
+
+function ProviderBar({ breakdown }: { breakdown: Array<{ provider: string; percent: number }> }) {
+  return (
+    <div className="flex flex-col gap-0.5" style={{ width: 100 }}>
+      <div className="flex h-2.5 rounded-full overflow-hidden bg-[#1e293b]">
+        {breakdown.map((p, i) => (
+          <div
+            key={i}
+            style={{ width: `${p.percent}%`, backgroundColor: PROVIDER_COLORS[p.provider] ?? '#64748b' }}
+          />
+        ))}
+      </div>
+      <div className="text-[9px] text-gray-500 truncate">
+        {breakdown.slice(0, 2).map(p => `${p.provider} ${Math.round(p.percent)}%`).join(' · ')}
+      </div>
+    </div>
+  );
+}
+
 export function Leaderboard() {
   const { data: lb } = useQuery({ queryKey: ['leaderboard'], queryFn: getLeaderboard });
   const { data: ov } = useQuery({ queryKey: ['overview'], queryFn: getOverview });
@@ -38,7 +68,7 @@ export function Leaderboard() {
       'requests', 'tokensIn', 'tokensOut', 'tokensCacheRead', 'tokensCacheCreation',
       'tokensReasoning', 'totalTokens', 'tokensPerRequest', 'cost', 'costPerRequest',
       'inputCost', 'outputCost', 'avgLatency', 'avgTtft', 'uniqueModels', 'uniqueProviders',
-      'requestsPerDay', 'outputRatio', 'providerDiversity', 'activeDays',
+      'requestsPerDay', 'outputRatio', 'activeDays',
       'avgSessionMessages', 'longestSessionMessages',
     ];
     const r: Record<string, { min: number; max: number }> = {};
@@ -86,14 +116,15 @@ export function Leaderboard() {
           <Trophy className="w-5 h-5 text-amber-400" />
           <h2 className="text-lg font-semibold text-white">Leaderboard</h2>
           <span className="text-xs text-gray-500 ml-2">click headers to sort</span>
+          <span className="text-xs text-gray-600 ml-2 md:hidden">scroll →</span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full whitespace-nowrap">
             <thead>
               <tr className="text-xs text-gray-500 uppercase tracking-wider">
-                <Th>#</Th>
-                <Th>User</Th>
+                <Th sticky left="left-0">#</Th>
+                <Th sticky left="left-10">User</Th>
                 <SortTh k="requests" label="Requests" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="tokensIn" label="Input Tok" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="tokensOut" label="Output Tok" current={sortKey} dir={sortDir} toggle={toggleSort} />
@@ -112,7 +143,7 @@ export function Leaderboard() {
                 <SortTh k="requestsPerDay" label="Req/Day" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="outputRatio" label="Output %" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <Th>Activity</Th>
-                <SortTh k="providerDiversity" label="Diversity" current={sortKey} dir={sortDir} toggle={toggleSort} />
+                <Th>Providers</Th>
                 <SortTh k="activeDays" label="Days" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="avgSessionMessages" label="Msg/Sess" current={sortKey} dir={sortDir} toggle={toggleSort} />
                 <SortTh k="longestSessionMessages" label="Max Sess" current={sortKey} dir={sortDir} toggle={toggleSort} />
@@ -129,7 +160,7 @@ export function Leaderboard() {
 
                 return (
                   <tr key={e.name} className="hover:bg-[#1f2937] transition-colors cursor-pointer" onClick={() => setSelectedUser(e.name)}>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 sticky left-0 bg-[#111827] z-10">
                       <span className={
                         i === 0 ? 'rank-gold font-bold text-lg' :
                         i === 1 ? 'rank-silver font-bold text-lg' :
@@ -137,7 +168,7 @@ export function Leaderboard() {
                         'text-gray-500'
                       }>{i + 1}</span>
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 sticky left-10 bg-[#111827] z-10">
                       <div className="flex items-center gap-2.5">
                         <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-white text-xs font-bold shrink-0">
                           {initial}
@@ -183,7 +214,10 @@ export function Leaderboard() {
                         <span className="text-gray-500 text-sm">{formatHour(e.peakHour)}</span>
                       )}
                     </td>
-                    <Td c={trafficColor('providerDiversity', e.providerDiversity)}>{formatDecimal(e.providerDiversity, 2)}</Td>
+                    {/* Provider distribution bar */}
+                    <td className="px-4 py-2">
+                      <ProviderBar breakdown={e.providerBreakdown ?? []} />
+                    </td>
                     <Td c={trafficColor('activeDays', e.activeDays)}>{e.activeDays}</Td>
                     <Td c={trafficColor('avgSessionMessages', e.avgSessionMessages)}>{formatDecimal(e.avgSessionMessages, 1)}</Td>
                     <Td c={trafficColor('longestSessionMessages', e.longestSessionMessages)}>{e.longestSessionMessages}</Td>
@@ -198,7 +232,11 @@ export function Leaderboard() {
         </div>
       </div>
       {selectedUser && (
-        <UserProfileModal name={selectedUser} onClose={() => setSelectedUser(null)} />
+        <UserProfileModal
+          name={selectedUser}
+          entry={entries.find(e => e.name === selectedUser)}
+          onClose={() => setSelectedUser(null)}
+        />
       )}
     </div>
   );
@@ -227,8 +265,9 @@ function MiniSparkline({ data, width, height }: { data: number[]; width: number;
   );
 }
 
-function Th({ children }: { children: React.ReactNode }) {
-  return <th className="px-4 py-3 text-left">{children}</th>;
+function Th({ children, sticky, left }: { children: React.ReactNode; sticky?: boolean; left?: string }) {
+  const stickyClass = sticky ? `sticky ${left ?? 'left-0'} bg-[#111827] z-10` : '';
+  return <th className={`px-4 py-3 text-left ${stickyClass}`}>{children}</th>;
 }
 
 function SortTh({ k, label, current, dir, toggle, bold }: {
@@ -260,7 +299,7 @@ function StatCard({ icon, label, value }: { icon: React.ReactNode; label: string
         {icon}
         <span className="text-xs text-gray-500 uppercase tracking-wider">{label}</span>
       </div>
-      <p className="text-2xl font-bold text-white">{value}</p>
+      <p className="text-xl md:text-2xl font-bold text-white">{value}</p>
     </div>
   );
 }
