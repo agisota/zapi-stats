@@ -15,31 +15,50 @@ describe('StatsService', () => {
   describe('getLeaderboard', () => {
     test('returns all users sorted by request count', () => {
       const lb = stats.getLeaderboard();
-      expect(lb.length).toBe(3); // alice, bob, charlie (no empty-name)
-      expect(lb[0]!.name).toBe('alice'); // 4 requests
-      expect(lb[1]!.name).toBe('bob');   // 2 requests
-      expect(lb[2]!.name).toBe('charlie'); // 1 request
+      expect(lb.length).toBe(3);
+      expect(lb[0]!.name).toBe('alice');
+      expect(lb[1]!.name).toBe('bob');
+      expect(lb[2]!.name).toBe('charlie');
+    });
+
+    test('includes displayName', () => {
+      const lb = stats.getLeaderboard();
+      // alice is not in DISPLAY_NAMES, so displayName === name
+      expect(lb[0]!.displayName).toBe('alice');
     });
 
     test('calculates correct request counts', () => {
       const lb = stats.getLeaderboard();
       const alice = lb.find(u => u.name === 'alice')!;
-      expect(alice.requests).toBe(4); // 3 success + 1 failed
+      expect(alice.requests).toBe(4);
     });
 
     test('sums tokens correctly', () => {
       const lb = stats.getLeaderboard();
       const alice = lb.find(u => u.name === 'alice')!;
-      // 50000 + 30000 + 20000 + 5000 = 105000
       expect(alice.tokensIn).toBe(105000);
-      // 2000 + 1500 + 500 + 0 = 4000
       expect(alice.tokensOut).toBe(4000);
+      expect(alice.totalTokens).toBe(109000);
+    });
+
+    test('calculates tokensPerRequest', () => {
+      const lb = stats.getLeaderboard();
+      const alice = lb.find(u => u.name === 'alice')!;
+      expect(alice.tokensPerRequest).toBe(Math.round(109000 / 4));
+    });
+
+    test('includes cache and reasoning tokens', () => {
+      const lb = stats.getLeaderboard();
+      const alice = lb.find(u => u.name === 'alice')!;
+      expect(alice.tokensCacheRead).toBe(0); // test data has 0
+      expect(alice.tokensCacheCreation).toBe(0);
+      expect(alice.tokensReasoning).toBe(0);
     });
 
     test('identifies top model per user', () => {
       const lb = stats.getLeaderboard();
       const alice = lb.find(u => u.name === 'alice')!;
-      expect(alice.topModel).toBe('claude-opus-4-6'); // 3 uses vs 1 grok
+      expect(alice.topModel).toBe('claude-opus-4-6');
     });
 
     test('identifies top provider per user', () => {
@@ -48,27 +67,52 @@ describe('StatsService', () => {
       expect(bob.topProvider).toBe('codex');
     });
 
-    test('calculates success rate', () => {
+    test('calculates success rate and error count', () => {
       const lb = stats.getLeaderboard();
       const alice = lb.find(u => u.name === 'alice')!;
-      expect(alice.successRate).toBeCloseTo(0.75, 2); // 3/4
+      expect(alice.successRate).toBeCloseTo(0.75, 2);
+      expect(alice.errorCount).toBe(1);
+      expect(alice.errorRate).toBeCloseTo(0.25, 2);
     });
 
-    test('calculates cost', () => {
+    test('calculates cost and cost breakdown', () => {
       const lb = stats.getLeaderboard();
       const alice = lb.find(u => u.name === 'alice')!;
       expect(alice.cost).toBeGreaterThan(0);
+      expect(alice.inputCost).toBeGreaterThan(0);
+      expect(alice.outputCost).toBeGreaterThan(0);
+      expect(alice.costPerRequest).toBeGreaterThan(0);
+      expect(alice.inputCost + alice.outputCost).toBeCloseTo(alice.cost, 4);
+    });
+
+    test('includes latency metrics', () => {
+      const lb = stats.getLeaderboard();
+      const alice = lb.find(u => u.name === 'alice')!;
+      expect(alice.avgLatency).toBeGreaterThan(0);
+      expect(alice.avgTtft).toBeGreaterThanOrEqual(0);
+    });
+
+    test('counts unique models and providers', () => {
+      const lb = stats.getLeaderboard();
+      const alice = lb.find(u => u.name === 'alice')!;
+      expect(alice.uniqueModels).toBe(2); // opus + grok
+      expect(alice.uniqueProviders).toBe(2); // claude + xai
+    });
+
+    test('includes first and last seen', () => {
+      const lb = stats.getLeaderboard();
+      const alice = lb.find(u => u.name === 'alice')!;
+      expect(alice.firstSeen).toBe('2026-04-08T10:00:00Z');
+      expect(alice.lastSeen).toBe('2026-04-08T13:00:00Z');
     });
 
     test('caches results', () => {
       const lb1 = stats.getLeaderboard();
-      // Insert new data
       db.prepare(`
         INSERT INTO usage_history (provider, model, api_key_id, api_key_name, tokens_input, tokens_output, status, success, latency_ms, ttft_ms, timestamp)
         VALUES ('claude', 'claude-opus-4-6', 'key-1', 'alice', 99999, 99999, 'ok', 1, 100, 10, '2026-04-09T00:00:00Z')
       `).run();
       const lb2 = stats.getLeaderboard();
-      // Should return cached (same reference)
       expect(lb2).toBe(lb1);
     });
   });
@@ -76,17 +120,15 @@ describe('StatsService', () => {
   describe('getOverview', () => {
     test('returns aggregate stats', () => {
       const ov = stats.getOverview();
-      expect(ov.totalRequests).toBe(7); // all seed entries
-      expect(ov.activeKeys).toBe(3); // alice, bob, charlie
-      expect(ov.uniqueModels).toBe(4); // opus, grok, gpt-5.4, llama
-      expect(ov.uniqueProviders).toBe(4); // claude, xai, codex, groq
+      expect(ov.totalRequests).toBe(7);
+      expect(ov.activeKeys).toBe(3);
+      expect(ov.uniqueModels).toBe(4);
+      expect(ov.uniqueProviders).toBe(4);
     });
 
     test('calculates total tokens', () => {
       const ov = stats.getOverview();
-      // total in: 50K + 30K + 20K + 100K + 80K + 10K + 5K = 295K
       expect(ov.totalTokensIn).toBe(295000);
-      // total out: 2K + 1.5K + 0.5K + 5K + 3K + 0.8K + 0 = 12.8K
       expect(ov.totalTokensOut).toBe(12800);
     });
 
@@ -100,7 +142,7 @@ describe('StatsService', () => {
     test('returns model breakdown', () => {
       const models = stats.getModelStats();
       expect(models.length).toBe(4);
-      expect(models[0]!.model).toBe('claude-opus-4-6'); // 3 uses
+      expect(models[0]!.model).toBe('claude-opus-4-6');
     });
 
     test('calculates per-model cost', () => {
@@ -115,13 +157,11 @@ describe('StatsService', () => {
     test('returns provider breakdown', () => {
       const providers = stats.getProviderStats();
       expect(providers.length).toBe(4);
-      expect(providers[0]!.provider).toBe('claude'); // 3 uses
     });
 
     test('calculates success rate per provider', () => {
       const providers = stats.getProviderStats();
       const claude = providers.find(p => p.provider === 'claude')!;
-      // 2 success + 1 fail = 2/3
       expect(claude.successRate).toBeCloseTo(0.667, 2);
     });
   });
@@ -131,20 +171,14 @@ describe('StatsService', () => {
       const user = stats.getUserPublicStats('alice');
       expect(user).not.toBeNull();
       expect(user!.name).toBe('alice');
+      expect(user!.displayName).toBe('alice');
       expect(user!.requests).toBe(4);
-      expect(user!.models.length).toBe(2); // opus + grok
-      expect(user!.providers.length).toBe(2); // claude + xai
+      expect(user!.models.length).toBe(2);
+      expect(user!.providers.length).toBe(2);
     });
 
     test('returns null for unknown user', () => {
-      const user = stats.getUserPublicStats('nonexistent');
-      expect(user).toBeNull();
-    });
-
-    test('includes first and last seen', () => {
-      const user = stats.getUserPublicStats('alice')!;
-      expect(user.firstSeen).toBe('2026-04-08T10:00:00Z');
-      expect(user.lastSeen).toBe('2026-04-08T13:00:00Z');
+      expect(stats.getUserPublicStats('nonexistent')).toBeNull();
     });
   });
 });

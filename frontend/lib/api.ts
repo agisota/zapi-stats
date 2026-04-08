@@ -59,14 +59,30 @@ export async function getUserModels(apiKey: string) {
 // Types
 export interface LeaderboardEntry {
   name: string;
+  displayName: string;
   requests: number;
   tokensIn: number;
   tokensOut: number;
+  tokensCacheRead: number;
+  tokensCacheCreation: number;
+  tokensReasoning: number;
+  totalTokens: number;
+  tokensPerRequest: number;
   cost: number;
-  lastSeen: string;
+  costPerRequest: number;
+  inputCost: number;
+  outputCost: number;
+  avgLatency: number;
+  avgTtft: number;
+  successRate: number;
+  errorCount: number;
+  errorRate: number;
+  uniqueModels: number;
+  uniqueProviders: number;
   topModel: string;
   topProvider: string;
-  successRate: number;
+  firstSeen: string;
+  lastSeen: string;
 }
 
 export interface OverviewStats {
@@ -107,6 +123,7 @@ export interface TimelinePoint {
 
 export interface UserPublicStats {
   name: string;
+  displayName: string;
   requests: number;
   tokensIn: number;
   tokensOut: number;

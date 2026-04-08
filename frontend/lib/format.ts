@@ -1,15 +1,9 @@
 export function formatNumber(n: number): string {
-  if (n >= 1_000_000_000) return `${(n / 1_000_000_000).toFixed(1)}B`;
-  if (n >= 1_000_000) return `${(n / 1_000_000).toFixed(1)}M`;
-  if (n >= 1_000) return `${(n / 1_000).toFixed(1)}K`;
-  return n.toString();
+  return n.toLocaleString('en-US');
 }
 
 export function formatCost(cost: number): string {
-  if (cost >= 1000) return `$${(cost / 1000).toFixed(1)}K`;
-  if (cost >= 1) return `$${cost.toFixed(2)}`;
-  if (cost >= 0.01) return `$${cost.toFixed(3)}`;
-  return `$${cost.toFixed(4)}`;
+  return `$${cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 export function formatLatency(ms: number): string {
@@ -19,10 +13,6 @@ export function formatLatency(ms: number): string {
 
 export function formatPercent(ratio: number): string {
   return `${(ratio * 100).toFixed(1)}%`;
-}
-
-export function formatTokens(n: number): string {
-  return formatNumber(n);
 }
 
 export function timeAgo(isoDate: string): string {
@@ -36,6 +26,6 @@ export function timeAgo(isoDate: string): string {
   return `${days}d ago`;
 }
 
-export function cn(...classes: (string | false | null | undefined)[]): string {
-  return classes.filter(Boolean).join(' ');
+export function formatDate(isoDate: string): string {
+  return new Date(isoDate).toLocaleDateString('ru', { day: '2-digit', month: '2-digit', year: '2-digit' });
 }

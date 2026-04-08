@@ -20,7 +20,7 @@ export function App() {
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <Zap className="w-5 h-5 text-cyan-400" />
-            <span className="font-semibold text-white text-lg">OmniRoute Stats</span>
+            <span className="font-semibold text-white text-lg">API ZED</span>
           </div>
 
           <nav className="flex items-center gap-1">

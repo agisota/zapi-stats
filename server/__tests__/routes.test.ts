@@ -32,13 +32,20 @@ describe('GET /api/leaderboard', () => {
     expect(body.data[0].name).toBe('alice');
   });
 
-  test('includes cost and top model', async () => {
+  test('includes extended metrics and displayName', async () => {
     const res = await req('/api/leaderboard');
     const body = await res.json();
     const alice = body.data[0];
     expect(alice.cost).toBeGreaterThan(0);
+    expect(alice.displayName).toBe('alice');
     expect(alice.topModel).toBe('claude-opus-4-6');
     expect(alice.successRate).toBeCloseTo(0.75, 2);
+    expect(alice.errorCount).toBe(1);
+    expect(alice.totalTokens).toBe(109000);
+    expect(alice.inputCost).toBeGreaterThan(0);
+    expect(alice.outputCost).toBeGreaterThan(0);
+    expect(alice.uniqueModels).toBe(2);
+    expect(alice.uniqueProviders).toBe(2);
   });
 });
 
