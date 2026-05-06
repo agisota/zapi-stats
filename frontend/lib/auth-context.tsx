@@ -13,10 +13,11 @@ interface AuthContextType extends AuthState {
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
+const AUTH_STORAGE_KEY = 'api-zed-auth';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AuthState>(() => {
-    const saved = sessionStorage.getItem('omniroute-auth');
+    const saved = sessionStorage.getItem(AUTH_STORAGE_KEY);
     if (saved) {
       try { return JSON.parse(saved) as AuthState; } catch { /* ignore */ }
     }
@@ -26,12 +27,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback((apiKey: string, keyName: string, keyId: string) => {
     const s = { apiKey, keyName, keyId };
     setState(s);
-    sessionStorage.setItem('omniroute-auth', JSON.stringify(s));
+    sessionStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(s));
   }, []);
 
   const logout = useCallback(() => {
     setState({ apiKey: null, keyName: null, keyId: null });
-    sessionStorage.removeItem('omniroute-auth');
+    sessionStorage.removeItem(AUTH_STORAGE_KEY);
   }, []);
 
   return (

@@ -52,11 +52,15 @@ export interface OverviewStats {
 
 export interface ModelStats {
   model: string;
+  provider: string;
   count: number;
   tokensIn: number;
   tokensOut: number;
   cost: number;
   avgLatency: number;
+  successRate: number;
+  users: number;
+  lastSeen: string;
 }
 
 export interface ProviderStats {
@@ -293,13 +297,31 @@ export class StatsService {
   getModelStats(): ModelStats[] {
     return this.getCached('models', 120_000, () => {
       const rows = this.db.prepare(`
-        SELECT model, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut, AVG(latency_ms) as avgLatency
-        FROM usage_history GROUP BY model ORDER BY count DESC
-      `).all() as Array<{ model: string; count: number; tokensIn: number; tokensOut: number; avgLatency: number }>;
+        SELECT
+          model,
+          provider,
+          COUNT(*) as count,
+          SUM(tokens_input) as tokensIn,
+          SUM(tokens_output) as tokensOut,
+          AVG(latency_ms) as avgLatency,
+          SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successes,
+          COUNT(DISTINCT api_key_name) as users,
+          MAX(timestamp) as lastSeen
+        FROM usage_history
+        GROUP BY provider, model
+        ORDER BY count DESC
+      `).all() as Array<{ model: string; provider: string; count: number; tokensIn: number; tokensOut: number; avgLatency: number; successes: number; users: number; lastSeen: string }>;
 
       return rows.map(r => ({
-        ...r,
-        avgLatency: Math.round(r.avgLatency),
+        model: r.model,
+        provider: r.provider,
+        count: r.count,
+        tokensIn: r.tokensIn,
+        tokensOut: r.tokensOut,
+        avgLatency: Math.round(r.avgLatency ?? 0),
+        successRate: r.count > 0 ? r.successes / r.count : 0,
+        users: r.users,
+        lastSeen: r.lastSeen,
         cost: this.calculateModelCost(r.model),
       }));
     });
@@ -354,8 +376,11 @@ export class StatsService {
     if (!row || !row.name || row.requests === 0) return null;
 
     const models = this.db.prepare(
-      'SELECT model, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut, AVG(latency_ms) as avgLatency FROM usage_history WHERE api_key_name = ? GROUP BY model ORDER BY count DESC'
-    ).all(name) as Array<{ model: string; count: number; tokensIn: number; tokensOut: number; avgLatency: number }>;
+      `SELECT model, provider, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut,
+        AVG(latency_ms) as avgLatency, SUM(CASE WHEN success=1 THEN 1 ELSE 0 END) as successes,
+        COUNT(DISTINCT api_key_name) as users, MAX(timestamp) as lastSeen
+       FROM usage_history WHERE api_key_name = ? GROUP BY provider, model ORDER BY count DESC`
+    ).all(name) as Array<{ model: string; provider: string; count: number; tokensIn: number; tokensOut: number; avgLatency: number; successes: number; users: number; lastSeen: string }>;
 
     const providers = this.db.prepare(
       'SELECT provider, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut, SUM(CASE WHEN success=1 THEN 1 ELSE 0 END) as successes FROM usage_history WHERE api_key_name = ? GROUP BY provider ORDER BY count DESC'
@@ -370,7 +395,18 @@ export class StatsService {
       cost: this.calculateUserCost(row.name),
       successRate: row.requests > 0 ? row.successes / row.requests : 0,
       avgLatency: Math.round(row.avgLatency),
-      models: models.map(m => ({ ...m, avgLatency: Math.round(m.avgLatency), cost: 0 })),
+      models: models.map(m => ({
+        model: m.model,
+        provider: m.provider,
+        count: m.count,
+        tokensIn: m.tokensIn,
+        tokensOut: m.tokensOut,
+        avgLatency: Math.round(m.avgLatency ?? 0),
+        successRate: m.count > 0 ? m.successes / m.count : 0,
+        users: m.users,
+        lastSeen: m.lastSeen,
+        cost: 0,
+      })),
       providers: providers.map(p => ({ ...p, cost: 0, successRate: p.count > 0 ? p.successes / p.count : 0 })),
       firstSeen: row.firstSeen,
       lastSeen: row.lastSeen,

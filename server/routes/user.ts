@@ -29,7 +29,7 @@ export function userRoutes(statsService: StatsService, authService: AuthService,
 
     return c.json({
       valid: true,
-      keyName: keyInfo.name,
+      keyName: keyInfo.displayName,
       keyId: keyInfo.id,
       noLog: keyInfo.noLog,
     });
@@ -56,6 +56,32 @@ export function userRoutes(statsService: StatsService, authService: AuthService,
 
   // Log endpoints (require LogReader)
   if (logReader) {
+    authed.get('/balance', (c) => {
+      const info = c.get('apiKeyInfo');
+      const data = logReader.getUserBalance(info.name, info.createdAt);
+      return c.json({ data });
+    });
+
+    authed.get('/activity', (c) => {
+      const info = c.get('apiKeyInfo');
+      if (info.noLog) {
+        return c.json({ error: { code: 'NO_LOG', message: 'Logging disabled for this key' } }, 403);
+      }
+
+      const data = logReader.getUserActivityAnalytics(info.name);
+      return c.json({ data });
+    });
+
+    authed.get('/skills-mapping', (c) => {
+      const info = c.get('apiKeyInfo');
+      if (info.noLog) {
+        return c.json({ error: { code: 'NO_LOG', message: 'Logging disabled for this key' } }, 403);
+      }
+
+      const data = logReader.getUserSkillsMapping(info.name);
+      return c.json({ data });
+    });
+
     authed.get('/logs', async (c) => {
       const info = c.get('apiKeyInfo');
       if (info.noLog) {
@@ -63,12 +89,39 @@ export function userRoutes(statsService: StatsService, authService: AuthService,
       }
 
       const cursor = c.req.query('cursor') ?? undefined;
+      const q = c.req.query('q') ?? undefined;
       const limit = parseInt(c.req.query('limit') ?? '50', 10);
+      const offset = parseInt(c.req.query('offset') ?? '0', 10);
       const date = c.req.query('date') ?? undefined;
+      const dateFrom = c.req.query('dateFrom') ?? undefined;
+      const dateTo = c.req.query('dateTo') ?? undefined;
       const model = c.req.query('model') ?? undefined;
       const provider = c.req.query('provider') ?? undefined;
+      const status = c.req.query('status') ?? undefined;
+      const sort = c.req.query('sort') ?? undefined;
+      const order = c.req.query('order') ?? undefined;
 
-      const data = await logReader.getUserLogs(info.name, { cursor, limit, date, model, provider });
+      const data = await logReader.getUserLogs(info.name, { cursor, q, limit, offset, date, dateFrom, dateTo, model, provider, status, sort, order });
+      return c.json({ data });
+    });
+
+    authed.get('/log-facets', async (c) => {
+      const info = c.get('apiKeyInfo');
+      if (info.noLog) {
+        return c.json({ error: { code: 'NO_LOG', message: 'Logging disabled for this key' } }, 403);
+      }
+
+      const data = logReader.getUserLogFacets(info.name);
+      return c.json({ data });
+    });
+
+    authed.get('/sessions', async (c) => {
+      const info = c.get('apiKeyInfo');
+      if (info.noLog) {
+        return c.json({ error: { code: 'NO_LOG', message: 'Logging disabled for this key' } }, 403);
+      }
+
+      const data = logReader.getUserSessions(info.name);
       return c.json({ data });
     });
 
@@ -79,15 +132,10 @@ export function userRoutes(statsService: StatsService, authService: AuthService,
       }
 
       const logId = c.req.param('id');
-      const detail = await logReader.getLogDetail(logId);
+      const detail = await logReader.getLogDetail(info.name, logId);
 
       if (!detail) {
         return c.json({ error: { code: 'NOT_FOUND', message: 'Log entry not found' } }, 404);
-      }
-
-      // Verify this log belongs to the authenticated user
-      if (detail.apiKeyName !== info.name) {
-        return c.json({ error: { code: 'FORBIDDEN', message: 'Access denied' } }, 403);
       }
 
       return c.json({ data: detail });

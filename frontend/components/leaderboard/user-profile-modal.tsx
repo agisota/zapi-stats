@@ -1,7 +1,8 @@
 import { useQuery } from '@tanstack/react-query';
-import { Search, Lightbulb, Star, X, Wrench, Globe } from 'lucide-react';
+import { Search, Lightbulb, Star, X, Wrench, Globe, FileCode } from 'lucide-react';
 import { getUserProfile, type LeaderboardEntry } from '../../lib/api.ts';
 import { formatNumber, formatCost, formatLatency, formatPercent, formatDecimal } from '../../lib/format.ts';
+import { displayName } from '../../lib/display.ts';
 
 interface ToolStats {
   totalToolCalls: number;
@@ -16,6 +17,13 @@ interface LanguageStats {
   otherPercent: number;
   sampledMessages: number;
   dominantLanguage: string;
+}
+
+interface ArtifactStats {
+  estimatedArtifacts: number;
+  codeBlocks: number;
+  fileWrites: number;
+  sampledRequests: number;
 }
 
 async function fetchJson<T>(path: string): Promise<T> {
@@ -46,13 +54,18 @@ export function UserProfileModal({ name, entry, onClose }: UserProfileModalProps
     queryFn: () => fetchJson<{ data: LanguageStats }>(`/api/stats/user/${encodeURIComponent(name)}/language`),
   });
 
+  const { data: artifactsData } = useQuery({
+    queryKey: ['artifacts', name],
+    queryFn: () => fetchJson<{ data: ArtifactStats }>(`/api/stats/user/${encodeURIComponent(name)}/artifacts`),
+  });
+
   const profile = data?.data;
   const tools = toolsData?.data;
   const lang = langData?.data;
+  const artifacts = artifactsData?.data;
+  const cleanName = displayName(profile?.displayName ?? name);
 
-  const initial = profile?.displayName.startsWith('@')
-    ? profile.displayName[1]?.toUpperCase()
-    : profile?.displayName[0]?.toUpperCase();
+  const initial = cleanName[0]?.toUpperCase();
 
   return (
     <div
@@ -60,7 +73,7 @@ export function UserProfileModal({ name, entry, onClose }: UserProfileModalProps
       onClick={onClose}
     >
       <div
-        className="relative bg-[#111827] border border-[#1e293b] rounded-2xl shadow-2xl w-full max-w-[95vw] md:max-w-2xl mx-4 max-h-[85vh] overflow-y-auto"
+        className="surface-card relative border rounded-2xl shadow-2xl w-full max-w-[95vw] md:max-w-2xl mx-4 max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -79,7 +92,7 @@ export function UserProfileModal({ name, entry, onClose }: UserProfileModalProps
           </div>
           <div>
             <p className="text-white font-semibold text-base">
-              {profile?.displayName ?? name}
+              {cleanName}
             </p>
             {profile?.summary ? (
               <p className="text-gray-400 text-xs italic mt-0.5">{profile.summary}</p>
@@ -135,8 +148,39 @@ export function UserProfileModal({ name, entry, onClose }: UserProfileModalProps
 
           {/* Tools section */}
           {tools && <ToolsSection tools={tools} />}
+
+          {/* Semantic/artifact section */}
+          {artifacts && <ArtifactSection artifacts={artifacts} />}
         </div>
       </div>
+    </div>
+  );
+}
+
+function ArtifactSection({ artifacts }: { artifacts: ArtifactStats }) {
+  return (
+    <div>
+      <div className="flex items-center gap-2 mb-3">
+        <FileCode className="w-4 h-4 text-cyan-400" />
+        <h3 className="text-sm font-semibold text-white uppercase tracking-wider">Семантика и артефакты</h3>
+      </div>
+      <div className="grid grid-cols-3 gap-2 rounded-lg border border-[#1e293b] bg-[#0f172a] p-3">
+        <MiniStat label="артефактов" value={formatNumber(artifacts.estimatedArtifacts)} />
+        <MiniStat label="code blocks" value={formatNumber(artifacts.codeBlocks)} />
+        <MiniStat label="file writes" value={formatNumber(artifacts.fileWrites)} />
+        <div className="col-span-3 text-[10px] text-gray-600">
+          Выборка: {formatNumber(artifacts.sampledRequests)} запросов из реальных call log artifacts
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MiniStat({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-md border border-white/5 bg-white/[0.025] px-3 py-2">
+      <div className="font-mono text-sm font-semibold text-cyan-100">{value}</div>
+      <div className="mt-1 text-[10px] text-gray-500">{label}</div>
     </div>
   );
 }
@@ -145,7 +189,7 @@ function StatsGrid({ entry }: { entry: LeaderboardEntry }) {
   const stats = [
     { label: 'запросов', value: formatNumber(entry.requests) },
     { label: 'стоимость', value: formatCost(entry.cost) },
-    { label: 'req/day', value: formatDecimal(entry.requestsPerDay, 1) },
+    { label: 'запр/день', value: formatDecimal(entry.requestsPerDay, 1) },
     { label: 'задержка', value: formatLatency(entry.avgLatency) },
     { label: 'успех', value: formatPercent(entry.successRate) },
     { label: 'активных дней', value: String(entry.activeDays) },
@@ -204,7 +248,7 @@ function LanguageSection({ lang }: { lang: LanguageStats }) {
             </span>
           )}
           <span className="ml-auto text-gray-600 text-[10px]">
-            Доминирующий: {lang.dominantLanguage}
+            Доминирующий: {languageLabel(lang.dominantLanguage)}
           </span>
         </div>
         <p className="text-gray-600 text-[10px]">
@@ -213,6 +257,12 @@ function LanguageSection({ lang }: { lang: LanguageStats }) {
       </div>
     </div>
   );
+}
+
+function languageLabel(language: string): string {
+  if (language === 'ru') return 'русский';
+  if (language === 'en') return 'английский';
+  return 'смешанный';
 }
 
 function ToolsSection({ tools }: { tools: ToolStats }) {

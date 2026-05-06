@@ -1,14 +1,14 @@
 export function formatNumber(n: number): string {
-  return n.toLocaleString('en-US');
+  return n.toLocaleString('ru-RU');
 }
 
 export function formatCost(cost: number): string {
-  return `$${cost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  return `$${cost.toLocaleString('ru-RU', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 }
 
 export function formatLatency(ms: number): string {
-  if (ms >= 1000) return `${(ms / 1000).toFixed(1)}s`;
-  return `${Math.round(ms)}ms`;
+  if (ms >= 1000) return `${(ms / 1000).toFixed(1).replace('.', ',')} с`;
+  return `${Math.round(ms)} мс`;
 }
 
 export function formatPercent(ratio: number): string {
@@ -18,12 +18,12 @@ export function formatPercent(ratio: number): string {
 export function timeAgo(isoDate: string): string {
   const diff = Date.now() - new Date(isoDate).getTime();
   const mins = Math.floor(diff / 60_000);
-  if (mins < 1) return 'just now';
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return 'только что';
+  if (mins < 60) return `${mins} мин назад`;
   const hours = Math.floor(mins / 60);
-  if (hours < 24) return `${hours}h ago`;
+  if (hours < 24) return `${hours} ч назад`;
   const days = Math.floor(hours / 24);
-  return `${days}d ago`;
+  return `${days} дн назад`;
 }
 
 export function formatDate(isoDate: string): string {

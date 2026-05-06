@@ -1,4 +1,4 @@
-# omniroute-stats
+# zapi-stats
 
 To install dependencies:
 

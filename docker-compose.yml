@@ -1,16 +1,17 @@
 services:
   stats:
     build: .
-    container_name: omniroute-stats
+    container_name: zapi-stats
     restart: unless-stopped
     ports:
       - "127.0.0.1:20129:20129"
     volumes:
-      - /mnt/volume_sfo3_01/omniroute/data:/data
+      - /data/omniroute:/data/omniroute:ro
+      - /srv/service-state/apps/zapi-stats/state:/data/zapi-stats-state
     environment:
       - PORT=20129
-      - DB_PATH=/data/storage.sqlite
-      - LOGS_PATH=/data/call_logs
+      - DB_PATH=/data/omniroute/storage.sqlite
+      - LOGS_PATH=/data/omniroute/call_logs
       - NODE_ENV=production
     deploy:
       resources:

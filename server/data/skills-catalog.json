@@ -1,0 +1,3381 @@
+[
+  {
+    "id": "vercel-ai-add-provider-package",
+    "slug": "add-provider-package",
+    "title": "add provider package",
+    "descriptionRu": "Навык «add-provider-package» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Guide for adding new AI provider packages to the AI SDK. Use when creating a new @ai-sdk/<provider package to integrate an AI service into the SDK.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-ai-add-provider-package",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/add-provider-package && cp -R \"/Users/marklindgreen/.codex/skills/vercel-ai-add-provider-package\"/. ~/.codex/skills/add-provider-package/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 153,
+    "downloads": 1933,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "address-sanitizer",
+    "slug": "address-sanitizer",
+    "title": "address sanitizer",
+    "descriptionRu": "Навык «address-sanitizer» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/address-sanitizer",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/address-sanitizer && cp -R \"/Users/marklindgreen/.codex/skills/address-sanitizer\"/. ~/.codex/skills/address-sanitizer/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 365,
+    "downloads": 2445,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "aflpp",
+    "slug": "aflpp",
+    "title": "aflpp",
+    "descriptionRu": "Навык «aflpp» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/aflpp",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/aflpp && cp -R \"/Users/marklindgreen/.codex/skills/aflpp\"/. ~/.codex/skills/aflpp/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 48,
+    "downloads": 3948,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-agent-browser-agent-browser",
+    "slug": "agent-browser",
+    "title": "agent browser",
+    "descriptionRu": "Навык «agent-browser» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Browser automation CLI for AI agents. Use when the user needs to interact with websites, including navigating pages, filling forms, clicking buttons, taking screenshots, extracting data, testing web apps, or automating any browser task. Triggers include requests to \"open a website\", \"fill out a form\", \"click a button\", \"take a screenshot\", \"scrape data from a page\", \"test this web app\", \"login to a site\", \"automate browser actions\", or any task requiring programmatic web interaction.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-agent-browser-agent-browser",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/agent-browser && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-agent-browser-agent-browser\"/. ~/.codex/skills/agent-browser/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 65,
+    "downloads": 4385,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "agentic-actions-auditor",
+    "slug": "agentic-actions-auditor",
+    "title": "agentic actions auditor",
+    "descriptionRu": "Навык «agentic-actions-auditor» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Audits GitHub Actions workflows for security vulnerabilities in AI agent integrations including Claude Code Action, Gemini CLI, OpenAI Codex, and GitHub AI Inference. Detects attack vectors where attacker-controlled input reaches AI agents running in CI/CD pipelines, including env var intermediary patterns, direct expression injection, dangerous sandbox configurations, and wildcard user allowlists. Use when reviewing workflow files that invoke AI coding agents, auditing CI/CD pipeline security for prompt injection risks, or evaluating agentic action configurations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/agentic-actions-auditor",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/agentic-actions-auditor && cp -R \"/Users/marklindgreen/.codex/skills/agentic-actions-auditor\"/. ~/.codex/skills/agentic-actions-auditor/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 357,
+    "downloads": 177,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-ai-elements-ai-elements",
+    "slug": "ai-elements",
+    "title": "ai elements",
+    "descriptionRu": "Навык «ai-elements» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Create new AI chat interface components for the ai-elements library following established composable patterns, shadcn/ui integration, and Vercel AI SDK conventions. Use when creating new components in packages/elements/src or when the user asks to add a new component to ai-elements.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-ai-elements-ai-elements",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ai-elements && cp -R \"/Users/marklindgreen/.codex/skills/vercel-ai-elements-ai-elements\"/. ~/.codex/skills/ai-elements/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 381,
+    "downloads": 1481,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ai-slop-cleaner",
+    "slug": "ai-slop-cleaner",
+    "title": "ai slop cleaner",
+    "descriptionRu": "Навык «ai-slop-cleaner» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Run an anti-slop cleanup/refactor/deslop workflow. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ai-slop-cleaner",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ai-slop-cleaner && cp -R \"/Users/marklindgreen/.codex/skills/ai-slop-cleaner\"/. ~/.codex/skills/ai-slop-cleaner/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 33,
+    "downloads": 4653,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": ".custom__aiagentforum",
+    "slug": "aiagentforum",
+    "title": "aiagentforum",
+    "descriptionRu": "Навык «aiagentforum» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Telegram forum where AI agents discuss, debate, and build protocols.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/.custom/aiagentforum",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/aiagentforum && cp -R \"/Users/marklindgreen/.codex/skills/.custom/aiagentforum\"/. ~/.codex/skills/aiagentforum/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 379,
+    "downloads": 4719,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "algorand-vulnerability-scanner",
+    "slug": "algorand-vulnerability-scanner",
+    "title": "algorand vulnerability scanner",
+    "descriptionRu": "Навык «algorand-vulnerability-scanner» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Scans Algorand smart contracts for 11 common vulnerabilities including rekeying attacks, unchecked transaction fees, missing field validations, and access control issues. Use when auditing Algorand projects (TEAL/PyTeal).. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/algorand-vulnerability-scanner",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/algorand-vulnerability-scanner && cp -R \"/Users/marklindgreen/.codex/skills/algorand-vulnerability-scanner\"/. ~/.codex/skills/algorand-vulnerability-scanner/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 107,
+    "downloads": 2207,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__alpha-research",
+    "slug": "alpha-research",
+    "title": "alpha research",
+    "descriptionRu": "Навык «alpha-research» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Search, read, and query research papers via the `alpha` CLI (alphaXiv-backed). Use when the user asks about academic papers, wants to find research on a topic, needs to read a specific paper, ask questions about a paper, inspect a paper's code repository, or manage paper annotations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/alpha-research",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/alpha-research && cp -R \"/Users/marklindgreen/.codex/skills/feynman/alpha-research\"/. ~/.codex/skills/alpha-research/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 217,
+    "downloads": 2617,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "analyze",
+    "slug": "analyze",
+    "title": "analyze",
+    "descriptionRu": "Навык «analyze» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Run read-only deep repository analysis and return a ranked synthesis with explicit confidence, concrete file references, and clear evidence-vs-inference boundaries. Use when a user says 'analyze', 'investigate', 'why does', 'what's causing', or needs grounded cross-file explanation before any changes are proposed.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/analyze",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/analyze && cp -R \"/Users/marklindgreen/.codex/skills/analyze\"/. ~/.codex/skills/analyze/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 73,
+    "downloads": 1133,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ask-claude",
+    "slug": "ask-claude",
+    "title": "ask claude",
+    "descriptionRu": "Навык «ask-claude» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Ask Claude via local CLI and capture a reusable artifact. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ask-claude",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ask-claude && cp -R \"/Users/marklindgreen/.codex/skills/ask-claude\"/. ~/.codex/skills/ask-claude/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 137,
+    "downloads": 3117,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ask-gemini",
+    "slug": "ask-gemini",
+    "title": "ask gemini",
+    "descriptionRu": "Навык «ask-gemini» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Ask Gemini via local CLI and capture a reusable artifact. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ask-gemini",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ask-gemini && cp -R \"/Users/marklindgreen/.codex/skills/ask-gemini\"/. ~/.codex/skills/ask-gemini/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 328,
+    "downloads": 3548,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "atheris",
+    "slug": "atheris",
+    "title": "atheris",
+    "descriptionRu": "Навык «atheris» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/atheris",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/atheris && cp -R \"/Users/marklindgreen/.codex/skills/atheris\"/. ~/.codex/skills/atheris/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 309,
+    "downloads": 3009,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "audit-context-building",
+    "slug": "audit-context-building",
+    "title": "audit context building",
+    "descriptionRu": "Навык «audit-context-building» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Enables ultra-granular, line-by-line code analysis to build deep architectural context before vulnerability or bug finding.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/audit-context-building",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/audit-context-building && cp -R \"/Users/marklindgreen/.codex/skills/audit-context-building\"/. ~/.codex/skills/audit-context-building/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 55,
+    "downloads": 775,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-nextjs-authoring-skills",
+    "slug": "authoring-skills",
+    "title": "authoring skills",
+    "descriptionRu": "Навык «authoring-skills» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-nextjs-authoring-skills",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/authoring-skills && cp -R \"/Users/marklindgreen/.codex/skills/vercel-nextjs-authoring-skills\"/. ~/.codex/skills/authoring-skills/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 359,
+    "downloads": 2799,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "autopilot",
+    "slug": "autopilot",
+    "title": "autopilot",
+    "descriptionRu": "Навык «autopilot» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Full autonomous execution from idea to working code. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/autopilot",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/autopilot && cp -R \"/Users/marklindgreen/.codex/skills/autopilot\"/. ~/.codex/skills/autopilot/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 302,
+    "downloads": 2582,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "autoresearch",
+    "slug": "autoresearch",
+    "title": "autoresearch",
+    "descriptionRu": "Навык «autoresearch» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Stateful validator-gated research loop with native-hook persistence. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/autoresearch",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/autoresearch && cp -R \"/Users/marklindgreen/.codex/skills/autoresearch\"/. ~/.codex/skills/autoresearch/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 45,
+    "downloads": 2505,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__autoresearch",
+    "slug": "autoresearch",
+    "title": "autoresearch",
+    "descriptionRu": "Навык «autoresearch» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Autonomous experiment loop that tries ideas, measures results, keeps what works, and discards what doesn't. Use when the user asks to optimize a metric, run an experiment loop, improve performance iteratively, or automate benchmarking.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/autoresearch",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/autoresearch && cp -R \"/Users/marklindgreen/.codex/skills/feynman/autoresearch\"/. ~/.codex/skills/autoresearch/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 45,
+    "downloads": 2505,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-autoship-autoship",
+    "slug": "autoship",
+    "title": "autoship",
+    "descriptionRu": "Навык «autoship» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: CLI tool for automated changeset-based releases with AI-generated descriptions. Use when the user needs to release a package, create changesets, bump versions, or automate npm publishing workflows. Triggers include requests to \"release a package\", \"create a changeset\", \"publish to npm\", \"bump the version\", \"automate releases\", or any task involving version management and package publishing for repositories using the changesets workflow.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-autoship-autoship",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/autoship && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-autoship-autoship\"/. ~/.codex/skills/autoship/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 298,
+    "downloads": 3498,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-components-build-building-components",
+    "slug": "building-components",
+    "title": "building components",
+    "descriptionRu": "Навык «building-components» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Guide for building modern, accessible, and composable UI components. Use when building new components, implementing accessibility, creating composable APIs, setting up design tokens, publishing to npm/registry, or writing component documentation.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-components-build-building-components",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/building-components && cp -R \"/Users/marklindgreen/.codex/skills/vercel-components-build-building-components\"/. ~/.codex/skills/building-components/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 300,
+    "downloads": 1680,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "cairo-vulnerability-scanner",
+    "slug": "cairo-vulnerability-scanner",
+    "title": "cairo vulnerability scanner",
+    "descriptionRu": "Навык «cairo-vulnerability-scanner» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Scans Cairo/StarkNet smart contracts for 6 critical vulnerabilities including felt252 arithmetic overflow, L1-L2 messaging issues, address conversion problems, and signature replay. Use when auditing StarkNet projects.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/cairo-vulnerability-scanner",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/cairo-vulnerability-scanner && cp -R \"/Users/marklindgreen/.codex/skills/cairo-vulnerability-scanner\"/. ~/.codex/skills/cairo-vulnerability-scanner/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 281,
+    "downloads": 4821,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "cancel",
+    "slug": "cancel",
+    "title": "cancel",
+    "descriptionRu": "Навык «cancel» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Cancel any active OMX mode (autopilot, ralph, ultrawork, ecomode, ultraqa, swarm, ultrapilot, pipeline, team). В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/cancel",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/cancel && cp -R \"/Users/marklindgreen/.codex/skills/cancel\"/. ~/.codex/skills/cancel/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 289,
+    "downloads": 249,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__capa-officer",
+    "slug": "capa-officer",
+    "title": "capa officer",
+    "descriptionRu": "Навык «capa-officer» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: CAPA system management for medical device QMS. Covers root cause analysis, corrective action planning, effectiveness verification, and CAPA metrics. Use for CAPA investigations, 5-Why analysis, fishbone diagrams, root cause determination, corrective action tracking, effectiveness verification, or CAPA program optimization.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/capa-officer",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/capa-officer && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/capa-officer\"/. ~/.codex/skills/capa-officer/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 195,
+    "downloads": 515,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-ai-capture-api-response-test-fixture",
+    "slug": "capture-api-response-test-fixture",
+    "title": "capture api response test fixture",
+    "descriptionRu": "Навык «capture-api-response-test-fixture» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Capture API response test fixture.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-ai-capture-api-response-test-fixture",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/capture-api-response-test-fixture && cp -R \"/Users/marklindgreen/.codex/skills/vercel-ai-capture-api-response-test-fixture\"/. ~/.codex/skills/capture-api-response-test-fixture/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 41,
+    "downloads": 2921,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "code-maturity-assessor",
+    "slug": "code-maturity-assessor",
+    "title": "code maturity assessor",
+    "descriptionRu": "Навык «code-maturity-assessor» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Systematic code maturity assessment using Trail of Bits' 9-category framework. Analyzes codebase for arithmetic safety, auditing practices, access controls, complexity, decentralization, documentation, MEV risks, low-level code, and testing. Produces professional scorecard with evidence-based ratings and actionable recommendations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/code-maturity-assessor",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/code-maturity-assessor && cp -R \"/Users/marklindgreen/.codex/skills/code-maturity-assessor\"/. ~/.codex/skills/code-maturity-assessor/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 274,
+    "downloads": 4234,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "configure-notifications",
+    "slug": "configure-notifications",
+    "title": "configure notifications",
+    "descriptionRu": "Навык «configure-notifications» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Configure OMX notifications - unified entry point for all platforms. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/configure-notifications",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/configure-notifications && cp -R \"/Users/marklindgreen/.codex/skills/configure-notifications\"/. ~/.codex/skills/configure-notifications/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 54,
+    "downloads": 2634,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "constant-time-analysis",
+    "slug": "constant-time-analysis",
+    "title": "constant time analysis",
+    "descriptionRu": "Навык «constant-time-analysis» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Detects timing side-channel vulnerabilities in cryptographic code. Use when implementing or reviewing crypto code, encountering division on secrets, secret-dependent branches, or constant-time programming questions in C, C++, Go, Rust, Swift, Java, Kotlin, C#, PHP, JavaScript, TypeScript, Python, or Ruby.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/constant-time-analysis",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/constant-time-analysis && cp -R \"/Users/marklindgreen/.codex/skills/constant-time-analysis\"/. ~/.codex/skills/constant-time-analysis/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 370,
+    "downloads": 4190,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "constant-time-testing",
+    "slug": "constant-time-testing",
+    "title": "constant time testing",
+    "descriptionRu": "Навык «constant-time-testing» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/constant-time-testing",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/constant-time-testing && cp -R \"/Users/marklindgreen/.codex/skills/constant-time-testing\"/. ~/.codex/skills/constant-time-testing/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 70,
+    "downloads": 1230,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__contributing",
+    "slug": "contributing",
+    "title": "contributing",
+    "descriptionRu": "Навык «contributing» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Contribute changes to the Feynman repository itself. Use when the task is to add features, fix bugs, update prompts or skills, change install or release behavior, improve docs, or prepare a focused PR against this repo.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/contributing",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/contributing && cp -R \"/Users/marklindgreen/.codex/skills/feynman/contributing\"/. ~/.codex/skills/contributing/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 289,
+    "downloads": 329,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "cosmos-vulnerability-scanner",
+    "slug": "cosmos-vulnerability-scanner",
+    "title": "cosmos vulnerability scanner",
+    "descriptionRu": "Навык «cosmos-vulnerability-scanner» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Scans Cosmos SDK blockchains for 9 consensus-critical vulnerabilities including non-determinism, incorrect signers, ABCI panics, and rounding errors. Use when auditing Cosmos chains or CosmWasm contracts.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/cosmos-vulnerability-scanner",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/cosmos-vulnerability-scanner && cp -R \"/Users/marklindgreen/.codex/skills/cosmos-vulnerability-scanner\"/. ~/.codex/skills/cosmos-vulnerability-scanner/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 289,
+    "downloads": 2989,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "coverage-analysis",
+    "slug": "coverage-analysis",
+    "title": "coverage analysis",
+    "descriptionRu": "Навык «coverage-analysis» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/coverage-analysis",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/coverage-analysis && cp -R \"/Users/marklindgreen/.codex/skills/coverage-analysis\"/. ~/.codex/skills/coverage-analysis/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 194,
+    "downloads": 814,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-skill-remotion-geist-create-remotion-geist",
+    "slug": "create-remotion-geist",
+    "title": "create remotion geist",
+    "descriptionRu": "Навык «create-remotion-geist» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Create Remotion videos using the Geist design system aesthetic. Use when asked to create videos, animations, or motion graphics that should follow Vercel's visual style - dark theme, spring animations, Geist typography, and the Geist color palette.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-skill-remotion-geist-create-remotion-geist",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/create-remotion-geist && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-skill-remotion-geist-create-remotion-geist\"/. ~/.codex/skills/create-remotion-geist/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 254,
+    "downloads": 1654,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-dev3000-d3k",
+    "slug": "d3k",
+    "title": "d3k",
+    "descriptionRu": "Навык «d3k» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: d3k assistant for debugging web apps. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-dev3000-d3k",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/d3k && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-dev3000-d3k\"/. ~/.codex/skills/d3k/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 65,
+    "downloads": 2625,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-nextjs-dce-edge",
+    "slug": "dce-edge",
+    "title": "dce edge",
+    "descriptionRu": "Навык «dce-edge» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-nextjs-dce-edge",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/dce-edge && cp -R \"/Users/marklindgreen/.codex/skills/vercel-nextjs-dce-edge\"/. ~/.codex/skills/dce-edge/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 111,
+    "downloads": 1091,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "debug-buttercup",
+    "slug": "debug-buttercup",
+    "title": "debug buttercup",
+    "descriptionRu": "Навык «debug-buttercup» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/debug-buttercup",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/debug-buttercup && cp -R \"/Users/marklindgreen/.codex/skills/debug-buttercup\"/. ~/.codex/skills/debug-buttercup/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 397,
+    "downloads": 1697,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "deep-interview",
+    "slug": "deep-interview",
+    "title": "deep interview",
+    "descriptionRu": "Навык «deep-interview» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Socratic deep interview with mathematical ambiguity gating before execution. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/deep-interview",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/deep-interview && cp -R \"/Users/marklindgreen/.codex/skills/deep-interview\"/. ~/.codex/skills/deep-interview/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 83,
+    "downloads": 4663,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__deep-research",
+    "slug": "deep-research",
+    "title": "deep research",
+    "descriptionRu": "Навык «deep-research» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Run a thorough, source-heavy investigation on any topic. Use when the user asks for deep research, a comprehensive analysis, an in-depth report, or a multi-source investigation. Produces a cited research brief with provenance tracking.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/deep-research",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/deep-research && cp -R \"/Users/marklindgreen/.codex/skills/feynman/deep-research\"/. ~/.codex/skills/deep-research/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 285,
+    "downloads": 1885,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-vercel-deploy-claude-code-plugin-deploy",
+    "slug": "deploy",
+    "title": "deploy",
+    "descriptionRu": "Навык «deploy» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Deploy applications to Vercel. Use when the user says \"deploy\", \"deploy to Vercel\", \"push to production\", \"deploy my app\", or \"go live\".. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-vercel-deploy-claude-code-plugin-deploy",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/deploy && cp -R \"/Users/marklindgreen/.codex/skills/vercel-vercel-deploy-claude-code-plugin-deploy\"/. ~/.codex/skills/deploy/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 118,
+    "downloads": 3038,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-ai-develop-ai-functions-example",
+    "slug": "develop-ai-functions-example",
+    "title": "develop ai functions example",
+    "descriptionRu": "Навык «develop-ai-functions-example» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Develop examples for AI SDK functions. Use when creating, running, or modifying examples under examples/ai-functions/src to validate provider support, demonstrate features, or create test fixtures.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-ai-develop-ai-functions-example",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/develop-ai-functions-example && cp -R \"/Users/marklindgreen/.codex/skills/vercel-ai-develop-ai-functions-example\"/. ~/.codex/skills/develop-ai-functions-example/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 66,
+    "downloads": 4006,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__docker",
+    "slug": "docker",
+    "title": "docker",
+    "descriptionRu": "Навык «docker» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Execute research code inside isolated Docker containers for safe replication, experiments, and benchmarks. Use when the user selects Docker as the execution environment or asks to run code safely, in isolation, or in a sandbox.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/docker",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/docker && cp -R \"/Users/marklindgreen/.codex/skills/feynman/docker\"/. ~/.codex/skills/docker/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 367,
+    "downloads": 287,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "doctor",
+    "slug": "doctor",
+    "title": "doctor",
+    "descriptionRu": "Навык «doctor» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Diagnose and fix oh-my-codex installation issues. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/doctor",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/doctor && cp -R \"/Users/marklindgreen/.codex/skills/doctor\"/. ~/.codex/skills/doctor/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 206,
+    "downloads": 4346,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "dwarf-expert",
+    "slug": "dwarf-expert",
+    "title": "dwarf expert",
+    "descriptionRu": "Навык «dwarf-expert» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Provides expertise for analyzing DWARF debug files and understanding the DWARF debug format/standard (v3-v5). Triggers when understanding DWARF information, interacting with DWARF files, answering DWARF-related questions, or working with code that parses DWARF data.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/dwarf-expert",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/dwarf-expert && cp -R \"/Users/marklindgreen/.codex/skills/dwarf-expert\"/. ~/.codex/skills/dwarf-expert/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 336,
+    "downloads": 2356,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__eli5",
+    "slug": "eli5",
+    "title": "eli5",
+    "descriptionRu": "Навык «eli5» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Explain research, papers, or technical ideas in plain English with minimal jargon, concrete analogies, and clear takeaways. Use when the user says \"ELI5 this\", asks for a simple explanation of a paper or research result, wants jargon removed, or asks what something technically dense actually means.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/eli5",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/eli5 && cp -R \"/Users/marklindgreen/.codex/skills/feynman/eli5\"/. ~/.codex/skills/eli5/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 94,
+    "downloads": 1234,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "entry-point-analyzer",
+    "slug": "entry-point-analyzer",
+    "title": "entry point analyzer",
+    "descriptionRu": "Навык «entry-point-analyzer» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Analyzes smart contract codebases to identify state-changing entry points for security auditing. Detects externally callable functions that modify state, categorizes them by access level (public, admin, role-restricted, contract-only), and generates structured audit reports. Excludes view/pure/read-only functions. Use when auditing smart contracts (Solidity, Vyper, Solana/Rust, Move, TON, CosmWasm) or when asked to find entry points, audit flows, external functions, access control patterns, or privileged operations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/entry-point-analyzer",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/entry-point-analyzer && cp -R \"/Users/marklindgreen/.codex/skills/entry-point-analyzer\"/. ~/.codex/skills/entry-point-analyzer/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 241,
+    "downloads": 2801,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__fda-consultant-specialist",
+    "slug": "fda-consultant-specialist",
+    "title": "fda consultant specialist",
+    "descriptionRu": "Навык «fda-consultant-specialist» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: FDA regulatory consultant for medical device companies. Provides 510(k)/PMA/De Novo pathway guidance, QSR (21 CFR 820) compliance, HIPAA assessments, and device cybersecurity. Use when user mentions FDA submission, 510(k), PMA, De Novo, QSR, premarket, predicate device, substantial equivalence, HIPAA medical device, or FDA cybersecurity.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/fda-consultant-specialist",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/fda-consultant-specialist && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/fda-consultant-specialist\"/. ~/.codex/skills/fda-consultant-specialist/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 210,
+    "downloads": 4850,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-skills-find-skills",
+    "slug": "find-skills",
+    "title": "find skills",
+    "descriptionRu": "Навык «find-skills» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-skills-find-skills",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/find-skills && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-skills-find-skills\"/. ~/.codex/skills/find-skills/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 291,
+    "downloads": 2051,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "fuzzing-dictionary",
+    "slug": "fuzzing-dictionary",
+    "title": "fuzzing dictionary",
+    "descriptionRu": "Навык «fuzzing-dictionary» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/fuzzing-dictionary",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/fuzzing-dictionary && cp -R \"/Users/marklindgreen/.codex/skills/fuzzing-dictionary\"/. ~/.codex/skills/fuzzing-dictionary/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 171,
+    "downloads": 1051,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "fuzzing-obstacles",
+    "slug": "fuzzing-obstacles",
+    "title": "fuzzing obstacles",
+    "descriptionRu": "Навык «fuzzing-obstacles» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/fuzzing-obstacles",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/fuzzing-obstacles && cp -R \"/Users/marklindgreen/.codex/skills/fuzzing-obstacles\"/. ~/.codex/skills/fuzzing-obstacles/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 95,
+    "downloads": 615,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__gdpr-dsgvo-expert",
+    "slug": "gdpr-dsgvo-expert",
+    "title": "gdpr dsgvo expert",
+    "descriptionRu": "Навык «gdpr-dsgvo-expert» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: GDPR and German DSGVO compliance automation. Scans codebases for privacy risks, generates DPIA documentation, tracks data subject rights requests. Use for GDPR compliance assessments, privacy audits, data protection planning, DPIA generation, and data subject rights management.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/gdpr-dsgvo-expert",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/gdpr-dsgvo-expert && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/gdpr-dsgvo-expert\"/. ~/.codex/skills/gdpr-dsgvo-expert/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 281,
+    "downloads": 3521,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "geist-learning-lab",
+    "slug": "geist-learning-lab",
+    "title": "geist learning lab",
+    "descriptionRu": "Навык «geist-learning-lab» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Build explorative, interactive learning experiences as Next.js apps using the Geist design system. Use when creating tutorials, explorable explanations, interactive lessons, code sandboxes, quizzes, or any educational UI. Covers the Learning Loop pedagogy, 23+ learning component patterns, progress tracking, spaced repetition, and Bret-Victor-style interactive exploration — all with Geist's dark-first minimal aesthetic.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/geist-learning-lab",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/geist-learning-lab && cp -R \"/Users/marklindgreen/.codex/skills/geist-learning-lab\"/. ~/.codex/skills/geist-learning-lab/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 30,
+    "downloads": 2590,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-skill-geist-learning-labs-geist-learning-lab",
+    "slug": "geist-learning-lab",
+    "title": "geist learning lab",
+    "descriptionRu": "Навык «geist-learning-lab» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Build explorative, interactive learning experiences as Next.js apps using the Geist design system. Use when creating tutorials, explorable explanations, interactive lessons, code sandboxes, quizzes, or any educational UI. Covers the Learning Loop pedagogy, 23+ learning component patterns, progress tracking, spaced repetition, and Bret-Victor-style interactive exploration — all with Geist's dark-first minimal aesthetic.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-skill-geist-learning-labs-geist-learning-lab",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/geist-learning-lab && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-skill-geist-learning-labs-geist-learning-lab\"/. ~/.codex/skills/geist-learning-lab/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 30,
+    "downloads": 2590,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "guidelines-advisor",
+    "slug": "guidelines-advisor",
+    "title": "guidelines advisor",
+    "descriptionRu": "Навык «guidelines-advisor» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Smart contract development advisor based on Trail of Bits' best practices. Analyzes codebase to generate documentation/specifications, review architecture, check upgradeability patterns, assess implementation quality, identify pitfalls, review dependencies, and evaluate testing. Provides actionable recommendations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/guidelines-advisor",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/guidelines-advisor && cp -R \"/Users/marklindgreen/.codex/skills/guidelines-advisor\"/. ~/.codex/skills/guidelines-advisor/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 129,
+    "downloads": 349,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "harness-writing",
+    "slug": "harness-writing",
+    "title": "harness writing",
+    "descriptionRu": "Навык «harness-writing» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/harness-writing",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/harness-writing && cp -R \"/Users/marklindgreen/.codex/skills/harness-writing\"/. ~/.codex/skills/harness-writing/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 340,
+    "downloads": 260,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "help",
+    "slug": "help",
+    "title": "help",
+    "descriptionRu": "Навык «help» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Guide on using oh-my-codex plugin. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/help",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/help && cp -R \"/Users/marklindgreen/.codex/skills/help\"/. ~/.codex/skills/help/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 52,
+    "downloads": 732,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "hud",
+    "slug": "hud",
+    "title": "hud",
+    "descriptionRu": "Навык «hud» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Show or configure the OMX HUD (two-layer statusline). В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/hud",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/hud && cp -R \"/Users/marklindgreen/.codex/skills/hud\"/. ~/.codex/skills/hud/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 248,
+    "downloads": 3608,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": ".system__imagegen",
+    "slug": "imagegen",
+    "title": "imagegen",
+    "descriptionRu": "Навык «imagegen» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual variants from references, and the output should be a bitmap asset rather than repo-native code or vector. Do not use when the task is better handled by editing existing SVG/vector/code-native assets, extending an established icon or logo system, or building the visual directly in HTML/CSS/canvas.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/.system/imagegen",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/imagegen && cp -R \"/Users/marklindgreen/.codex/skills/.system/imagegen\"/. ~/.codex/skills/imagegen/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 236,
+    "downloads": 3336,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__information-security-manager-iso27001",
+    "slug": "information-security-manager-iso27001",
+    "title": "information security manager iso27001",
+    "descriptionRu": "Навык «information-security-manager-iso27001» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: ISO 27001 ISMS implementation and cybersecurity governance for HealthTech and MedTech companies. Use for ISMS design, security risk assessment, control implementation, ISO 27001 certification, security audits, incident response, and compliance verification. Covers ISO 27001, ISO 27002, healthcare security, and medical device cybersecurity.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/information-security-manager-iso27001",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/information-security-manager-iso27001 && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/information-security-manager-iso27001\"/. ~/.codex/skills/information-security-manager-iso27001/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 104,
+    "downloads": 4844,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "interpreting-culture-index",
+    "slug": "interpreting-culture-index",
+    "title": "interpreting culture index",
+    "descriptionRu": "Навык «interpreting-culture-index» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Interprets Culture Index (CI) surveys, behavioral profiles, and personality assessment data. Supports individual profile interpretation, team composition analysis (gas/brake/glue), burnout detection, profile comparison, hiring profiles, manager coaching, interview transcript analysis for trait prediction, candidate debrief, onboarding planning, and conflict mediation. Accepts extracted JSON or PDF input via OpenCV extraction script.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/interpreting-culture-index",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/interpreting-culture-index && cp -R \"/Users/marklindgreen/.codex/skills/interpreting-culture-index\"/. ~/.codex/skills/interpreting-culture-index/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 34,
+    "downloads": 2794,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__isms-audit-expert",
+    "slug": "isms-audit-expert",
+    "title": "isms audit expert",
+    "descriptionRu": "Навык «isms-audit-expert» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Information Security Management System (ISMS) audit expert for ISO 27001 compliance verification, security control assessment, and certification support. Use when the user mentions ISO 27001, ISMS audit, Annex A controls, Statement of Applicability (SOA), gap analysis, nonconformity management, internal audit, surveillance audit, or security certification preparation. Helps review control implementation evidence, document audit findings, classify nonconformities, generate risk-based audit plans, map controls to Annex A requirements, prepare Stage 1 and Stage 2 audit documentation, and support corrective action workflows.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/isms-audit-expert",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/isms-audit-expert && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/isms-audit-expert\"/. ~/.codex/skills/isms-audit-expert/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 58,
+    "downloads": 1358,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__jobs",
+    "slug": "jobs",
+    "title": "jobs",
+    "descriptionRu": "Навык «jobs» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Inspect active background research work including running processes, scheduled follow-ups, and pending tasks. Use when the user asks what's running, checks on background work, or wants to see scheduled jobs.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/jobs",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/jobs && cp -R \"/Users/marklindgreen/.codex/skills/feynman/jobs\"/. ~/.codex/skills/jobs/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 157,
+    "downloads": 1017,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "json-render-core",
+    "slug": "json-render-core",
+    "title": "json render core",
+    "descriptionRu": "Навык «json-render-core» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Core package for defining schemas, catalogs, and AI prompt generation for json-render. Use when working with @json-render/core, defining schemas, creating catalogs, or building JSON specs for UI/video generation.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/json-render-core",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-core && cp -R \"/Users/marklindgreen/.codex/skills/json-render-core\"/. ~/.codex/skills/json-render-core/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 232,
+    "downloads": 3052,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-json-render-json-render-core",
+    "slug": "json-render-core",
+    "title": "json render core",
+    "descriptionRu": "Навык «json-render-core» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Core package for defining schemas, catalogs, and AI prompt generation for json-render. Use when working with @json-render/core, defining schemas, creating catalogs, or building JSON specs for UI/video generation.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-core",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-core && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-core\"/. ~/.codex/skills/json-render-core/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 232,
+    "downloads": 3052,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "json-render-react",
+    "slug": "json-render-react",
+    "title": "json render react",
+    "descriptionRu": "Навык «json-render-react» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: React renderer for json-render that turns JSON specs into React components. Use when working with @json-render/react, building React UIs from JSON, creating component catalogs, or rendering AI-generated specs.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/json-render-react",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-react && cp -R \"/Users/marklindgreen/.codex/skills/json-render-react\"/. ~/.codex/skills/json-render-react/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 54,
+    "downloads": 1474,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-json-render-json-render-react",
+    "slug": "json-render-react",
+    "title": "json render react",
+    "descriptionRu": "Навык «json-render-react» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: React renderer for json-render that turns JSON specs into React components. Use when working with @json-render/react, building React UIs from JSON, creating component catalogs, or rendering AI-generated specs.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-react",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-react && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-react\"/. ~/.codex/skills/json-render-react/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 54,
+    "downloads": 1474,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "json-render-react-native",
+    "slug": "json-render-react-native",
+    "title": "json render react native",
+    "descriptionRu": "Навык «json-render-react-native» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: React Native renderer for json-render that turns JSON specs into native mobile UIs. Use when working with @json-render/react-native, building React Native UIs from JSON, creating mobile component catalogs, or rendering AI-generated specs on mobile.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/json-render-react-native",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-react-native && cp -R \"/Users/marklindgreen/.codex/skills/json-render-react-native\"/. ~/.codex/skills/json-render-react-native/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 122,
+    "downloads": 1022,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-json-render-json-render-react-native",
+    "slug": "json-render-react-native",
+    "title": "json render react native",
+    "descriptionRu": "Навык «json-render-react-native» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: React Native renderer for json-render that turns JSON specs into native mobile UIs. Use when working with @json-render/react-native, building React Native UIs from JSON, creating mobile component catalogs, or rendering AI-generated specs on mobile.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-react-native",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-react-native && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-react-native\"/. ~/.codex/skills/json-render-react-native/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 122,
+    "downloads": 1022,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "json-render-remotion",
+    "slug": "json-render-remotion",
+    "title": "json render remotion",
+    "descriptionRu": "Навык «json-render-remotion» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Remotion renderer for json-render that turns JSON timeline specs into videos. Use when working with @json-render/remotion, building video compositions from JSON, creating video catalogs, or rendering AI-generated video timelines.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/json-render-remotion",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-remotion && cp -R \"/Users/marklindgreen/.codex/skills/json-render-remotion\"/. ~/.codex/skills/json-render-remotion/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 262,
+    "downloads": 4622,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-json-render-json-render-remotion",
+    "slug": "json-render-remotion",
+    "title": "json render remotion",
+    "descriptionRu": "Навык «json-render-remotion» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Remotion renderer for json-render that turns JSON timeline specs into videos. Use when working with @json-render/remotion, building video compositions from JSON, creating video catalogs, or rendering AI-generated video timelines.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-remotion",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-remotion && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-remotion\"/. ~/.codex/skills/json-render-remotion/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 262,
+    "downloads": 4622,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "json-render-shadcn",
+    "slug": "json-render-shadcn",
+    "title": "json render shadcn",
+    "descriptionRu": "Навык «json-render-shadcn» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Pre-built shadcn/ui components for json-render. Use when working with @json-render/shadcn, adding standard UI components to a catalog, or building web UIs with Radix UI + Tailwind CSS components.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/json-render-shadcn",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-shadcn && cp -R \"/Users/marklindgreen/.codex/skills/json-render-shadcn\"/. ~/.codex/skills/json-render-shadcn/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 48,
+    "downloads": 3568,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-json-render-json-render-shadcn",
+    "slug": "json-render-shadcn",
+    "title": "json render shadcn",
+    "descriptionRu": "Навык «json-render-shadcn» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Pre-built shadcn/ui components for json-render. Use when working with @json-render/shadcn, adding standard UI components to a catalog, or building web UIs with Radix UI + Tailwind CSS components.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-shadcn",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/json-render-shadcn && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-json-render-json-render-shadcn\"/. ~/.codex/skills/json-render-shadcn/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 48,
+    "downloads": 3568,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "libafl",
+    "slug": "libafl",
+    "title": "libafl",
+    "descriptionRu": "Навык «libafl» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/libafl",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/libafl && cp -R \"/Users/marklindgreen/.codex/skills/libafl\"/. ~/.codex/skills/libafl/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 153,
+    "downloads": 3193,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "libfuzzer",
+    "slug": "libfuzzer",
+    "title": "libfuzzer",
+    "descriptionRu": "Навык «libfuzzer» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/libfuzzer",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/libfuzzer && cp -R \"/Users/marklindgreen/.codex/skills/libfuzzer\"/. ~/.codex/skills/libfuzzer/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 370,
+    "downloads": 2590,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-ai-list-npm-package-content",
+    "slug": "list-npm-package-content",
+    "title": "list npm package content",
+    "descriptionRu": "Навык «list-npm-package-content» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: List the contents of an npm package tarball before publishing. Use when the user wants to see what files are included in an npm bundle, verify package contents, or debug npm publish issues.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-ai-list-npm-package-content",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/list-npm-package-content && cp -R \"/Users/marklindgreen/.codex/skills/vercel-ai-list-npm-package-content\"/. ~/.codex/skills/list-npm-package-content/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 116,
+    "downloads": 1236,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__literature-review",
+    "slug": "literature-review",
+    "title": "literature review",
+    "descriptionRu": "Навык «literature-review» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Run a literature review using paper search and primary-source synthesis. Use when the user asks for a lit review, paper survey, state of the art, or academic landscape summary on a research topic.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/literature-review",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/literature-review && cp -R \"/Users/marklindgreen/.codex/skills/feynman/literature-review\"/. ~/.codex/skills/literature-review/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 333,
+    "downloads": 3953,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-vercel-deploy-claude-code-plugin-logs",
+    "slug": "logs",
+    "title": "logs",
+    "descriptionRu": "Навык «logs» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: View Vercel deployment logs. Use when the user says \"show logs\", \"check logs\", \"vercel logs\", or \"what went wrong with the deployment\".. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-vercel-deploy-claude-code-plugin-logs",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/logs && cp -R \"/Users/marklindgreen/.codex/skills/vercel-vercel-deploy-claude-code-plugin-logs\"/. ~/.codex/skills/logs/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 234,
+    "downloads": 1954,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__mdr-745-specialist",
+    "slug": "mdr-745-specialist",
+    "title": "mdr 745 specialist",
+    "descriptionRu": "Навык «mdr-745-specialist» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: EU MDR 2017/745 compliance specialist for medical device classification, technical documentation, clinical evidence, and post-market surveillance. Covers Annex VIII classification rules, Annex II/III technical files, Annex XIV clinical evaluation, and EUDAMED integration.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/mdr-745-specialist",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/mdr-745-specialist && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/mdr-745-specialist\"/. ~/.codex/skills/mdr-745-specialist/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 91,
+    "downloads": 3251,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__modal-compute",
+    "slug": "modal-compute",
+    "title": "modal compute",
+    "descriptionRu": "Навык «modal-compute» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Run GPU workloads on Modal's serverless infrastructure. Use when the user needs remote GPU compute for training, inference, benchmarks, or batch processing and Modal CLI is available.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/modal-compute",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/modal-compute && cp -R \"/Users/marklindgreen/.codex/skills/feynman/modal-compute\"/. ~/.codex/skills/modal-compute/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 320,
+    "downloads": 3820,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-next-skills-next-best-practices",
+    "slug": "next-best-practices",
+    "title": "next best practices",
+    "descriptionRu": "Навык «next-best-practices» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Next.js best practices - file conventions, RSC boundaries, data patterns, async APIs, metadata, error handling, route handlers, image/font optimization, bundling. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-next-skills-next-best-practices",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/next-best-practices && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-next-skills-next-best-practices\"/. ~/.codex/skills/next-best-practices/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 262,
+    "downloads": 2542,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-next-skills-next-cache-components",
+    "slug": "next-cache-components",
+    "title": "next cache components",
+    "descriptionRu": "Навык «next-cache-components» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Next.js 16 Cache Components - PPR, use cache directive, cacheLife, cacheTag, updateTag. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-next-skills-next-cache-components",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/next-cache-components && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-next-skills-next-cache-components\"/. ~/.codex/skills/next-cache-components/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 172,
+    "downloads": 2812,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-next-skills-next-upgrade",
+    "slug": "next-upgrade",
+    "title": "next upgrade",
+    "descriptionRu": "Навык «next-upgrade» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Upgrade Next.js to the latest version following official migration guides and codemods. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-next-skills-next-upgrade",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/next-upgrade && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-next-skills-next-upgrade\"/. ~/.codex/skills/next-upgrade/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 29,
+    "downloads": 3089,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "note",
+    "slug": "note",
+    "title": "note",
+    "descriptionRu": "Навык «note» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Save notes to notepad.md for compaction resilience. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/note",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/note && cp -R \"/Users/marklindgreen/.codex/skills/note\"/. ~/.codex/skills/note/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 165,
+    "downloads": 3125,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "omx-setup",
+    "slug": "omx-setup",
+    "title": "omx setup",
+    "descriptionRu": "Навык «omx-setup» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Setup and configure oh-my-codex using current CLI behavior. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/omx-setup",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/omx-setup && cp -R \"/Users/marklindgreen/.codex/skills/omx-setup\"/. ~/.codex/skills/omx-setup/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 211,
+    "downloads": 511,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": ".system__openai-docs",
+    "slug": "openai-docs",
+    "title": "openai docs",
+    "descriptionRu": "Навык «openai-docs» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Use when the user asks how to build with OpenAI products or APIs and needs up-to-date official documentation with citations, help choosing the latest model for a use case, or model upgrade and prompt-upgrade guidance; prioritize OpenAI docs MCP tools, use bundled references only as helper context, and restrict any fallback browsing to official OpenAI domains.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/.system/openai-docs",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/openai-docs && cp -R \"/Users/marklindgreen/.codex/skills/.system/openai-docs\"/. ~/.codex/skills/openai-docs/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 27,
+    "downloads": 1207,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ossfuzz",
+    "slug": "ossfuzz",
+    "title": "ossfuzz",
+    "descriptionRu": "Навык «ossfuzz» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ossfuzz",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ossfuzz && cp -R \"/Users/marklindgreen/.codex/skills/ossfuzz\"/. ~/.codex/skills/ossfuzz/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 123,
+    "downloads": 4443,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__paper-code-audit",
+    "slug": "paper-code-audit",
+    "title": "paper code audit",
+    "descriptionRu": "Навык «paper-code-audit» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Compare a paper's claims against its public codebase. Use when the user asks to audit a paper, check code-claim consistency, verify reproducibility of a specific paper, or find mismatches between a paper and its implementation.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/paper-code-audit",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/paper-code-audit && cp -R \"/Users/marklindgreen/.codex/skills/feynman/paper-code-audit\"/. ~/.codex/skills/paper-code-audit/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 63,
+    "downloads": 1763,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__paper-writing",
+    "slug": "paper-writing",
+    "title": "paper writing",
+    "descriptionRu": "Навык «paper-writing» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Turn research findings into a polished paper-style draft with sections, equations, and citations. Use when the user asks to write a paper, draft a report, write up findings, or produce a technical document from collected research.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/paper-writing",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/paper-writing && cp -R \"/Users/marklindgreen/.codex/skills/feynman/paper-writing\"/. ~/.codex/skills/paper-writing/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 48,
+    "downloads": 2048,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__peer-review",
+    "slug": "peer-review",
+    "title": "peer review",
+    "descriptionRu": "Навык «peer-review» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Simulate a tough but constructive peer review of an AI research artifact. Use when the user asks for a review, critique, feedback on a paper or draft, or wants to identify weaknesses before submission.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/peer-review",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/peer-review && cp -R \"/Users/marklindgreen/.codex/skills/feynman/peer-review\"/. ~/.codex/skills/peer-review/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 308,
+    "downloads": 2668,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "pipeline",
+    "slug": "pipeline",
+    "title": "pipeline",
+    "descriptionRu": "Навык «pipeline» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Configurable pipeline orchestrator for sequencing stages. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/pipeline",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/pipeline && cp -R \"/Users/marklindgreen/.codex/skills/pipeline\"/. ~/.codex/skills/pipeline/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 177,
+    "downloads": 1817,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "plan",
+    "slug": "plan",
+    "title": "plan",
+    "descriptionRu": "Навык «plan» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Strategic planning with optional interview workflow. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/plan",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/plan && cp -R \"/Users/marklindgreen/.codex/skills/plan\"/. ~/.codex/skills/plan/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 44,
+    "downloads": 444,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": ".system__plugin-creator",
+    "slug": "plugin-creator",
+    "title": "plugin creator",
+    "descriptionRu": "Навык «plugin-creator» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Create and scaffold plugin directories for Codex with a required `.codex-plugin/plugin.json`, optional plugin folders/files, and baseline placeholders you can edit before publishing or testing. Use when Codex needs to create a new local plugin, add optional plugin structure, or generate or update repo-root `.agents/plugins/marketplace.json` entries for plugin ordering and availability metadata.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/.system/plugin-creator",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/plugin-creator && cp -R \"/Users/marklindgreen/.codex/skills/.system/plugin-creator\"/. ~/.codex/skills/plugin-creator/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 185,
+    "downloads": 3205,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-portless-portless",
+    "slug": "portless",
+    "title": "portless",
+    "descriptionRu": "Навык «portless» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Set up and use portless for named local dev server URLs (e.g. http://myapp.localhost instead of http://localhost:3000). Use when integrating portless into a project, configuring dev server names, setting up the local proxy, working with .localhost domains, or troubleshooting port/proxy issues.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-portless-portless",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/portless && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-portless-portless\"/. ~/.codex/skills/portless/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 113,
+    "downloads": 2053,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-nextjs-pr-status-triage",
+    "slug": "pr-status-triage",
+    "title": "pr status triage",
+    "descriptionRu": "Навык «pr-status-triage» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-nextjs-pr-status-triage",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/pr-status-triage && cp -R \"/Users/marklindgreen/.codex/skills/vercel-nextjs-pr-status-triage\"/. ~/.codex/skills/pr-status-triage/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 207,
+    "downloads": 2547,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__preview",
+    "slug": "preview",
+    "title": "preview",
+    "descriptionRu": "Навык «preview» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Preview Markdown, LaTeX, PDF, or code artifacts in the browser or as PDF. Use when the user wants to review a written artifact, export a report, or view a rendered document.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/preview",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/preview && cp -R \"/Users/marklindgreen/.codex/skills/feynman/preview\"/. ~/.codex/skills/preview/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 109,
+    "downloads": 2849,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__qms-audit-expert",
+    "slug": "qms-audit-expert",
+    "title": "qms audit expert",
+    "descriptionRu": "Навык «qms-audit-expert» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: ISO 13485 internal audit expertise for medical device QMS. Covers audit planning, execution, nonconformity classification, and CAPA verification. Use for internal audit planning, audit execution, finding classification, external audit preparation, or audit program management.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/qms-audit-expert",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/qms-audit-expert && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/qms-audit-expert\"/. ~/.codex/skills/qms-audit-expert/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 81,
+    "downloads": 4461,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__quality-documentation-manager",
+    "slug": "quality-documentation-manager",
+    "title": "quality documentation manager",
+    "descriptionRu": "Навык «quality-documentation-manager» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Document control system management for medical device QMS. Covers document numbering, version control, change management, and 21 CFR Part 11 compliance. Use for document control procedures, change control workflow, document numbering, version management, electronic signature compliance, or regulatory documentation review.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/quality-documentation-manager",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/quality-documentation-manager && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/quality-documentation-manager\"/. ~/.codex/skills/quality-documentation-manager/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 293,
+    "downloads": 2593,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__quality-manager-qmr",
+    "slug": "quality-manager-qmr",
+    "title": "quality manager qmr",
+    "descriptionRu": "Навык «quality-manager-qmr» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Senior Quality Manager Responsible Person (QMR) for HealthTech and MedTech companies. Provides quality system governance, management review leadership, regulatory compliance oversight, and quality performance monitoring per ISO 13485 Clause 5.5.2.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/quality-manager-qmr",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/quality-manager-qmr && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/quality-manager-qmr\"/. ~/.codex/skills/quality-manager-qmr/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 137,
+    "downloads": 3357,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__quality-manager-qms-iso13485",
+    "slug": "quality-manager-qms-iso13485",
+    "title": "quality manager qms iso13485",
+    "descriptionRu": "Навык «quality-manager-qms-iso13485» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: ISO 13485 Quality Management System implementation and maintenance for medical device organizations. Provides QMS design, documentation control, internal auditing, CAPA management, and certification support. Use when working with medical device quality systems, preparing for ISO 13485 audits, managing regulatory compliance documentation, setting up corrective actions, or building audit preparation programs. Useful for quality management, audit preparation, regulatory compliance, medical device documentation, and corrective action workflows.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/quality-manager-qms-iso13485",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/quality-manager-qms-iso13485 && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/quality-manager-qms-iso13485\"/. ~/.codex/skills/quality-manager-qms-iso13485/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 185,
+    "downloads": 4945,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team",
+    "slug": "ra-qm-skills",
+    "title": "ra qm skills",
+    "descriptionRu": "Навык «ra-qm-skills» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: 12 production-ready regulatory affairs and quality management skills for HealthTech/MedTech: ISO 13485 QMS, MDR 2017/745, FDA 510(k)/PMA, ISO 27001 ISMS, GDPR/DSGVO compliance, risk management (ISO 14971), CAPA, document control, and internal auditing. Python tools included (all stdlib-only). Works with Claude Code, Codex CLI, and OpenClaw.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ra-qm-skills && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team\"/. ~/.codex/skills/ra-qm-skills/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 396,
+    "downloads": 296,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ralph",
+    "slug": "ralph",
+    "title": "ralph",
+    "descriptionRu": "Навык «ralph» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Self-referential loop until task completion with architect verification. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ralph",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ralph && cp -R \"/Users/marklindgreen/.codex/skills/ralph\"/. ~/.codex/skills/ralph/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 202,
+    "downloads": 2242,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-ralph-gpu-ralph-gpu",
+    "slug": "ralph-gpu",
+    "title": "ralph gpu",
+    "descriptionRu": "Навык «ralph-gpu» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Minimal WebGPU shader library for creative coding and real-time graphics. Provides fullscreen passes, particles, compute shaders, render targets, and ping-pong buffers with automatic uniform bindings and global time/resolution tracking.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-ralph-gpu-ralph-gpu",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ralph-gpu && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-ralph-gpu-ralph-gpu\"/. ~/.codex/skills/ralph-gpu/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 305,
+    "downloads": 245,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ralplan",
+    "slug": "ralplan",
+    "title": "ralplan",
+    "descriptionRu": "Навык «ralplan» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Alias for $plan --consensus. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ralplan",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ralplan && cp -R \"/Users/marklindgreen/.codex/skills/ralplan\"/. ~/.codex/skills/ralplan/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 399,
+    "downloads": 3999,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-nextjs-react-vendoring",
+    "slug": "react-vendoring",
+    "title": "react vendoring",
+    "descriptionRu": "Навык «react-vendoring» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-nextjs-react-vendoring",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/react-vendoring && cp -R \"/Users/marklindgreen/.codex/skills/vercel-nextjs-react-vendoring\"/. ~/.codex/skills/react-vendoring/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 137,
+    "downloads": 977,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__regulatory-affairs-head",
+    "slug": "regulatory-affairs-head",
+    "title": "regulatory affairs head",
+    "descriptionRu": "Навык «regulatory-affairs-head» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Senior Regulatory Affairs Manager for HealthTech and MedTech companies. Prepares FDA 510(k), De Novo, and PMA submission packages; analyzes regulatory pathways for new medical devices; drafts responses to FDA deficiency letters and Notified Body queries; develops CE marking technical documentation under EU MDR 2017/745; coordinates multi-market approval strategies across FDA, EU, Health Canada, PMDA, and NMPA; and maintains regulatory intelligence on evolving standards. Use when users need to plan or execute FDA submissions, navigate 510(k) or PMA approval processes, achieve CE marking, prepare pre-submission meeting materials, write regulatory strategy documents, respond to agency queries, or manage compliance documentation for medical device market access.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/regulatory-affairs-head",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/regulatory-affairs-head && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/regulatory-affairs-head\"/. ~/.codex/skills/regulatory-affairs-head/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 273,
+    "downloads": 2473,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-json-render-remotion-best-practices",
+    "slug": "remotion-best-practices",
+    "title": "remotion best practices",
+    "descriptionRu": "Навык «remotion-best-practices» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Best practices for Remotion - Video creation in React. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-json-render-remotion-best-practices",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/remotion-best-practices && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-json-render-remotion-best-practices\"/. ~/.codex/skills/remotion-best-practices/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 368,
+    "downloads": 2788,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__replication",
+    "slug": "replication",
+    "title": "replication",
+    "descriptionRu": "Навык «replication» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Plan or execute a replication of a paper, claim, or benchmark. Use when the user asks to replicate results, reproduce an experiment, verify a claim empirically, or build a replication package.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/replication",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/replication && cp -R \"/Users/marklindgreen/.codex/skills/feynman/replication\"/. ~/.codex/skills/replication/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 253,
+    "downloads": 3493,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ra-qm-team__risk-management-specialist",
+    "slug": "risk-management-specialist",
+    "title": "risk management specialist",
+    "descriptionRu": "Навык «risk-management-specialist» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Medical device risk management specialist implementing ISO 14971 throughout product lifecycle. Provides risk analysis, risk evaluation, risk control, and post-production information analysis. Use when user mentions risk management, ISO 14971, risk analysis, FMEA, fault tree analysis, hazard identification, risk control, risk matrix, benefit-risk analysis, residual risk, risk acceptability, or post-market risk.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ra-qm-team/risk-management-specialist",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/risk-management-specialist && cp -R \"/Users/marklindgreen/.codex/skills/ra-qm-team/risk-management-specialist\"/. ~/.codex/skills/risk-management-specialist/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 188,
+    "downloads": 1668,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__runpod-compute",
+    "slug": "runpod-compute",
+    "title": "runpod compute",
+    "descriptionRu": "Навык «runpod-compute» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Provision and manage GPU pods on RunPod for long-running experiments. Use when the user needs persistent GPU compute with SSH access, large datasets, or multi-step experiments.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/runpod-compute",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/runpod-compute && cp -R \"/Users/marklindgreen/.codex/skills/feynman/runpod-compute\"/. ~/.codex/skills/runpod-compute/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 307,
+    "downloads": 4007,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-nextjs-runtime-debug",
+    "slug": "runtime-debug",
+    "title": "runtime debug",
+    "descriptionRu": "Навык «runtime-debug» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-nextjs-runtime-debug",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/runtime-debug && cp -R \"/Users/marklindgreen/.codex/skills/vercel-nextjs-runtime-debug\"/. ~/.codex/skills/runtime-debug/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 271,
+    "downloads": 911,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ruzzy",
+    "slug": "ruzzy",
+    "title": "ruzzy",
+    "descriptionRu": "Навык «ruzzy» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ruzzy",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ruzzy && cp -R \"/Users/marklindgreen/.codex/skills/ruzzy\"/. ~/.codex/skills/ruzzy/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 283,
+    "downloads": 4243,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__session-log",
+    "slug": "session-log",
+    "title": "session log",
+    "descriptionRu": "Навык «session-log» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Write a durable session log capturing completed work, findings, open questions, and next steps. Use when the user asks to log progress, save session notes, write up what was done, or create a research diary entry.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/session-log",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/session-log && cp -R \"/Users/marklindgreen/.codex/skills/feynman/session-log\"/. ~/.codex/skills/session-log/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 298,
+    "downloads": 3098,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__session-search",
+    "slug": "session-search",
+    "title": "session search",
+    "descriptionRu": "Навык «session-search» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Search past Feynman session transcripts to recover prior work, conversations, and research context. Use when the user references something from a previous session, asks \"what did we do before\", or when you suspect relevant past context exists.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/session-search",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/session-search && cp -R \"/Users/marklindgreen/.codex/skills/feynman/session-search\"/. ~/.codex/skills/session-search/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 318,
+    "downloads": 2258,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-vercel-deploy-claude-code-plugin-setup",
+    "slug": "setup",
+    "title": "setup",
+    "descriptionRu": "Навык «setup» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Set up Vercel CLI and project configuration. Use when the user says \"set up Vercel\", \"configure Vercel\", \"link to Vercel\", or \"vercel init\".. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-vercel-deploy-claude-code-plugin-setup",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/setup && cp -R \"/Users/marklindgreen/.codex/skills/vercel-vercel-deploy-claude-code-plugin-setup\"/. ~/.codex/skills/setup/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 38,
+    "downloads": 4178,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "skill",
+    "slug": "skill",
+    "title": "skill",
+    "descriptionRu": "Навык «skill» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Manage local skills - list, add, remove, search, edit, setup wizard. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/skill",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/skill && cp -R \"/Users/marklindgreen/.codex/skills/skill\"/. ~/.codex/skills/skill/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 350,
+    "downloads": 570,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": ".system__skill-creator",
+    "slug": "skill-creator",
+    "title": "skill creator",
+    "descriptionRu": "Навык «skill-creator» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Codex's capabilities with specialized knowledge, workflows, or tool integrations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/.system/skill-creator",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/skill-creator && cp -R \"/Users/marklindgreen/.codex/skills/.system/skill-creator\"/. ~/.codex/skills/skill-creator/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 157,
+    "downloads": 957,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-agent-browser-skill-creator",
+    "slug": "skill-creator",
+    "title": "skill creator",
+    "descriptionRu": "Навык «skill-creator» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-agent-browser-skill-creator",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/skill-creator && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-agent-browser-skill-creator\"/. ~/.codex/skills/skill-creator/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 157,
+    "downloads": 957,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-json-render-skill-creator",
+    "slug": "skill-creator",
+    "title": "skill creator",
+    "descriptionRu": "Навык «skill-creator» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-json-render-skill-creator",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/skill-creator && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-json-render-skill-creator\"/. ~/.codex/skills/skill-creator/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 157,
+    "downloads": 957,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-portless-skill-creator",
+    "slug": "skill-creator",
+    "title": "skill creator",
+    "descriptionRu": "Навык «skill-creator» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-portless-skill-creator",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/skill-creator && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-portless-skill-creator\"/. ~/.codex/skills/skill-creator/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 157,
+    "downloads": 957,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": ".system__skill-installer",
+    "slug": "skill-installer",
+    "title": "skill installer",
+    "descriptionRu": "Навык «skill-installer» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Install Codex skills into $CODEX_HOME/skills from a curated list or a GitHub repo path. Use when a user asks to list installable skills, install a curated skill, or install a skill from another repo (including private repos).. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/.system/skill-installer",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/skill-installer && cp -R \"/Users/marklindgreen/.codex/skills/.system/skill-installer\"/. ~/.codex/skills/skill-installer/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 305,
+    "downloads": 3505,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "solana-vulnerability-scanner",
+    "slug": "solana-vulnerability-scanner",
+    "title": "solana vulnerability scanner",
+    "descriptionRu": "Навык «solana-vulnerability-scanner» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Scans Solana programs for 6 critical vulnerabilities including arbitrary CPI, improper PDA validation, missing signer/ownership checks, and sysvar spoofing. Use when auditing Solana/Anchor programs.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/solana-vulnerability-scanner",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/solana-vulnerability-scanner && cp -R \"/Users/marklindgreen/.codex/skills/solana-vulnerability-scanner\"/. ~/.codex/skills/solana-vulnerability-scanner/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 391,
+    "downloads": 3531,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__source-comparison",
+    "slug": "source-comparison",
+    "title": "source comparison",
+    "descriptionRu": "Навык «source-comparison» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Compare multiple sources on a topic and produce a grounded comparison matrix. Use when the user asks to compare papers, tools, approaches, frameworks, or claims across multiple sources.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/source-comparison",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/source-comparison && cp -R \"/Users/marklindgreen/.codex/skills/feynman/source-comparison\"/. ~/.codex/skills/source-comparison/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 164,
+    "downloads": 2444,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "spec-to-code-compliance",
+    "slug": "spec-to-code-compliance",
+    "title": "spec to code compliance",
+    "descriptionRu": "Навык «spec-to-code-compliance» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Verifies code implements exactly what documentation specifies for blockchain audits. Use when comparing code against whitepapers, finding gaps between specs and implementation, or performing compliance checks for protocol implementations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/spec-to-code-compliance",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/spec-to-code-compliance && cp -R \"/Users/marklindgreen/.codex/skills/spec-to-code-compliance\"/. ~/.codex/skills/spec-to-code-compliance/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 212,
+    "downloads": 2112,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "substrate-vulnerability-scanner",
+    "slug": "substrate-vulnerability-scanner",
+    "title": "substrate vulnerability scanner",
+    "descriptionRu": "Навык «substrate-vulnerability-scanner» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Scans Substrate/Polkadot pallets for 7 critical vulnerabilities including arithmetic overflow, panic DoS, incorrect weights, and bad origin checks. Use when auditing Substrate runtimes or FRAME pallets.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/substrate-vulnerability-scanner",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/substrate-vulnerability-scanner && cp -R \"/Users/marklindgreen/.codex/skills/substrate-vulnerability-scanner\"/. ~/.codex/skills/substrate-vulnerability-scanner/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 110,
+    "downloads": 2210,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "supply-chain-risk-auditor",
+    "slug": "supply-chain-risk-auditor",
+    "title": "supply chain risk auditor",
+    "descriptionRu": "Навык «supply-chain-risk-auditor» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Identifies dependencies at heightened risk of exploitation or takeover. Use when assessing supply chain attack surface, evaluating dependency health, or scoping security engagements.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/supply-chain-risk-auditor",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/supply-chain-risk-auditor && cp -R \"/Users/marklindgreen/.codex/skills/supply-chain-risk-auditor\"/. ~/.codex/skills/supply-chain-risk-auditor/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 379,
+    "downloads": 1579,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "team",
+    "slug": "team",
+    "title": "team",
+    "descriptionRu": "Навык «team» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] N coordinated agents on shared task list using tmux-based orchestration. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/team",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/team && cp -R \"/Users/marklindgreen/.codex/skills/team\"/. ~/.codex/skills/team/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 380,
+    "downloads": 180,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "testing-handbook-generator",
+    "slug": "testing-handbook-generator",
+    "title": "testing handbook generator",
+    "descriptionRu": "Навык «testing-handbook-generator» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/testing-handbook-generator",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/testing-handbook-generator && cp -R \"/Users/marklindgreen/.codex/skills/testing-handbook-generator\"/. ~/.codex/skills/testing-handbook-generator/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 310,
+    "downloads": 170,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "token-integration-analyzer",
+    "slug": "token-integration-analyzer",
+    "title": "token integration analyzer",
+    "descriptionRu": "Навык «token-integration-analyzer» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Token integration and implementation analyzer based on Trail of Bits' token integration checklist. Analyzes token implementations for ERC20/ERC721 conformity, checks for 20+ weird token patterns, assesses contract composition and owner privileges, performs on-chain scarcity analysis, and evaluates how protocols handle non-standard tokens. Context-aware for both token implementations and token integrations.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/token-integration-analyzer",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/token-integration-analyzer && cp -R \"/Users/marklindgreen/.codex/skills/token-integration-analyzer\"/. ~/.codex/skills/token-integration-analyzer/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 166,
+    "downloads": 3826,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ton-vulnerability-scanner",
+    "slug": "ton-vulnerability-scanner",
+    "title": "ton vulnerability scanner",
+    "descriptionRu": "Навык «ton-vulnerability-scanner» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Scans TON (The Open Network) smart contracts for 3 critical vulnerabilities including integer-as-boolean misuse, fake Jetton contracts, and forward TON without gas checks. Use when auditing FunC contracts.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ton-vulnerability-scanner",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ton-vulnerability-scanner && cp -R \"/Users/marklindgreen/.codex/skills/ton-vulnerability-scanner\"/. ~/.codex/skills/ton-vulnerability-scanner/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 216,
+    "downloads": 4416,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "trace",
+    "slug": "trace",
+    "title": "trace",
+    "descriptionRu": "Навык «trace» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Show agent flow trace timeline and summary. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/trace",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/trace && cp -R \"/Users/marklindgreen/.codex/skills/trace\"/. ~/.codex/skills/trace/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 394,
+    "downloads": 2554,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ucp",
+    "slug": "ucp",
+    "title": "ucp",
+    "descriptionRu": "Навык «ucp» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: локальный рабочий сценарий из установленной библиотеки Codex. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ucp",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ucp && cp -R \"/Users/marklindgreen/.codex/skills/ucp\"/. ~/.codex/skills/ucp/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 35,
+    "downloads": 855,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ultraqa",
+    "slug": "ultraqa",
+    "title": "ultraqa",
+    "descriptionRu": "Навык «ultraqa» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] QA cycling workflow - test, verify, fix, repeat until goal met. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ultraqa",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ultraqa && cp -R \"/Users/marklindgreen/.codex/skills/ultraqa\"/. ~/.codex/skills/ultraqa/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 165,
+    "downloads": 4065,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "ultrawork",
+    "slug": "ultrawork",
+    "title": "ultrawork",
+    "descriptionRu": "Навык «ultrawork» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Parallel execution engine for high-throughput task completion. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/ultrawork",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/ultrawork && cp -R \"/Users/marklindgreen/.codex/skills/ultrawork\"/. ~/.codex/skills/ultrawork/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 398,
+    "downloads": 438,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-nextjs-update-docs",
+    "slug": "update-docs",
+    "title": "update docs",
+    "descriptionRu": "Навык «update-docs» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: This skill should be used when the user asks to \"update documentation for my changes\", \"check docs for this PR\", \"what docs need updating\", \"sync docs with code\", \"scaffold docs for this feature\", \"document this feature\", \"review docs completeness\", \"add docs for this change\", \"what documentation is affected\", \"docs impact\", or mentions \"docs/\", \"docs/01-app\", \"docs/02-pages\", \"MDX\", \"documentation update\", \"API reference\", \".mdx files\". Provides guided workflow for updating Next.js documentation based on code changes.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-nextjs-update-docs",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/update-docs && cp -R \"/Users/marklindgreen/.codex/skills/vercel-nextjs-update-docs\"/. ~/.codex/skills/update-docs/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 104,
+    "downloads": 1284,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-vercel-vercel-cli",
+    "slug": "vercel-cli",
+    "title": "vercel cli",
+    "descriptionRu": "Навык «vercel-cli» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Deploy, manage, and develop projects on Vercel from the command line. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-vercel-vercel-cli",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-cli && cp -R \"/Users/marklindgreen/.codex/skills/vercel-vercel-vercel-cli\"/. ~/.codex/skills/vercel-cli/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 213,
+    "downloads": 1413,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-agent-skills-composition-patterns",
+    "slug": "vercel-composition-patterns",
+    "title": "vercel composition patterns",
+    "descriptionRu": "Навык «vercel-composition-patterns» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Composition patterns for building flexible, maintainable React components. Avoid boolean prop proliferation by using compound components, lifting state, and composing internals. These patterns make codebases easier for both humans and AI agents to work with as. Описание подготовлено на основе установленного SKILL.md.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-composition-patterns",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-composition-patterns && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-composition-patterns\"/. ~/.codex/skills/vercel-composition-patterns/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 81,
+    "downloads": 681,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-deploy.backup-20260218",
+    "slug": "vercel-deploy",
+    "title": "vercel deploy",
+    "descriptionRu": "Навык «vercel-deploy» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Deploy applications and websites to Vercel. Use when the user requests deployment actions like \"deploy my app\", \"deploy and give me the link\", \"push this live\", or \"create a preview deployment\".. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-deploy.backup-20260218",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-deploy && cp -R \"/Users/marklindgreen/.codex/skills/vercel-deploy.backup-20260218\"/. ~/.codex/skills/vercel-deploy/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 294,
+    "downloads": 4234,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-agent-skills-vercel-deploy-claimable",
+    "slug": "vercel-deploy",
+    "title": "vercel deploy",
+    "descriptionRu": "Навык «vercel-deploy» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Deploy applications and websites to Vercel. Use this skill when the user requests deployment actions such as \"Deploy my app\", \"Deploy this to production\", \"Create a preview deployment\", \"Deploy and give me the link\", or \"Push this live\". No authentication required - returns preview URL and claimable deployment link.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-vercel-deploy-claimable",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-deploy && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-vercel-deploy-claimable\"/. ~/.codex/skills/vercel-deploy/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 294,
+    "downloads": 4234,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-vercel-deploy-codex-skill-vercel-deploy",
+    "slug": "vercel-deploy",
+    "title": "vercel deploy",
+    "descriptionRu": "Навык «vercel-deploy» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Deploy applications and websites to Vercel with a claimable preview. Use when the user requests deployment actions like \"deploy my app\", \"deploy and give me the link\", \"push this live\", or \"create a preview deployment\". No authentication required - returns preview URL and claimable deployment link.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-vercel-deploy-codex-skill-vercel-deploy",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-deploy && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-vercel-deploy-codex-skill-vercel-deploy\"/. ~/.codex/skills/vercel-deploy/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 294,
+    "downloads": 4234,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-agent-eval-vercel-react-best-practices",
+    "slug": "vercel-react-best-practices",
+    "title": "vercel react best practices",
+    "descriptionRu": "Навык «vercel-react-best-practices» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-agent-eval-vercel-react-best-practices",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-react-best-practices && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-agent-eval-vercel-react-best-practices\"/. ~/.codex/skills/vercel-react-best-practices/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 388,
+    "downloads": 3628,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-agent-skills-react-best-practices",
+    "slug": "vercel-react-best-practices",
+    "title": "vercel react best practices",
+    "descriptionRu": "Навык «vercel-react-best-practices» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-react-best-practices",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-react-best-practices && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-react-best-practices\"/. ~/.codex/skills/vercel-react-best-practices/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 388,
+    "downloads": 3628,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-cursor-plugin-vercel-react-best-practices",
+    "slug": "vercel-react-best-practices",
+    "title": "vercel react best practices",
+    "descriptionRu": "Навык «vercel-react-best-practices» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-cursor-plugin-vercel-react-best-practices",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-react-best-practices && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-cursor-plugin-vercel-react-best-practices\"/. ~/.codex/skills/vercel-react-best-practices/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 388,
+    "downloads": 3628,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-sandcastle-vercel-react-best-practices",
+    "slug": "vercel-react-best-practices",
+    "title": "vercel react best practices",
+    "descriptionRu": "Навык «vercel-react-best-practices» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-sandcastle-vercel-react-best-practices",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-react-best-practices && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-sandcastle-vercel-react-best-practices\"/. ~/.codex/skills/vercel-react-best-practices/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 388,
+    "downloads": 3628,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-agent-skills-react-native-skills",
+    "slug": "vercel-react-native-skills",
+    "title": "vercel react native skills",
+    "descriptionRu": "Навык «vercel-react-native-skills» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Comprehensive best practices for React Native and Expo applications. Contains rules across multiple categories covering performance, animations, UI patterns, and platform-specific optimizations.. Описание подготовлено на основе установленного SKILL.md.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-react-native-skills",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/vercel-react-native-skills && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-react-native-skills\"/. ~/.codex/skills/vercel-react-native-skills/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 35,
+    "downloads": 4235,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "visual-ralph",
+    "slug": "visual-ralph",
+    "title": "visual ralph",
+    "descriptionRu": "Навык «visual-ralph» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Visual Ralph orchestration for frontend UI from generated references, static references, or live URL targets, using $ralph with $visual-verdict and pixel-diff evidence until the implementation matches and leaves a reproducible design system.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/visual-ralph",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/visual-ralph && cp -R \"/Users/marklindgreen/.codex/skills/visual-ralph\"/. ~/.codex/skills/visual-ralph/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 59,
+    "downloads": 939,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "visual-verdict",
+    "slug": "visual-verdict",
+    "title": "visual verdict",
+    "descriptionRu": "Навык «visual-verdict» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Structured visual QA verdict for screenshot-to-reference comparisons. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/visual-verdict",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/visual-verdict && cp -R \"/Users/marklindgreen/.codex/skills/visual-verdict\"/. ~/.codex/skills/visual-verdict/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 375,
+    "downloads": 555,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "feynman__watch",
+    "slug": "watch",
+    "title": "watch",
+    "descriptionRu": "Навык «watch» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Set up a recurring research watch on a topic, company, paper area, or product surface. Use when the user asks to monitor a field, track new papers, watch for updates, or set up alerts on a research area.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/feynman/watch",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/watch && cp -R \"/Users/marklindgreen/.codex/skills/feynman/watch\"/. ~/.codex/skills/watch/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 112,
+    "downloads": 1532,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-examples-web-design-guidelines",
+    "slug": "web-design-guidelines",
+    "title": "web design guidelines",
+    "descriptionRu": "Навык «web-design-guidelines» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-examples-web-design-guidelines",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/web-design-guidelines && cp -R \"/Users/marklindgreen/.codex/skills/vercel-examples-web-design-guidelines\"/. ~/.codex/skills/web-design-guidelines/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 174,
+    "downloads": 1214,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-agent-eval-web-design-guidelines",
+    "slug": "web-design-guidelines",
+    "title": "web design guidelines",
+    "descriptionRu": "Навык «web-design-guidelines» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-agent-eval-web-design-guidelines",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/web-design-guidelines && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-agent-eval-web-design-guidelines\"/. ~/.codex/skills/web-design-guidelines/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 174,
+    "downloads": 1214,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-agent-skills-web-design-guidelines",
+    "slug": "web-design-guidelines",
+    "title": "web design guidelines",
+    "descriptionRu": "Навык «web-design-guidelines» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-web-design-guidelines",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/web-design-guidelines && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-agent-skills-web-design-guidelines\"/. ~/.codex/skills/web-design-guidelines/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 174,
+    "downloads": 1214,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "vercel-labs-sandcastle-web-design-guidelines",
+    "slug": "web-design-guidelines",
+    "title": "web design guidelines",
+    "descriptionRu": "Навык «web-design-guidelines» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/vercel-labs-sandcastle-web-design-guidelines",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/web-design-guidelines && cp -R \"/Users/marklindgreen/.codex/skills/vercel-labs-sandcastle-web-design-guidelines\"/. ~/.codex/skills/web-design-guidelines/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 174,
+    "downloads": 1214,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "wiki",
+    "slug": "wiki",
+    "title": "wiki",
+    "descriptionRu": "Навык «wiki» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Persistent markdown project wiki stored under .omx/wiki with keyword search and lifecycle capture. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/wiki",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/wiki && cp -R \"/Users/marklindgreen/.codex/skills/wiki\"/. ~/.codex/skills/wiki/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 43,
+    "downloads": 603,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "worker",
+    "slug": "worker",
+    "title": "worker",
+    "descriptionRu": "Навык «worker» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: [OMX] Team worker protocol (ACK, mailbox, task lifecycle) for tmux-based OMX teams. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/worker",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/worker && cp -R \"/Users/marklindgreen/.codex/skills/worker\"/. ~/.codex/skills/worker/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 181,
+    "downloads": 1221,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "wycheproof",
+    "slug": "wycheproof",
+    "title": "wycheproof",
+    "descriptionRu": "Навык «wycheproof» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Используется в Codex как готовый рабочий сценарий; можно установить и запускать по имени навыка.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/wycheproof",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/wycheproof && cp -R \"/Users/marklindgreen/.codex/skills/wycheproof\"/. ~/.codex/skills/wycheproof/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 261,
+    "downloads": 3061,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "zeroize-audit",
+    "slug": "zeroize-audit",
+    "title": "zeroize audit",
+    "descriptionRu": "Навык «zeroize-audit» помогает быстро запускать готовый сценарий работы в Codex. Основа описания: Detects missing zeroization of sensitive data in source code and identifies zeroization removed by compiler optimizations, with assembly-level analysis, and control-flow verification. Use for auditing C/C++/Rust code handling secrets, keys, passwords, or other sensitive data.. В карточке есть команда установки, источник пакета и счетчики интереса, чтобы понять, какие навыки чаще копируют и переиспользуют.",
+    "source": "codex-local",
+    "sourcePath": "/Users/marklindgreen/.codex/skills/zeroize-audit",
+    "githubRepo": null,
+    "installCommand": "mkdir -p ~/.codex/skills/zeroize-audit && cp -R \"/Users/marklindgreen/.codex/skills/zeroize-audit\"/. ~/.codex/skills/zeroize-audit/",
+    "tags": [
+      "codex-local"
+    ],
+    "likes": 303,
+    "downloads": 363,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "thinking-partner",
+    "slug": "thinking-partner",
+    "title": "thinking-partner",
+    "descriptionRu": "Коллаборативный партнёр для обсуждения сложных проблем через вопросы",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/thinking-partner",
+    "githubRepo": null,
+    "installCommand": "clawdhub install thinking-partner",
+    "tags": [
+      "thinking",
+      "brainstorm",
+      "research",
+      "planning"
+    ],
+    "likes": 2,
+    "downloads": 142,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "word-docx",
+    "slug": "word-docx",
+    "title": "Word / Docx",
+    "descriptionRu": "Чтение и генерация Word-документов с правильной структурой и стилями",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/word-docx",
+    "githubRepo": null,
+    "installCommand": "clawdhub install word-docx",
+    "tags": [
+      "word",
+      "docx",
+      "document",
+      "office"
+    ],
+    "likes": 14,
+    "downloads": 82,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "openclaw-anything",
+    "slug": "openclaw-anything",
+    "title": "openclaw",
+    "descriptionRu": "OpenClaw CLI — шлюзы, каналы, модели, агенты, браузер, память, безопасность, автоматизация",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/openclaw-anything",
+    "githubRepo": null,
+    "installCommand": "clawdhub install openclaw-anything",
+    "tags": [
+      "openclaw",
+      "cli",
+      "gateway",
+      "agents",
+      "automation"
+    ],
+    "likes": 40,
+    "downloads": 44,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "automation-workflows",
+    "slug": "automation-workflows",
+    "title": "automation-workflows",
+    "descriptionRu": "Проектирование и внедрение автоматизированных рабочих процессов (Zapier, Make, n8n)",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/automation-workflows",
+    "githubRepo": null,
+    "installCommand": "clawdhub install automation-workflows",
+    "tags": [
+      "automation",
+      "workflow",
+      "no-code",
+      "orchestration"
+    ],
+    "likes": 19,
+    "downloads": 54,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "humanizer",
+    "slug": "humanizer",
+    "title": "humanizer",
+    "descriptionRu": "Удаление признаков AI-текста: inflated symbolism, promotional language, em dash overuse и других паттернов",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/humanizer",
+    "githubRepo": null,
+    "installCommand": "clawdhub install humanizer",
+    "tags": [
+      "humanize",
+      "editing",
+      "slop",
+      "text",
+      "review"
+    ],
+    "likes": 19,
+    "downloads": 191,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "obsidian",
+    "slug": "obsidian",
+    "title": "obsidian",
+    "descriptionRu": "Работа с Obsidian vaults (plain Markdown) и автоматизация через obsidian-cli",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/obsidian",
+    "githubRepo": null,
+    "installCommand": "clawdhub install obsidian",
+    "tags": [
+      "obsidian",
+      "notes",
+      "markdown",
+      "knowledge"
+    ],
+    "likes": 29,
+    "downloads": 168,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "superdesign",
+    "slug": "superdesign",
+    "title": "frontend-design",
+    "descriptionRu": "Экспертные гайдлайны для создания красивых современных UI: landing pages, dashboards, интерфейсы",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/superdesign",
+    "githubRepo": null,
+    "installCommand": "clawdhub install superdesign",
+    "tags": [
+      "frontend",
+      "design",
+      "UI",
+      "landing",
+      "dashboard"
+    ],
+    "likes": 1,
+    "downloads": 170,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "sag",
+    "slug": "sag",
+    "title": "sag",
+    "descriptionRu": "ElevenLabs text-to-speech с macOS-стилем say UX",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/sag",
+    "githubRepo": null,
+    "installCommand": "clawdhub install sag",
+    "tags": [
+      "tts",
+      "elevenlabs",
+      "voice",
+      "audio",
+      "macos"
+    ],
+    "likes": 34,
+    "downloads": 59,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "proactive-agent",
+    "slug": "proactive-agent",
+    "title": "proactive-agent",
+    "descriptionRu": "Превращение AI-агентов из исполнителей в проактивных партнёров с WAL Protocol, Autonomous Crons",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/proactive-agent",
+    "githubRepo": null,
+    "installCommand": "clawdhub install proactive-agent",
+    "tags": [
+      "proactive",
+      "agent",
+      "self-improving",
+      "orchestration"
+    ],
+    "likes": 4,
+    "downloads": 165,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "mcporter",
+    "slug": "mcporter",
+    "title": "mcporter",
+    "descriptionRu": "MCP CLI для управления серверами и инструментами (HTTP/stdio), включая ad-hoc серверы",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/mcporter",
+    "githubRepo": null,
+    "installCommand": "clawdhub install mcporter",
+    "tags": [
+      "mcp",
+      "cli",
+      "tools",
+      "devops"
+    ],
+    "likes": 10,
+    "downloads": 186,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "agentd-global-orchestrator",
+    "slug": "agentd-global-orchestrator",
+    "title": "agentd-global-orchestrator",
+    "descriptionRu": "Единый глобальный оркестратор AgentD: один prompt → планирование → dispatch subagents → проверки",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/agentd-global-orchestrator",
+    "githubRepo": null,
+    "installCommand": "clawdhub install agentd-global-orchestrator",
+    "tags": [
+      "agentd",
+      "orchestrator",
+      "autopilot",
+      "pipeline"
+    ],
+    "likes": 9,
+    "downloads": 71,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "google-sheets",
+    "slug": "google-sheets",
+    "title": "google-sheets",
+    "descriptionRu": "Google Sheets API: чтение, запись, форматирование таблиц через OAuth",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/google-sheets",
+    "githubRepo": null,
+    "installCommand": "clawdhub install google-sheets",
+    "tags": [
+      "google-sheets",
+      "spreadsheet",
+      "api",
+      "oauth"
+    ],
+    "likes": 47,
+    "downloads": 134,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "x-twitter",
+    "slug": "x-twitter",
+    "title": "twitter-openclaw",
+    "descriptionRu": "Twitter/X взаимодействие: чтение твитов, поиск, постинг, лайки, ретвиты, управление лентой",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/x-twitter",
+    "githubRepo": null,
+    "installCommand": "clawdhub install x-twitter",
+    "tags": [
+      "twitter",
+      "social-media",
+      "research"
+    ],
+    "likes": 4,
+    "downloads": 167,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "byterover",
+    "slug": "byterover",
+    "title": "byterover",
+    "descriptionRu": "Knowledge management для AI-агентов: хранение и поиск проектных паттернов и архитектурных правил через brv",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/byterover",
+    "githubRepo": null,
+    "installCommand": "clawdhub install byterover",
+    "tags": [
+      "knowledge",
+      "patterns",
+      "decisions",
+      "planning"
+    ],
+    "likes": 30,
+    "downloads": 29,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "apple-reminders",
+    "slug": "apple-reminders",
+    "title": "apple-reminders",
+    "descriptionRu": "Управление Apple Reminders через remindctl CLI: list, add, edit, complete, delete",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/apple-reminders",
+    "githubRepo": "https://github.com/steipete/remindctl",
+    "installCommand": "clawdhub install apple-reminders",
+    "tags": [
+      "reminders",
+      "todo",
+      "macos"
+    ],
+    "likes": 37,
+    "downloads": 26,
+    "stars": 282,
+    "updatedAt": "2026-04-09T21:19:56.581Z"
+  },
+  {
+    "id": "memory-setup",
+    "slug": "memory-setup",
+    "title": "memory-setup",
+    "descriptionRu": "Настройка Moltbot/Clawdbot memory search: MEMORY.md, daily logs, векторный поиск",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/memory-setup",
+    "githubRepo": null,
+    "installCommand": "clawdhub install memory-setup",
+    "tags": [
+      "memory",
+      "vector-search",
+      "context",
+      "devops"
+    ],
+    "likes": 26,
+    "downloads": 3,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "clawdhub",
+    "slug": "clawdhub",
+    "title": "clawdhub",
+    "descriptionRu": "CLI для поиска, установки, обновления и публикации agent skills на clawdhub.com",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/clawdhub",
+    "githubRepo": null,
+    "installCommand": "clawdhub install clawdhub",
+    "tags": [
+      "clawdhub",
+      "skill-install",
+      "skill-publish",
+      "cli"
+    ],
+    "likes": 35,
+    "downloads": 160,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "pipedrive-api",
+    "slug": "pipedrive-api",
+    "title": "pipedrive",
+    "descriptionRu": "Pipedrive CRM API: сделки, контакты, организации, активности через OAuth",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/pipedrive-api",
+    "githubRepo": null,
+    "installCommand": "clawdhub install pipedrive-api",
+    "tags": [
+      "pipedrive",
+      "crm",
+      "deals",
+      "api"
+    ],
+    "likes": 10,
+    "downloads": 4,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "moltbook-interact",
+    "slug": "moltbook-interact",
+    "title": "moltbook",
+    "descriptionRu": "Moltbook — социальная сеть для AI-агентов: посты, ответы, аналитика",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/moltbook-interact",
+    "githubRepo": null,
+    "installCommand": "clawdhub install moltbook-interact",
+    "tags": [
+      "moltbook",
+      "social-network",
+      "agent"
+    ],
+    "likes": 7,
+    "downloads": 136,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "self-reflection",
+    "slug": "self-reflection",
+    "title": "self-reflection",
+    "descriptionRu": "Постоянное самоулучшение через структурированную рефлексию и память",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/self-reflection",
+    "githubRepo": null,
+    "installCommand": "clawdhub install self-reflection",
+    "tags": [
+      "self-reflection",
+      "improvement",
+      "lessons-learned"
+    ],
+    "likes": 17,
+    "downloads": 143,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "agentmail",
+    "slug": "agentmail",
+    "title": "agentmail",
+    "descriptionRu": "API-first email для AI-агентов: inbox, отправка, webhook события",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/agentmail",
+    "githubRepo": null,
+    "installCommand": "clawdhub install agentmail",
+    "tags": [
+      "email",
+      "inbox",
+      "webhook",
+      "api"
+    ],
+    "likes": 38,
+    "downloads": 169,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "imap-smtp-email",
+    "slug": "imap-smtp-email",
+    "title": "imap-smtp-email",
+    "descriptionRu": "Чтение и отправка email через IMAP/SMTP: Gmail, Outlook, 163.com, 126.com",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/imap-smtp-email",
+    "githubRepo": null,
+    "installCommand": "clawdhub install imap-smtp-email",
+    "tags": [
+      "email",
+      "imap",
+      "smtp",
+      "send"
+    ],
+    "likes": 37,
+    "downloads": 119,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "output-policy",
+    "slug": "output-policy",
+    "title": "output-policy",
+    "descriptionRu": "Глобальная политика вывода: русский executive-стиль, BLUF, ASCII",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/output-policy",
+    "githubRepo": null,
+    "installCommand": "clawdhub install output-policy",
+    "tags": [
+      "output",
+      "style",
+      "russian"
+    ],
+    "likes": 47,
+    "downloads": 119,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "discord",
+    "slug": "discord",
+    "title": "discord",
+    "descriptionRu": "Управление Discord через Clawdbot: сообщения, реакции, стикеры, emoji, polls, модерация",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/discord",
+    "githubRepo": null,
+    "installCommand": "clawdhub install discord",
+    "tags": [
+      "discord",
+      "messaging",
+      "bot",
+      "moderation"
+    ],
+    "likes": 1,
+    "downloads": 199,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "self-improving",
+    "slug": "self-improving",
+    "title": "Self-Improving Agent",
+    "descriptionRu": "Саморефлексия + самокритика + самообучение + самоорганизующаяся память агента",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/self-improving",
+    "githubRepo": null,
+    "installCommand": "clawdhub install self-improving",
+    "tags": [
+      "self-improving",
+      "reflection",
+      "learning"
+    ],
+    "likes": 23,
+    "downloads": 151,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "system-inventory",
+    "slug": "system-inventory",
+    "title": "system-inventory",
+    "descriptionRu": "Единый источник правды: секреты, MCP-серверы, инструменты, репозитории",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/system-inventory",
+    "githubRepo": null,
+    "installCommand": "clawdhub install system-inventory",
+    "tags": [
+      "inventory",
+      "secrets",
+      "mcp",
+      "tools",
+      "devops"
+    ],
+    "likes": 27,
+    "downloads": 37,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "peekaboo",
+    "slug": "peekaboo",
+    "title": "peekaboo",
+    "descriptionRu": "Захват и автоматизация macOS UI через Peekaboo CLI",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/peekaboo",
+    "githubRepo": null,
+    "installCommand": "clawdhub install peekaboo",
+    "tags": [
+      "macos",
+      "ui-automation",
+      "screenshot",
+      "testing"
+    ],
+    "likes": 14,
+    "downloads": 87,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "brave-search",
+    "slug": "brave-search",
+    "title": "brave-search",
+    "descriptionRu": "Веб-поиск и извлечение контента через Brave Search API",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/brave-search",
+    "githubRepo": null,
+    "installCommand": "clawdhub install brave-search",
+    "tags": [
+      "search",
+      "brave",
+      "web-search",
+      "research"
+    ],
+    "likes": 43,
+    "downloads": 9,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "edge-tts",
+    "slug": "edge-tts",
+    "title": "edge-tts",
+    "descriptionRu": "Text-to-speech через node-edge-tts: голоса, языки, скорость, pitch, субтитры",
+    "source": "agent-hub-skills",
+    "sourcePath": "~/.ai-agent-hub/skills/edge-tts",
+    "githubRepo": null,
+    "installCommand": "clawdhub install edge-tts",
+    "tags": [
+      "tts",
+      "text-to-speech",
+      "audio",
+      "voice"
+    ],
+    "likes": 24,
+    "downloads": 47,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "react-patterns",
+    "slug": "react-patterns",
+    "title": "react-patterns",
+    "descriptionRu": "React 19: Server Components, Actions, Suspense, хуки и композиция компонентов",
+    "source": "agent-hub-knowledge",
+    "sourcePath": "~/.ai-agent-hub/knowledge/skills/react-patterns",
+    "githubRepo": null,
+    "installCommand": "clawdhub install react-patterns",
+    "tags": [
+      "react",
+      "server-components",
+      "hooks",
+      "frontend"
+    ],
+    "likes": 11,
+    "downloads": 5,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "mcp-development",
+    "slug": "mcp-development",
+    "title": "mcp-development",
+    "descriptionRu": "Разработка MCP-серверов: tool design, resources, prompts, transport",
+    "source": "agent-hub-knowledge",
+    "sourcePath": "~/.ai-agent-hub/knowledge/skills/mcp-development",
+    "githubRepo": null,
+    "installCommand": "clawdhub install mcp-development",
+    "tags": [
+      "mcp",
+      "server",
+      "tools",
+      "sdk"
+    ],
+    "likes": 48,
+    "downloads": 105,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "nextjs-mastery",
+    "slug": "nextjs-mastery",
+    "title": "nextjs-mastery",
+    "descriptionRu": "Next.js 14+ App Router: RSC, ISR, middleware, parallel routes, data fetching",
+    "source": "agent-hub-knowledge",
+    "sourcePath": "~/.ai-agent-hub/knowledge/skills/nextjs-mastery",
+    "githubRepo": null,
+    "installCommand": "clawdhub install nextjs-mastery",
+    "tags": [
+      "nextjs",
+      "app-router",
+      "rsc",
+      "frontend"
+    ],
+    "likes": 32,
+    "downloads": 168,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "mobile-development",
+    "slug": "mobile-development",
+    "title": "mobile-development",
+    "descriptionRu": "Мобильная разработка: React Native и Flutter — навигация, state, responsive design",
+    "source": "agent-hub-knowledge",
+    "sourcePath": "~/.ai-agent-hub/knowledge/skills/mobile-development",
+    "githubRepo": null,
+    "installCommand": "clawdhub install mobile-development",
+    "tags": [
+      "mobile",
+      "react-native",
+      "flutter",
+      "ios",
+      "android"
+    ],
+    "likes": 27,
+    "downloads": 11,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "frontend-excellence",
+    "slug": "frontend-excellence",
+    "title": "frontend-excellence",
+    "descriptionRu": "Современные frontend-паттерны: RSC, performance, Core Web Vitals",
+    "source": "agent-hub-knowledge",
+    "sourcePath": "~/.ai-agent-hub/knowledge/skills/frontend-excellence",
+    "githubRepo": null,
+    "installCommand": "clawdhub install frontend-excellence",
+    "tags": [
+      "frontend",
+      "performance",
+      "web-vitals",
+      "optimization"
+    ],
+    "likes": 0,
+    "downloads": 132,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "llm-integration",
+    "slug": "llm-integration",
+    "title": "llm-integration",
+    "descriptionRu": "LLM-интеграция: API, streaming, function calling, RAG, cost optimization",
+    "source": "agent-hub-knowledge",
+    "sourcePath": "~/.ai-agent-hub/knowledge/skills/llm-integration",
+    "githubRepo": null,
+    "installCommand": "clawdhub install llm-integration",
+    "tags": [
+      "llm",
+      "api",
+      "streaming",
+      "rag",
+      "anthropic"
+    ],
+    "likes": 23,
+    "downloads": 178,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "continuous-learning",
+    "slug": "continuous-learning",
+    "title": "continuous-learning",
+    "descriptionRu": "Авто-извлечение паттернов из coding sessions, трекинг исправлений, knowledge base",
+    "source": "agent-hub-knowledge",
+    "sourcePath": "~/.ai-agent-hub/knowledge/skills/continuous-learning",
+    "githubRepo": null,
+    "installCommand": "clawdhub install continuous-learning",
+    "tags": [
+      "learning",
+      "patterns",
+      "knowledge-base",
+      "self-improvement"
+    ],
+    "likes": 9,
+    "downloads": 13,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "api-design-patterns",
+    "slug": "api-design-patterns",
+    "title": "api-design-patterns",
+    "descriptionRu": "REST API дизайн: resource naming, pagination, versioning, OpenAPI",
+    "source": "agent-hub-knowledge",
+    "sourcePath": "~/.ai-agent-hub/knowledge/skills/api-design-patterns",
+    "githubRepo": null,
+    "installCommand": "clawdhub install api-design-patterns",
+    "tags": [
+      "api",
+      "rest",
+      "openapi",
+      "backend"
+    ],
+    "likes": 22,
+    "downloads": 184,
+    "stars": null,
+    "updatedAt": null
+  },
+  {
+    "id": "accessibility-wcag",
+    "slug": "accessibility-wcag",
+    "title": "accessibility-wcag",
+    "descriptionRu": "Веб-доступность WCAG 2.2: ARIA, keyboard navigation, screen readers, тестирование",
+    "source": "agent-hub-knowledge",
+    "sourcePath": "~/.ai-agent-hub/knowledge/skills/accessibility-wcag",
+    "githubRepo": null,
+    "installCommand": "clawdhub install accessibility-wcag",
+    "tags": [
+      "accessibility",
+      "wcag",
+      "aria",
+      "a11y"
+    ],
+    "likes": 16,
+    "downloads": 85,
+    "stars": null,
+    "updatedAt": null
+  }
+]

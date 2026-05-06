@@ -8,6 +8,8 @@ import { healthRoutes } from './routes/health.ts';
 import { leaderboardRoutes } from './routes/leaderboard.ts';
 import { statsRoutes } from './routes/stats.ts';
 import { userRoutes } from './routes/user.ts';
+import { supportRoutes } from './routes/support.ts';
+import { skillsRoutes } from './routes/skills.ts';
 import { LogReader } from './services/log-reader.ts';
 import { LanguageAnalyzer } from './services/language-analyzer.ts';
 import { ToolAnalyzer } from './services/tool-analyzer.ts';
@@ -19,9 +21,9 @@ export function createApp(db: Database, logsPath?: string) {
   // Services
   const statsService = new StatsService(db);
   const authService = new AuthService(db);
-  const logReader = logsPath ? new LogReader(logsPath) : undefined;
-  const languageAnalyzer = logsPath ? new LanguageAnalyzer(logsPath) : undefined;
-  const toolAnalyzer = logsPath ? new ToolAnalyzer(logsPath) : undefined;
+  const logReader = new LogReader(db, logsPath);
+  const languageAnalyzer = new LanguageAnalyzer(db, logsPath);
+  const toolAnalyzer = new ToolAnalyzer(db, logsPath);
 
   // Middleware
   app.use('*', cors());
@@ -32,6 +34,8 @@ export function createApp(db: Database, logsPath?: string) {
   app.route('/api', leaderboardRoutes(statsService));
   app.route('/api', statsRoutes(statsService, languageAnalyzer, toolAnalyzer));
   app.route('/api', userRoutes(statsService, authService, logReader));
+  app.route('/api', supportRoutes());
+  app.route('/api', skillsRoutes());
 
   return app;
 }
@@ -41,7 +45,16 @@ export function createProductionApp(db: Database, logsPath?: string) {
 
   // Serve static frontend in production
   app.use('/assets/*', serveStatic({ root: './dist' }));
-  app.get('*', serveStatic({ root: './dist', path: '/index.html' }));
+  app.get('*', async (c) => {
+    const htmlFile = Bun.file('./dist/index.html');
+    const html = await htmlFile.text();
+    const host = c.req.header('host')?.split(':')[0]?.toLowerCase() ?? '';
+    const title = host === 'skills.api.zed.md' || c.req.path.startsWith('/skills')
+      ? 'Навыки агентов — API ZED'
+      : 'Рейтинг API — API ZED';
+
+    return c.html(html.replace(/<title>.*?<\/title>/, `<title>${title}</title>`));
+  });
 
   return app;
 }
@@ -49,16 +62,18 @@ export function createProductionApp(db: Database, logsPath?: string) {
 // Production entry
 async function startServer() {
   const { createDb } = await import('./db.ts');
-  const dbPath = process.env.DB_PATH ?? '/data/storage.sqlite';
-  const logsPath = process.env.LOGS_PATH ?? '/data/call_logs';
+  const dbPath = process.env.DB_PATH ?? '/data/omniroute/storage.sqlite';
+  const logsPath = process.env.LOGS_PATH ?? '/data/omniroute/call_logs';
   const port = parseInt(process.env.PORT ?? '20129', 10);
+  const hostname = process.env.BIND_HOST ?? process.env.HOST ?? '0.0.0.0';
 
   const db = createDb(dbPath);
   const app = createProductionApp(db, logsPath);
 
-  console.log(`OmniRoute Stats running on http://localhost:${port}`);
+  console.log(`API ZED Stats running on http://${hostname}:${port}`);
 
   Bun.serve({
+    hostname,
     port,
     fetch: app.fetch,
   });
