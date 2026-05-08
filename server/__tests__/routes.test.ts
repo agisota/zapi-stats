@@ -20,6 +20,22 @@ describe('GET /api/health', () => {
     expect(body.status).toBe('ok');
     expect(body.uptime).toBeGreaterThanOrEqual(0);
   });
+
+  test('returns degraded deployment status as data', async () => {
+    const previousHealthUrl = process.env.API_ZED_HEALTH_URL;
+    try {
+      process.env.API_ZED_HEALTH_URL = 'http://127.0.0.1:9/unreachable';
+      const { app: degradedApp } = createTestApp();
+      const res = await degradedApp.request('/api/deployment/status');
+      expect(res.status).toBe(200);
+      const body = await res.json();
+      expect(body.data.status).toBe('unreachable');
+      expect(body.data.error).toBeString();
+    } finally {
+      if (previousHealthUrl === undefined) delete process.env.API_ZED_HEALTH_URL;
+      else process.env.API_ZED_HEALTH_URL = previousHealthUrl;
+    }
+  });
 });
 
 describe('GET /api/leaderboard', () => {

@@ -100,7 +100,7 @@ export function healthRoutes() {
           checkedAt: new Date().toISOString(),
           error: error instanceof Error ? error.message : 'unknown error',
         },
-      }, 502);
+      });
     }
   });
 
