@@ -10,38 +10,101 @@ import { statsRoutes } from './routes/stats.ts';
 import { userRoutes } from './routes/user.ts';
 import { supportRoutes } from './routes/support.ts';
 import { skillsRoutes } from './routes/skills.ts';
+import { accountRoutes } from './routes/account.ts';
+import { analyticsRoutes } from './routes/analytics.ts';
 import { LogReader } from './services/log-reader.ts';
 import { LanguageAnalyzer } from './services/language-analyzer.ts';
 import { ToolAnalyzer } from './services/tool-analyzer.ts';
+import { createAccountDb, createAccountMemoryDb } from './services/account-db.ts';
+import { AccountService } from './services/account-service.ts';
+import { ProvisioningService } from './services/provisioning-service.ts';
+import { DvnetService } from './services/dvnet-service.ts';
+import { UsageBillingService } from './services/usage-billing-service.ts';
+import { AccountAnalyticsService } from './services/account-analytics-service.ts';
 import type { Database } from 'bun:sqlite';
 
-export function createApp(db: Database, logsPath?: string) {
+interface CreateAppOptions {
+  logsPath?: string;
+  accountDb?: Database;
+  gatewayWriteDbPath?: string | null;
+  dvnetEnv?: Record<string, string | undefined>;
+  enforceAccountBalance?: boolean;
+}
+
+export function createApp(db: Database, logsPathOrOptions?: string | CreateAppOptions, accountDb?: Database) {
+  const options: CreateAppOptions = typeof logsPathOrOptions === 'string'
+    ? { logsPath: logsPathOrOptions, accountDb }
+    : (logsPathOrOptions ?? {});
   const app = new Hono();
 
   // Services
+  const accountStateDb = options.accountDb ?? createAccountMemoryDb();
+  const accountService = new AccountService(accountStateDb);
+  const enforceAccountBalance = options.enforceAccountBalance ?? accountBalanceEnforcementEnabled();
+  const provisioner = new ProvisioningService(accountStateDb, {
+    gatewayWriteDbPath: options.gatewayWriteDbPath ?? null,
+    enforceBalance: enforceAccountBalance,
+  });
   const statsService = new StatsService(db);
-  const authService = new AuthService(db);
-  const logReader = new LogReader(db, logsPath);
-  const languageAnalyzer = new LanguageAnalyzer(db, logsPath);
-  const toolAnalyzer = new ToolAnalyzer(db, logsPath);
+  const logReader = new LogReader(db, options.logsPath);
+  const languageAnalyzer = new LanguageAnalyzer(db, options.logsPath);
+  const toolAnalyzer = new ToolAnalyzer(db, options.logsPath);
+  const dvnet = new DvnetService(options.dvnetEnv ?? {});
+  const usageBilling = new UsageBillingService(db, accountStateDb, accountService, provisioner, { enforceBalance: enforceAccountBalance });
+  const accountAnalytics = new AccountAnalyticsService(db, accountStateDb);
+  const authService = new AuthService(db, apiKey => {
+    const owner = provisioner.findManagedKeyOwner(apiKey);
+    if (!owner) return { handled: false, keyInfo: null };
+    usageBilling.reconcileUser(owner.userId);
+    return { handled: true, keyInfo: provisioner.validateManagedKey(apiKey) };
+  });
 
   // Middleware
-  app.use('*', cors());
+  app.use('*', cors({
+    origin: allowedCorsOrigin,
+    allowHeaders: ['Authorization', 'Content-Type', 'X-Account-Session', 'X_SIGN'],
+    allowMethods: ['GET', 'HEAD', 'POST', 'PATCH', 'OPTIONS'],
+    maxAge: 600,
+  }));
   app.use('/api/*', logger());
 
   // API routes
   app.route('/api', healthRoutes());
   app.route('/api', leaderboardRoutes(statsService));
   app.route('/api', statsRoutes(statsService, languageAnalyzer, toolAnalyzer));
+  app.route('/api', analyticsRoutes(accountAnalytics));
   app.route('/api', userRoutes(statsService, authService, logReader));
+  app.route('/api', accountRoutes(accountService, provisioner, dvnet, usageBilling, accountAnalytics));
   app.route('/api', supportRoutes());
   app.route('/api', skillsRoutes());
 
   return app;
 }
 
-export function createProductionApp(db: Database, logsPath?: string) {
-  const app = createApp(db, logsPath);
+function allowedCorsOrigin(origin: string): string | null {
+  if (!origin) return null;
+  const configured = (process.env.CORS_ALLOWED_ORIGINS ?? process.env.ALLOWED_ORIGINS ?? '')
+    .split(',')
+    .map(item => item.trim())
+    .filter(Boolean);
+  if (configured.length === 0) {
+    return process.env.NODE_ENV === 'production' ? null : origin;
+  }
+  return configured.includes(origin) ? origin : null;
+}
+
+function accountBalanceEnforcementEnabled(): boolean {
+  const raw = process.env.ACCOUNT_ENFORCE_BALANCE ?? '';
+  return raw === '1' || raw.toLowerCase() === 'true';
+}
+
+export function createProductionApp(db: Database, logsPath?: string, accountDb?: Database) {
+  const app = createApp(db, {
+    logsPath,
+    accountDb,
+    gatewayWriteDbPath: process.env.OMNIROUTE_RW_DB_PATH ?? null,
+    dvnetEnv: process.env,
+  });
 
   // Serve static frontend in production
   app.use('/assets/*', serveStatic({ root: './dist' }));
@@ -64,11 +127,13 @@ async function startServer() {
   const { createDb } = await import('./db.ts');
   const dbPath = process.env.DB_PATH ?? '/data/omniroute/storage.sqlite';
   const logsPath = process.env.LOGS_PATH ?? '/data/omniroute/call_logs';
+  const accountDbPath = process.env.ACCOUNT_DB_PATH ?? `${process.env.APP_STATE_DIR ?? '/data/zapi-stats-state'}/account.sqlite`;
   const port = parseInt(process.env.PORT ?? '20129', 10);
   const hostname = process.env.BIND_HOST ?? process.env.HOST ?? '0.0.0.0';
 
   const db = createDb(dbPath);
-  const app = createProductionApp(db, logsPath);
+  const accountDb = createAccountDb(accountDbPath);
+  const app = createProductionApp(db, logsPath, accountDb);
 
   console.log(`API ZED Stats running on http://${hostname}:${port}`);
 

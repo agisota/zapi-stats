@@ -24,8 +24,8 @@ export function App() {
   const [page, setPage] = useState<Page>(() => initialPage());
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSupportModal, setShowSupportModal] = useState(false);
-  const { isAuthenticated, keyName, logout } = useAuth();
-  const activeName = displayName(keyName);
+  const { isAuthenticated, keyName, account, logout } = useAuth();
+  const activeName = displayName(keyName ?? account?.displayName ?? null);
 
   useEffect(() => {
     const titleByPage: Record<Page, string> = {

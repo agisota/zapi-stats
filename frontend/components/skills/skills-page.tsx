@@ -1,9 +1,10 @@
 import { useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Copy, ExternalLink, Heart, Search, BarChart3, Tag, LayoutGrid, List } from 'lucide-react';
-import { getSkills, trackSkillAction, type SkillItem } from '../../lib/api.ts';
+import { getSkills, recordAccountSkillActivation, trackSkillAction, type SkillItem } from '../../lib/api.ts';
 import { formatNumber } from '../../lib/format.ts';
 import { MetricGuide, SkeletonBlock, StatePanel } from '../ui/feedback.tsx';
+import { useAuth } from '../../lib/auth-context.tsx';
 
 export function SkillsPage({ onOpenStats }: { onOpenStats: () => void }) {
   const [q, setQ] = useState('');
@@ -12,6 +13,7 @@ export function SkillsPage({ onOpenStats }: { onOpenStats: () => void }) {
   const [copied, setCopied] = useState<string | null>(null);
   const [viewMode, setViewMode] = useState<'list' | 'cards'>('list');
   const queryClient = useQueryClient();
+  const { accountSession } = useAuth();
   const { data, isLoading, isError } = useQuery({
     queryKey: ['skills', q, source, category],
     queryFn: () => getSkills({ q, source, category }),
@@ -19,6 +21,10 @@ export function SkillsPage({ onOpenStats }: { onOpenStats: () => void }) {
   const mutation = useMutation({
     mutationFn: ({ id, action }: { id: string; action: 'like' | 'download' }) => trackSkillAction(id, action),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['skills'] }),
+  });
+  const activationMutation = useMutation({
+    mutationFn: ({ id, action }: { id: string; action: 'like' | 'download' }) => recordAccountSkillActivation(accountSession!, id, action),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['account-skill-analytics', accountSession] }),
   });
 
   const skills = data?.data.items ?? [];
@@ -38,7 +44,13 @@ export function SkillsPage({ onOpenStats }: { onOpenStats: () => void }) {
     await navigator.clipboard.writeText(skill.installCommand);
     setCopied(skill.id);
     mutation.mutate({ id: skill.id, action: 'download' });
+    if (accountSession) activationMutation.mutate({ id: skill.id, action: 'download' });
     setTimeout(() => setCopied(null), 1200);
+  }
+
+  function likeSkill(skill: SkillItem) {
+    mutation.mutate({ id: skill.id, action: 'like' });
+    if (accountSession) activationMutation.mutate({ id: skill.id, action: 'like' });
   }
 
   return (
@@ -204,7 +216,7 @@ export function SkillsPage({ onOpenStats }: { onOpenStats: () => void }) {
                     skill={skill}
                     copied={copied === skill.id}
                     onCopy={() => copyInstall(skill)}
-                    onLike={() => mutation.mutate({ id: skill.id, action: 'like' })}
+                    onLike={() => likeSkill(skill)}
                   />
                 ))}
               </div>
@@ -228,7 +240,7 @@ export function SkillsPage({ onOpenStats }: { onOpenStats: () => void }) {
                     skill={skill}
                     copied={copied === skill.id}
                     onCopy={() => copyInstall(skill)}
-                    onLike={() => mutation.mutate({ id: skill.id, action: 'like' })}
+                    onLike={() => likeSkill(skill)}
                   />
                 ))}
               </div>

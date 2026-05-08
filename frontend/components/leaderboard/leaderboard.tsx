@@ -7,6 +7,7 @@ import { UserProfileModal } from './user-profile-modal.tsx';
 import { displayName } from '../../lib/display.ts';
 import { StatsPage } from '../stats/stats-page.tsx';
 import { MetricGuide, SkeletonBlock, StatePanel } from '../ui/feedback.tsx';
+import { UsageAnalytics } from '../stats/usage-analytics.tsx';
 
 type SortKey = keyof LeaderboardEntry;
 type SortDir = 'asc' | 'desc';
@@ -125,6 +126,8 @@ export function Leaderboard() {
       )}
 
       {entries.length > 0 && <OperationalSummary entries={entries} />}
+
+      <UsageAnalytics />
 
       <MetricGuide
         items={[

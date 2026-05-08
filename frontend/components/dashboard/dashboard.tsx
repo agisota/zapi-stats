@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../../lib/auth-context.tsx';
+import { AccountConsole } from '../account/account-console.tsx';
 import {
   getUserActivity,
   getUserBalance,
@@ -22,8 +23,8 @@ import { Activity, BadgeCheck, BrainCircuit, CalendarDays, Coins, Gauge, Hash, L
 const COLORS = ['#06b6d4', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444', '#ec4899'];
 
 export function Dashboard() {
-  const { apiKey, keyName } = useAuth();
-  const cleanName = displayName(keyName);
+  const { apiKey, keyName, accountSession, account } = useAuth();
+  const cleanName = displayName(keyName ?? account?.displayName ?? null);
 
   const { data: stats } = useQuery({
     queryKey: ['user-stats', apiKey],
@@ -68,6 +69,8 @@ export function Dashboard() {
 
   return (
     <div className="space-y-7 overflow-x-hidden">
+      {accountSession && account && <AccountConsole sessionToken={accountSession} account={account} />}
+
       <section className="surface-card dashboard-hero rounded-2xl border p-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 grid-flow-dense">
           <div className="lg:col-span-7">

@@ -30,6 +30,14 @@ export async function getTimeline(period: string = '24h') {
   return fetchJson<{ data: TimelinePoint[] }>(`/stats/timeline?period=${period}`);
 }
 
+export async function getGlobalSkillAnalytics(period: string = '30d') {
+  return fetchJson<{ data: SkillAnalytics }>(`/stats/skills/analytics?period=${period}`);
+}
+
+export async function getGlobalUserExpenses(period: string = '30d') {
+  return fetchJson<{ data: ExpenseAnalytics }>(`/stats/expenses/users?period=${period}`);
+}
+
 export async function getDeploymentStatus() {
   return fetchJson<{ data: DeploymentStatus }>('/deployment/status');
 }
@@ -84,6 +92,96 @@ export async function validateApiKey(key: string) {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ key }),
+  });
+}
+
+export async function registerAccount(payload: { email: string; displayName?: string }) {
+  return fetchJson<{ data: AccountRegistrationResult }>('/account/register', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function loginAccount(email: string) {
+  return fetchJson<{ data: AccountLoginResult }>('/account/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email }),
+  });
+}
+
+function accountHeaders(sessionToken: string): Record<string, string> {
+  return { 'X-Account-Session': sessionToken };
+}
+
+export async function getAccountMe(sessionToken: string) {
+  return fetchJson<{ data: { user: AccountUser } }>('/account/me', { headers: accountHeaders(sessionToken) });
+}
+
+export async function getAccountBalance(sessionToken: string) {
+  return fetchJson<{ data: AccountBalance }>('/account/billing/balance', { headers: accountHeaders(sessionToken) });
+}
+
+export async function getAccountLedger(sessionToken: string) {
+  return fetchJson<{ data: AccountLedgerEntry[] }>('/account/billing/ledger', { headers: accountHeaders(sessionToken) });
+}
+
+export async function getAccountExpenses(sessionToken: string, period: string = '30d') {
+  return fetchJson<{ data: ExpenseAnalytics }>(`/account/billing/expenses?period=${period}`, { headers: accountHeaders(sessionToken) });
+}
+
+export async function createTopup(sessionToken: string, amount: number) {
+  return fetchJson<{ data: AccountTopupResult }>('/account/billing/topup', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...accountHeaders(sessionToken) },
+    body: JSON.stringify({ amount }),
+  });
+}
+
+export async function getAccountKeys(sessionToken: string) {
+  return fetchJson<{ data: ManagedApiKey[] }>('/account/keys', { headers: accountHeaders(sessionToken) });
+}
+
+export async function createAccountKey(sessionToken: string, payload: { displayName?: string; noLog?: boolean } = {}) {
+  return fetchJson<{ data: ManagedApiKey & { rawKey: string } }>('/account/keys', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...accountHeaders(sessionToken) },
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function revokeAccountKey(sessionToken: string, keyId: string) {
+  return fetchJson<{ data: ManagedApiKey }>(`/account/keys/${encodeURIComponent(keyId)}/revoke`, {
+    method: 'POST',
+    headers: accountHeaders(sessionToken),
+  });
+}
+
+export async function rotateAccountKey(sessionToken: string, keyId: string) {
+  return fetchJson<{ data: ManagedApiKey & { rawKey: string } }>(`/account/keys/${encodeURIComponent(keyId)}/rotate`, {
+    method: 'POST',
+    headers: accountHeaders(sessionToken),
+  });
+}
+
+export async function updateAccountKeyLimits(sessionToken: string, keyId: string, limits: Partial<KeyLimits>) {
+  return fetchJson<{ data: ManagedApiKey }>(`/account/keys/${encodeURIComponent(keyId)}/limits`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json', ...accountHeaders(sessionToken) },
+    body: JSON.stringify(limits),
+  });
+}
+
+export async function getAccountSkillAnalytics(sessionToken: string, period: string = '30d') {
+  return fetchJson<{ data: SkillAnalytics }>(`/account/skills/analytics?period=${period}`, { headers: accountHeaders(sessionToken) });
+}
+
+export async function recordAccountSkillActivation(sessionToken: string, skillId: string, action: SkillEventAction = 'activate') {
+  return fetchJson<{ data: SkillEventRecord }>(`/account/skills/${encodeURIComponent(skillId)}/activate`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...accountHeaders(sessionToken) },
+    body: JSON.stringify({ action, source: 'skills_catalog' }),
   });
 }
 
@@ -209,6 +307,76 @@ export interface TimelinePoint {
   tokensIn: number;
   tokensOut: number;
   cost: number;
+}
+
+export type SkillEventAction = 'activate' | 'download' | 'like';
+
+export interface SkillEventRecord {
+  id: string;
+  userId: string;
+  displayName: string;
+  skillId: string;
+  skillSlug: string;
+  action: SkillEventAction;
+  source: string;
+  createdAt: string;
+}
+
+export interface SkillAnalyticsItem {
+  skillId: string;
+  skillSlug: string;
+  count: number;
+  explicit: number;
+  inferred: number;
+}
+
+export interface SkillAnalyticsUser {
+  userId: string | null;
+  displayName: string;
+  count: number;
+}
+
+export interface SkillAnalyticsDay {
+  date: string;
+  total: number;
+  skills: SkillAnalyticsItem[];
+  users: SkillAnalyticsUser[];
+}
+
+export interface SkillAnalytics {
+  totalInvocations: number;
+  explicitActivations: number;
+  inferredInvocations: number;
+  activeUsers: number;
+  topSkills: SkillAnalyticsItem[];
+  topUsers: SkillAnalyticsUser[];
+  daily: SkillAnalyticsDay[];
+  recent: SkillEventRecord[];
+}
+
+export interface UserCostSlice {
+  userId: string | null;
+  displayName: string;
+  apiKeyName: string;
+  cost: number;
+  requests: number;
+  tokensIn: number;
+  tokensOut: number;
+}
+
+export interface ExpenseDay {
+  date: string;
+  totalCost: number;
+  totalRequests: number;
+  users: UserCostSlice[];
+}
+
+export interface ExpenseAnalytics {
+  totalCost: number;
+  totalRequests: number;
+  activeUsers: number;
+  topUsers: UserCostSlice[];
+  daily: ExpenseDay[];
 }
 
 export interface DeploymentStatus {
@@ -450,6 +618,101 @@ export interface UserBalance {
   usagePercent: number;
   keyCreatedAt: string;
   ledger: BalanceLedgerEntry[];
+}
+
+export interface AccountUser {
+  id: string;
+  email: string;
+  displayName: string;
+  status: 'pending' | 'active' | 'suspended';
+  createdAt: string;
+  verifiedAt: string | null;
+}
+
+export interface KeyLimits {
+  maxRequestsPerMinute: number;
+  maxRequestsPerDay: number;
+  allowedModels: string[];
+  allowedConnections: string[];
+}
+
+export interface ManagedApiKey {
+  id: string;
+  userId: string;
+  gatewayKeyId: string;
+  gatewayName: string;
+  keyPrefix: string;
+  displayName: string;
+  status: 'active' | 'revoked' | 'suspended';
+  syncStatus: 'shadow' | 'synced' | 'failed';
+  noLog: boolean;
+  limits: KeyLimits;
+  createdAt: string;
+  revokedAt: string | null;
+}
+
+export interface AccountRegistrationResult {
+  user: AccountUser;
+  sessionToken: string | null;
+  defaultKey: (ManagedApiKey & { rawKey: string }) | null;
+  verificationRequired: boolean;
+}
+
+export interface AccountLoginResult {
+  user: AccountUser;
+  sessionToken: string;
+}
+
+export interface AccountBalance {
+  walletId: string;
+  currency: 'USD';
+  available: number;
+  reserved: number;
+  spent: number;
+  updatedAt: string;
+  usageSync: {
+    scanned: number;
+    debited: number;
+    totalDebited: number;
+    balance: number;
+    suspendedKeys: number;
+    activatedKeys: number;
+  } | null;
+}
+
+export interface AccountLedgerEntry {
+  id: string;
+  type: 'credit' | 'debit' | 'refund' | 'adjustment';
+  amount: number;
+  balanceAfter: number;
+  label: string;
+  detail: string;
+  externalRef: string | null;
+  createdAt: string;
+}
+
+export interface PaymentIntent {
+  id: string;
+  userId: string;
+  provider: string;
+  providerPaymentId: string | null;
+  status: 'pending' | 'completed' | 'failed' | 'expired';
+  amount: number;
+  currency: 'USD';
+  checkoutUrl: string | null;
+  idempotencyKey: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AccountTopupResult {
+  intent: PaymentIntent;
+  checkout: {
+    configured: boolean;
+    checkoutUrl: string | null;
+    providerPaymentId: string | null;
+    raw: unknown;
+  };
 }
 
 export interface ActivityDay {

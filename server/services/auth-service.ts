@@ -11,18 +11,28 @@ export interface ApiKeyInfo {
   lastUsedAt: string | null;
 }
 
+export interface ManagedKeyValidationResult {
+  handled: boolean;
+  keyInfo: ApiKeyInfo | null;
+}
+
 export class AuthService {
   private db: Database;
   private apiKeyColumns: Set<string>;
+  private managedKeyValidator?: (apiKey: string) => ManagedKeyValidationResult;
 
-  constructor(db: Database) {
+  constructor(db: Database, managedKeyValidator?: (apiKey: string) => ManagedKeyValidationResult) {
     this.db = db;
+    this.managedKeyValidator = managedKeyValidator;
     this.apiKeyColumns = new Set(
       (this.db.prepare('PRAGMA table_info(api_keys)').all() as Array<{ name: string }>).map(c => c.name),
     );
   }
 
   validateKey(apiKey: string): ApiKeyInfo | null {
+    const managed = this.managedKeyValidator?.(apiKey);
+    if (managed?.handled) return managed.keyInfo;
+
     const row = this.db.prepare(
       `SELECT
         id,
