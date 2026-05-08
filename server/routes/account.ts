@@ -310,6 +310,7 @@ function readDays(raw: string | undefined): number {
   if (raw === '24h') return 1;
   if (raw === '7d') return 7;
   if (raw === '30d') return 30;
+  if (raw === '90d') return 90;
   const parsed = Number(raw);
   return Number.isFinite(parsed) ? Math.max(1, Math.min(365, Math.round(parsed))) : 30;
 }
@@ -322,6 +323,9 @@ function emptySkillAnalytics() {
     activeUsers: 0,
     topSkills: [],
     topUsers: [],
+    userSkillMatrix: [],
+    actionBreakdown: [],
+    sourceBreakdown: [],
     daily: [],
     recent: [],
   };

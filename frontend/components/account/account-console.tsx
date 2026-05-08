@@ -20,11 +20,19 @@ import {
 } from '../../lib/api.ts';
 import { formatCost, formatNumber } from '../../lib/format.ts';
 
+const PERIODS = [
+  { label: '7D', value: '7d' },
+  { label: '30D', value: '30d' },
+  { label: '90D', value: '90d' },
+] as const;
+type Period = (typeof PERIODS)[number]['value'];
+
 export function AccountConsole({ sessionToken, account }: { sessionToken: string; account: AccountUser }) {
   const qc = useQueryClient();
   const [amount, setAmount] = useState('25');
   const [revealedKey, setRevealedKey] = useState<string | null>(null);
   const [checkoutUrl, setCheckoutUrl] = useState<string | null>(null);
+  const [analyticsPeriod, setAnalyticsPeriod] = useState<Period>('30d');
 
   const balance = useQuery({
     queryKey: ['account-balance', sessionToken],
@@ -39,12 +47,12 @@ export function AccountConsole({ sessionToken, account }: { sessionToken: string
     queryFn: () => getAccountKeys(sessionToken),
   });
   const skillAnalytics = useQuery({
-    queryKey: ['account-skill-analytics', sessionToken],
-    queryFn: () => getAccountSkillAnalytics(sessionToken, '30d'),
+    queryKey: ['account-skill-analytics', sessionToken, analyticsPeriod],
+    queryFn: () => getAccountSkillAnalytics(sessionToken, analyticsPeriod),
   });
   const expenses = useQuery({
-    queryKey: ['account-expenses', sessionToken],
-    queryFn: () => getAccountExpenses(sessionToken, '30d'),
+    queryKey: ['account-expenses', sessionToken, analyticsPeriod],
+    queryFn: () => getAccountExpenses(sessionToken, analyticsPeriod),
   });
 
   const invalidate = () => {
@@ -208,6 +216,14 @@ export function AccountConsole({ sessionToken, account }: { sessionToken: string
         </div>
       </div>
 
+      <div className="mt-5 flex flex-col gap-3 border-t border-white/10 pt-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <div className="text-xs uppercase text-cyan-200/70">Personal analytics</div>
+          <div className="mt-1 text-sm text-gray-500">Личные активации skills и расходы по managed keys за выбранный период.</div>
+        </div>
+        <PeriodPicker value={analyticsPeriod} onChange={setAnalyticsPeriod} />
+      </div>
+
       <AccountAnalyticsPanels skills={skillAnalytics.data?.data} expenses={expenses.data?.data} />
     </section>
   );
@@ -244,12 +260,24 @@ function AccountAnalyticsPanels({ skills, expenses }: { skills?: SkillAnalytics;
           ))}
         </div>
         <div className="mt-3 grid gap-2">
+          {(skills?.actionBreakdown ?? []).length > 0 && (
+            <div className="grid grid-cols-3 gap-2">
+              {(skills?.actionBreakdown ?? []).slice(0, 3).map(item => (
+                <Metric key={item.label} label={actionLabel(item.label)} value={formatNumber(item.count)} />
+              ))}
+            </div>
+          )}
           {(skills?.topSkills ?? []).slice(0, 4).map(item => (
             <div key={item.skillId} className="flex items-center justify-between gap-3 text-sm">
               <div className="min-w-0 truncate text-gray-300">{item.skillSlug}</div>
               <div className="font-mono text-cyan-100">{formatNumber(item.count)}</div>
             </div>
           ))}
+          {(skills?.sourceBreakdown ?? []).length > 0 && (
+            <div className="rounded-lg border border-white/10 bg-black/10 px-3 py-2 text-xs text-gray-500">
+              source: {(skills?.sourceBreakdown ?? []).slice(0, 3).map(item => `${item.label} ${formatNumber(item.count)}`).join(' / ')}
+            </div>
+          )}
           {(skills?.recent ?? []).slice(0, 3).map(item => (
             <div key={item.id} className="rounded-lg border border-white/10 bg-black/10 px-3 py-2 text-xs">
               <div className="flex items-center justify-between gap-3">
@@ -294,6 +322,26 @@ function AccountAnalyticsPanels({ skills, expenses }: { skills?: SkillAnalytics;
   );
 }
 
+function PeriodPicker({ value, onChange }: { value: Period; onChange: (period: Period) => void }) {
+  return (
+    <div className="inline-flex rounded-xl border border-white/10 bg-black/18 p-1">
+      {PERIODS.map(period => (
+        <button
+          key={period.value}
+          type="button"
+          onClick={() => onChange(period.value)}
+          className={`h-9 rounded-lg px-3 text-xs font-semibold transition-colors ${
+            value === period.value ? 'bg-cyan-300/16 text-cyan-100' : 'text-gray-500 hover:bg-white/5 hover:text-gray-200'
+          }`}
+          aria-pressed={value === period.value}
+        >
+          {period.label}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 function Metric({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-xl border border-white/10 bg-[#07111f]/70 p-3">
@@ -301,6 +349,13 @@ function Metric({ label, value }: { label: string; value: string }) {
       <div className="mt-1 truncate font-mono text-sm font-semibold text-cyan-100">{value}</div>
     </div>
   );
+}
+
+function actionLabel(action: string): string {
+  if (action === 'download') return 'downloads';
+  if (action === 'like') return 'likes';
+  if (action === 'activate') return 'activations';
+  return action;
 }
 
 function KeyCard({

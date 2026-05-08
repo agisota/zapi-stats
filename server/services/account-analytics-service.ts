@@ -31,6 +31,20 @@ export interface SkillAnalyticsUser {
   count: number;
 }
 
+export interface SkillAnalyticsUserSkills {
+  userId: string | null;
+  displayName: string;
+  total: number;
+  explicit: number;
+  inferred: number;
+  topSkills: SkillAnalyticsItem[];
+}
+
+export interface SkillAnalyticsBreakdownItem {
+  label: string;
+  count: number;
+}
+
 export interface SkillAnalyticsDay {
   date: string;
   total: number;
@@ -45,6 +59,9 @@ export interface SkillAnalytics {
   activeUsers: number;
   topSkills: SkillAnalyticsItem[];
   topUsers: SkillAnalyticsUser[];
+  userSkillMatrix: SkillAnalyticsUserSkills[];
+  actionBreakdown: SkillAnalyticsBreakdownItem[];
+  sourceBreakdown: SkillAnalyticsBreakdownItem[];
   daily: SkillAnalyticsDay[];
   recent: SkillEventRecord[];
 }
@@ -176,11 +193,22 @@ export class AccountAnalyticsService {
     const owners = this.ownersByGatewayName();
     const topSkills = new Map<string, SkillAnalyticsItem>();
     const topUsers = new Map<string, SkillAnalyticsUser>();
+    const userSkillMatrix = new Map<string, { userId: string | null; displayName: string; total: number; explicit: number; inferred: number; skills: Map<string, SkillAnalyticsItem> }>();
+    const actionBreakdown = new Map<string, number>();
+    const sourceBreakdown = new Map<string, number>();
     const daily = new Map<string, { date: string; total: number; skills: Map<string, SkillAnalyticsItem>; users: Map<string, SkillAnalyticsUser> }>();
     let explicitActivations = 0;
     let inferredInvocations = 0;
 
-    const add = (date: string, skillId: string, skillSlug: string, owner: Owner, kind: 'explicit' | 'inferred') => {
+    const add = (
+      date: string,
+      skillId: string,
+      skillSlug: string,
+      owner: Owner,
+      kind: 'explicit' | 'inferred',
+      action?: SkillEventAction,
+      source?: string,
+    ) => {
       const userKey = owner.userId ?? `legacy:${owner.apiKeyName}`;
       const dailyRow = daily.get(date) ?? { date, total: 0, skills: new Map(), users: new Map() };
       dailyRow.total += 1;
@@ -204,16 +232,38 @@ export class AccountAnalyticsService {
       aggregateUser.count += 1;
       topUsers.set(userKey, aggregateUser);
 
+      const matrixRow = userSkillMatrix.get(userKey) ?? {
+        userId: owner.userId,
+        displayName: owner.displayName,
+        total: 0,
+        explicit: 0,
+        inferred: 0,
+        skills: new Map<string, SkillAnalyticsItem>(),
+      };
+      matrixRow.total += 1;
+      if (kind === 'explicit') matrixRow.explicit += 1;
+      else matrixRow.inferred += 1;
+      const matrixSkill = matrixRow.skills.get(skillId) ?? { skillId, skillSlug, count: 0, explicit: 0, inferred: 0 };
+      matrixSkill.count += 1;
+      if (kind === 'explicit') matrixSkill.explicit += 1;
+      else matrixSkill.inferred += 1;
+      matrixRow.skills.set(skillId, matrixSkill);
+      userSkillMatrix.set(userKey, matrixRow);
+
+      if (action) actionBreakdown.set(action, (actionBreakdown.get(action) ?? 0) + 1);
+      if (source) sourceBreakdown.set(source, (sourceBreakdown.get(source) ?? 0) + 1);
+
       if (kind === 'explicit') explicitActivations += 1;
       else inferredInvocations += 1;
     };
 
     for (const event of this.skillEventsSince(since, input.userId)) {
+      const action = normalizeAction(event.action);
       add(event.created_at.slice(0, 10), event.skill_id, event.skill_slug, {
         userId: event.user_id,
         displayName: event.display_name,
         apiKeyName: event.user_id,
-      }, 'explicit');
+      }, 'explicit', action, event.source);
     }
 
     for (const row of this.skillLogRowsSince(since, input.gatewayNames)) {
@@ -250,6 +300,18 @@ export class AccountAnalyticsService {
       activeUsers: topUsers.size,
       topSkills: sortedValues(topSkills),
       topUsers: [...topUsers.values()].sort((a, b) => b.count - a.count || a.displayName.localeCompare(b.displayName, 'ru')),
+      userSkillMatrix: [...userSkillMatrix.values()]
+        .sort((a, b) => b.total - a.total || a.displayName.localeCompare(b.displayName, 'ru'))
+        .map(row => ({
+          userId: row.userId,
+          displayName: row.displayName,
+          total: row.total,
+          explicit: row.explicit,
+          inferred: row.inferred,
+          topSkills: sortedValues(row.skills).slice(0, 8),
+        })),
+      actionBreakdown: sortedBreakdown(actionBreakdown),
+      sourceBreakdown: sortedBreakdown(sourceBreakdown),
       daily: [...daily.values()]
         .sort((a, b) => a.date.localeCompare(b.date))
         .map(row => ({
@@ -436,6 +498,12 @@ function normalizeAction(action: string): SkillEventAction {
 
 function sortedValues(map: Map<string, SkillAnalyticsItem>): SkillAnalyticsItem[] {
   return [...map.values()].sort((a, b) => b.count - a.count || a.skillSlug.localeCompare(b.skillSlug, 'ru'));
+}
+
+function sortedBreakdown(map: Map<string, number>): SkillAnalyticsBreakdownItem[] {
+  return [...map.entries()]
+    .map(([label, count]) => ({ label, count }))
+    .sort((a, b) => b.count - a.count || a.label.localeCompare(b.label, 'ru'));
 }
 
 function matchSkills(skills: SkillItemWithCategory[], raw: string): SkillItemWithCategory[] {

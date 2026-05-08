@@ -336,6 +336,20 @@ export interface SkillAnalyticsUser {
   count: number;
 }
 
+export interface SkillAnalyticsUserSkills {
+  userId: string | null;
+  displayName: string;
+  total: number;
+  explicit: number;
+  inferred: number;
+  topSkills: SkillAnalyticsItem[];
+}
+
+export interface SkillAnalyticsBreakdownItem {
+  label: string;
+  count: number;
+}
+
 export interface SkillAnalyticsDay {
   date: string;
   total: number;
@@ -350,6 +364,9 @@ export interface SkillAnalytics {
   activeUsers: number;
   topSkills: SkillAnalyticsItem[];
   topUsers: SkillAnalyticsUser[];
+  userSkillMatrix: SkillAnalyticsUserSkills[];
+  actionBreakdown: SkillAnalyticsBreakdownItem[];
+  sourceBreakdown: SkillAnalyticsBreakdownItem[];
   daily: SkillAnalyticsDay[];
   recent: SkillEventRecord[];
 }

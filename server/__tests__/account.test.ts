@@ -396,6 +396,11 @@ describe('account billing and DV.net webhook', () => {
     expect(globalSkillBody.data.explicitActivations).toBe(1);
     expect(globalSkillBody.data.inferredInvocations).toBeGreaterThanOrEqual(1);
     expect(autopilot?.count).toBeGreaterThanOrEqual(2);
+    expect(globalSkillBody.data.actionBreakdown[0]).toEqual({ label: 'download', count: 1 });
+    expect(globalSkillBody.data.sourceBreakdown[0]).toEqual({ label: 'test', count: 1 });
+    const userSkillRow = globalSkillBody.data.userSkillMatrix.find((item: { displayName: string }) => item.displayName === 'New User');
+    expect(userSkillRow?.total).toBeGreaterThanOrEqual(2);
+    expect(userSkillRow?.topSkills[0].skillSlug).toBe('autopilot');
 
     const personalSkills = await analyticsReq('/api/account/skills/analytics?days=30', {
       headers: { 'X-Account-Session': body.data.sessionToken },
@@ -403,6 +408,7 @@ describe('account billing and DV.net webhook', () => {
     const personalSkillBody = await personalSkills.json();
     expect(personalSkillBody.data.recent[0].skillSlug).toBe('autopilot');
     expect(personalSkillBody.data.topSkills.find((item: { skillSlug: string }) => item.skillSlug === 'autopilot')?.count).toBeGreaterThanOrEqual(2);
+    expect(personalSkillBody.data.userSkillMatrix[0].displayName).toBe('New User');
 
     const globalExpenses = await analyticsReq('/api/stats/expenses/users?days=30');
     const globalExpenseBody = await globalExpenses.json();
