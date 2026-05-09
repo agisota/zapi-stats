@@ -5,6 +5,7 @@ import { DvnetError, DvnetService } from '../services/dvnet-service.ts';
 import { ProvisioningError, ProvisioningService, type KeyLimits } from '../services/provisioning-service.ts';
 import type { UsageBillingService } from '../services/usage-billing-service.ts';
 import type { AccountAnalyticsService, SkillEventAction } from '../services/account-analytics-service.ts';
+import type { MagicLinkMailer } from '../services/magic-link-mailer.ts';
 
 type AccountEnv = {
   Variables: {
@@ -22,6 +23,7 @@ export function accountRoutes(
   dvnet: DvnetService,
   usageBilling?: UsageBillingService,
   analytics?: AccountAnalyticsService,
+  magicLinks?: MagicLinkMailer,
 ) {
   const app = new Hono<AccountEnv>();
 
@@ -39,12 +41,16 @@ export function accountRoutes(
       const defaultKey = user.status === 'active'
         ? provisioner.createKey({ userId: user.id, userEmail: user.email, userDisplayName: user.displayName })
         : null;
+      const magicLinkSent = user.status !== 'active' && magicLinks?.config.configured === true
+        ? await sendMagicLinkForUser(accountService, magicLinks, user.id)
+        : false;
       return c.json({
         data: {
           user,
           sessionToken: user.status === 'active' ? session.token : null,
           defaultKey,
           verificationRequired: user.status !== 'active',
+          magicLinkSent,
         },
       }, 201);
     } catch (error) {
@@ -58,10 +64,37 @@ export function accountRoutes(
       if (limited) return limited;
       const body = await readJsonBody(c);
       if (process.env.ACCOUNT_ALLOW_EMAIL_LOGIN !== '1' && process.env.NODE_ENV === 'production') {
-        return c.json({ error: { code: 'LOGIN_DISABLED', message: 'Email-only login is disabled in production. Use API key login or configure a verified magic-link provider.' } }, 403);
+        if (!magicLinks?.config.configured) {
+          return c.json({ error: { code: 'MAGIC_LINK_NOT_CONFIGURED', message: magicLinks?.config.reason ?? 'Verified magic-link provider is not configured for production.' } }, 503);
+        }
+        await sendMagicLinkForEmail(accountService, magicLinks, String((body as { email?: string }).email ?? ''));
+        return c.json({ data: { user: null, sessionToken: null, verificationRequired: true, magicLinkSent: true } });
       }
       const { user, session } = accountService.loginByEmail(String((body as { email?: string }).email ?? ''));
-      return c.json({ data: { user, sessionToken: session.token } });
+      return c.json({ data: { user, sessionToken: session.token, verificationRequired: false, magicLinkSent: false } });
+    } catch (error) {
+      return errorResponse(c, error);
+    }
+  });
+
+  app.post('/account/magic/verify', async (c) => {
+    try {
+      const limited = rateLimit(c, 'account.magic.verify', 30, 15 * 60 * 1000);
+      if (limited) return limited;
+      const body = await readJsonBody(c);
+      const { user, session, activated } = accountService.consumeMagicLink(String((body as { token?: string }).token ?? ''));
+      const defaultKey = activated
+        ? provisioner.createKey({ userId: user.id, userEmail: user.email, userDisplayName: user.displayName })
+        : null;
+      return c.json({
+        data: {
+          user,
+          sessionToken: session.token,
+          defaultKey,
+          verified: true,
+          activated,
+        },
+      });
     } catch (error) {
       return errorResponse(c, error);
     }
@@ -303,6 +336,33 @@ function readLimits(body: unknown): Partial<KeyLimits> {
 
 function readSkillAction(input: unknown): SkillEventAction {
   return input === 'download' || input === 'like' ? input : 'activate';
+}
+
+async function sendMagicLinkForEmail(accountService: AccountService, magicLinks: MagicLinkMailer, email: string): Promise<boolean> {
+  const challenge = accountService.createMagicLinkForEmail(email, magicLinks.config.ttlMinutes);
+  if (!challenge) return false;
+  const delivery = await magicLinks.send({
+    idempotencyKey: challenge.id,
+    email: challenge.email,
+    token: challenge.token,
+    displayName: challenge.user.displayName,
+    expiresAt: challenge.expiresAt,
+  });
+  accountService.markMagicLinkSent(challenge.id, delivery.provider, delivery.messageId);
+  return true;
+}
+
+async function sendMagicLinkForUser(accountService: AccountService, magicLinks: MagicLinkMailer, userId: string): Promise<boolean> {
+  const challenge = accountService.createMagicLinkForUser(userId, magicLinks.config.ttlMinutes);
+  const delivery = await magicLinks.send({
+    idempotencyKey: challenge.id,
+    email: challenge.email,
+    token: challenge.token,
+    displayName: challenge.user.displayName,
+    expiresAt: challenge.expiresAt,
+  });
+  accountService.markMagicLinkSent(challenge.id, delivery.provider, delivery.messageId);
+  return true;
 }
 
 function readDays(raw: string | undefined): number {

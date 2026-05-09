@@ -8,8 +8,10 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 const { app } = createTestApp();
+let requestSeq = 1;
 
 type Requester = (path: string, init?: RequestInit) => Response | Promise<Response>;
+type SentMagicEmail = { body: { html?: string; text?: string; to?: string[] }; headers: HeadersInit | undefined };
 
 function req(path: string, init?: RequestInit) {
   return app.request(path, init);
@@ -18,7 +20,7 @@ function req(path: string, init?: RequestInit) {
 async function register(email = 'new-user@example.com', requester: Requester = req) {
   const res = await requester('/api/account/register', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': `203.0.113.${requestSeq++}` },
     body: JSON.stringify({ email, displayName: 'New User' }),
   });
   const body = await res.json();
@@ -47,11 +49,134 @@ describe('account registration and managed keys', () => {
       expect(body.data.sessionToken).toBeNull();
       expect(body.data.defaultKey).toBeNull();
       expect(body.data.verificationRequired).toBe(true);
+      expect(body.data.magicLinkSent).toBe(false);
     } finally {
       if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
       else process.env.NODE_ENV = previousNodeEnv;
       if (previousAutoVerify === undefined) delete process.env.ACCOUNT_AUTO_VERIFY;
       else process.env.ACCOUNT_AUTO_VERIFY = previousAutoVerify;
+    }
+  });
+
+  test('sends and consumes production magic-link login without direct email sessions', async () => {
+    const sentEmails: SentMagicEmail[] = [];
+    const { app: magicApp } = createMagicApp(sentEmails);
+    const magicReq: Requester = (path, init) => magicApp.request(path, init);
+
+    const { body } = await register('magic-login@example.com', magicReq);
+    const previousNodeEnv = process.env.NODE_ENV;
+    const previousAllowEmail = process.env.ACCOUNT_ALLOW_EMAIL_LOGIN;
+    try {
+      process.env.NODE_ENV = 'production';
+      delete process.env.ACCOUNT_ALLOW_EMAIL_LOGIN;
+      const login = await magicReq('/api/account/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '198.51.100.10' },
+        body: JSON.stringify({ email: body.data.user.email }),
+      });
+      const loginBody = await login.json();
+      expect(login.status).toBe(200);
+      expect(loginBody.data.sessionToken).toBeNull();
+      expect(loginBody.data.user).toBeNull();
+      expect(loginBody.data.magicLinkSent).toBe(true);
+      expect(sentEmails).toHaveLength(1);
+
+      const token = extractMagicToken(sentEmails[0]!);
+      const verified = await magicReq('/api/account/magic/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '198.51.100.11' },
+        body: JSON.stringify({ token }),
+      });
+      const verifiedBody = await verified.json();
+      expect(verified.status).toBe(200);
+      expect(verifiedBody.data.sessionToken).toStartWith('acct_');
+      expect(verifiedBody.data.user.status).toBe('active');
+      expect(verifiedBody.data.defaultKey).toBeNull();
+
+      const me = await magicReq('/api/account/me', {
+        headers: { 'X-Account-Session': verifiedBody.data.sessionToken },
+      });
+      expect(me.status).toBe(200);
+
+      const replay = await magicReq('/api/account/magic/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '198.51.100.12' },
+        body: JSON.stringify({ token }),
+      });
+      expect(replay.status).toBe(401);
+    } finally {
+      if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = previousNodeEnv;
+      if (previousAllowEmail === undefined) delete process.env.ACCOUNT_ALLOW_EMAIL_LOGIN;
+      else process.env.ACCOUNT_ALLOW_EMAIL_LOGIN = previousAllowEmail;
+    }
+  });
+
+  test('verifies production registrations by magic link and issues the first key once', async () => {
+    const sentEmails: SentMagicEmail[] = [];
+    const previousNodeEnv = process.env.NODE_ENV;
+    const previousAutoVerify = process.env.ACCOUNT_AUTO_VERIFY;
+    try {
+      process.env.NODE_ENV = 'production';
+      delete process.env.ACCOUNT_AUTO_VERIFY;
+      const { app: magicApp } = createMagicApp(sentEmails);
+      const magicReq: Requester = (path, init) => magicApp.request(path, init);
+
+      const registered = await magicReq('/api/account/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '198.51.100.20' },
+        body: JSON.stringify({ email: 'magic-register@example.com', displayName: 'Magic Register' }),
+      });
+      const registeredBody = await registered.json();
+      expect(registered.status).toBe(201);
+      expect(registeredBody.data.user.status).toBe('pending');
+      expect(registeredBody.data.sessionToken).toBeNull();
+      expect(registeredBody.data.defaultKey).toBeNull();
+      expect(registeredBody.data.magicLinkSent).toBe(true);
+      expect(sentEmails).toHaveLength(1);
+
+      const token = extractMagicToken(sentEmails[0]!);
+      const verified = await magicReq('/api/account/magic/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '198.51.100.21' },
+        body: JSON.stringify({ token }),
+      });
+      const verifiedBody = await verified.json();
+      expect(verified.status).toBe(200);
+      expect(verifiedBody.data.activated).toBe(true);
+      expect(verifiedBody.data.user.status).toBe('active');
+      expect(verifiedBody.data.sessionToken).toStartWith('acct_');
+      expect(verifiedBody.data.defaultKey.rawKey).toStartWith('zed_');
+    } finally {
+      if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = previousNodeEnv;
+      if (previousAutoVerify === undefined) delete process.env.ACCOUNT_AUTO_VERIFY;
+      else process.env.ACCOUNT_AUTO_VERIFY = previousAutoVerify;
+    }
+  });
+
+  test('requires a configured provider before production email login is enabled', async () => {
+    const { app: noProviderApp } = createTestApp();
+    const noProviderReq: Requester = (path, init) => noProviderApp.request(path, init);
+    await register('no-provider@example.com', noProviderReq);
+    const previousNodeEnv = process.env.NODE_ENV;
+    const previousAllowEmail = process.env.ACCOUNT_ALLOW_EMAIL_LOGIN;
+    try {
+      process.env.NODE_ENV = 'production';
+      delete process.env.ACCOUNT_ALLOW_EMAIL_LOGIN;
+      const login = await noProviderReq('/api/account/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Forwarded-For': '198.51.100.30' },
+        body: JSON.stringify({ email: 'no-provider@example.com' }),
+      });
+      const loginBody = await login.json();
+      expect(login.status).toBe(503);
+      expect(loginBody.error.code).toBe('MAGIC_LINK_NOT_CONFIGURED');
+    } finally {
+      if (previousNodeEnv === undefined) delete process.env.NODE_ENV;
+      else process.env.NODE_ENV = previousNodeEnv;
+      if (previousAllowEmail === undefined) delete process.env.ACCOUNT_ALLOW_EMAIL_LOGIN;
+      else process.env.ACCOUNT_ALLOW_EMAIL_LOGIN = previousAllowEmail;
     }
   });
 
@@ -80,6 +205,35 @@ describe('account registration and managed keys', () => {
     expect(validated.keyId).toBe(body.data.defaultKey.gatewayKeyId);
   });
 });
+
+function createMagicApp(sentEmails: SentMagicEmail[]) {
+  return createTestApp({
+    magicLinkEnv: {
+      NODE_ENV: 'production',
+      MAGIC_LINK_PROVIDER: 'resend',
+      MAGIC_LINK_BASE_URL: 'https://stats.api.zed.md',
+      MAGIC_LINK_FROM: 'API ZED <login@api.zed.md>',
+      RESEND_API_KEY: 're_test',
+    },
+    magicLinkFetch: async (_input, init) => {
+      sentEmails.push({
+        body: JSON.parse(String(init?.body ?? '{}')) as SentMagicEmail['body'],
+        headers: init?.headers,
+      });
+      return new Response(JSON.stringify({ id: `email_${sentEmails.length}` }), {
+        status: 200,
+        headers: { 'Content-Type': 'application/json' },
+      });
+    },
+  });
+}
+
+function extractMagicToken(email: SentMagicEmail): string {
+  const html = String(email.body.html ?? '');
+  const match = /https:\/\/stats\.api\.zed\.md\/magic#token=([^"'<\s]+)/.exec(html);
+  if (!match?.[1]) throw new Error(`Magic token not found in ${html}`);
+  return decodeURIComponent(match[1]);
+}
 
 describe('account billing and DV.net webhook', () => {
   test('creates an unconfigured DV.net top-up intent safely', async () => {

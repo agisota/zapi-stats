@@ -39,6 +39,21 @@ export function migrateAccountDb(db: Database): void {
       FOREIGN KEY (user_id) REFERENCES users(id)
     );
 
+    CREATE TABLE IF NOT EXISTS magic_links (
+      id TEXT PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      email TEXT NOT NULL,
+      token_hash TEXT NOT NULL UNIQUE,
+      provider TEXT,
+      provider_message_id TEXT,
+      created_at TEXT NOT NULL,
+      expires_at TEXT NOT NULL,
+      sent_at TEXT,
+      used_at TEXT,
+      revoked_at TEXT,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+
     CREATE TABLE IF NOT EXISTS wallets (
       id TEXT PRIMARY KEY,
       user_id TEXT NOT NULL UNIQUE,
@@ -128,6 +143,8 @@ export function migrateAccountDb(db: Database): void {
     );
 
     CREATE INDEX IF NOT EXISTS idx_sessions_hash ON sessions(token_hash);
+    CREATE INDEX IF NOT EXISTS idx_magic_links_hash ON magic_links(token_hash);
+    CREATE INDEX IF NOT EXISTS idx_magic_links_user ON magic_links(user_id, created_at);
     CREATE INDEX IF NOT EXISTS idx_account_keys_user ON account_keys(user_id);
     CREATE INDEX IF NOT EXISTS idx_ledger_wallet ON wallet_ledger(wallet_id, created_at);
     CREATE INDEX IF NOT EXISTS idx_payment_user ON payment_intents(user_id, created_at);

@@ -2,6 +2,7 @@ import type { Database } from 'bun:sqlite';
 import { createHash, randomBytes, randomUUID, timingSafeEqual } from 'node:crypto';
 
 const SESSION_TTL_DAYS = 30;
+const MAGIC_LINK_TTL_MINUTES = 15;
 
 export interface AccountUser {
   id: string;
@@ -18,6 +19,21 @@ export interface AccountSession {
   token: string;
   createdAt: string;
   expiresAt: string;
+}
+
+export interface MagicLinkChallenge {
+  id: string;
+  user: AccountUser;
+  email: string;
+  token: string;
+  createdAt: string;
+  expiresAt: string;
+}
+
+export interface MagicLinkConsumeResult {
+  user: AccountUser;
+  session: AccountSession;
+  activated: boolean;
 }
 
 export interface WalletBalance {
@@ -99,6 +115,121 @@ export class AccountService {
       throw new AccountError('INVALID_ACCOUNT', 'Account not found or inactive', 401);
     }
     return { user, session: this.createSession(user.id) };
+  }
+
+  createMagicLinkForEmail(emailInput: string, ttlMinutes = MAGIC_LINK_TTL_MINUTES): MagicLinkChallenge | null {
+    const email = normalizeEmail(emailInput);
+    if (!email) throw new AccountError('INVALID_EMAIL', 'Valid email is required', 400);
+    const user = this.getUserByEmail(email);
+    if (!user || user.status === 'suspended') return null;
+    return this.createMagicLinkForUser(user.id, ttlMinutes);
+  }
+
+  createMagicLinkForUser(userId: string, ttlMinutes = MAGIC_LINK_TTL_MINUTES): MagicLinkChallenge {
+    const user = this.getUserById(userId);
+    if (!user || user.status === 'suspended') {
+      throw new AccountError('INVALID_ACCOUNT', 'Account not found or inactive', 401);
+    }
+    const now = new Date();
+    const createdAt = now.toISOString();
+    const expiresAt = new Date(now.getTime() + sanitizeTtlMinutes(ttlMinutes) * 60 * 1000).toISOString();
+    const token = secret('ml');
+    const challenge: MagicLinkChallenge = {
+      id: id('mlk'),
+      user,
+      email: user.email,
+      token,
+      createdAt,
+      expiresAt,
+    };
+
+    this.db.transaction(() => {
+      this.db.prepare(`
+        UPDATE magic_links
+        SET revoked_at = ?
+        WHERE user_id = ? AND used_at IS NULL AND revoked_at IS NULL
+      `).run(createdAt, user.id);
+      this.db.prepare(`
+        INSERT INTO magic_links
+        (id, user_id, email, token_hash, created_at, expires_at)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `).run(challenge.id, user.id, user.email, hashSecret(token), createdAt, expiresAt);
+      this.audit(user.id, 'account.magic_link.created', 'magic_link', challenge.id, { email: user.email, expiresAt }, createdAt);
+    })();
+
+    return challenge;
+  }
+
+  markMagicLinkSent(linkId: string, provider: string, messageId: string | null): void {
+    const now = new Date().toISOString();
+    this.db.prepare(`
+      UPDATE magic_links
+      SET provider = ?, provider_message_id = ?, sent_at = ?
+      WHERE id = ? AND used_at IS NULL AND revoked_at IS NULL
+    `).run(provider, messageId, now, linkId);
+    const row = this.db.prepare('SELECT user_id FROM magic_links WHERE id = ?').get(linkId) as { user_id: string } | null;
+    this.audit(row?.user_id ?? null, 'account.magic_link.sent', 'magic_link', linkId, { provider, messageId }, now);
+  }
+
+  consumeMagicLink(rawToken: string): MagicLinkConsumeResult {
+    const token = String(rawToken ?? '').trim();
+    if (!token) throw new AccountError('MAGIC_LINK_INVALID', 'Magic link is invalid or expired', 401);
+    const row = this.db.prepare(`
+      SELECT
+        ml.id as link_id,
+        ml.user_id as link_user_id,
+        ml.expires_at as link_expires_at,
+        ml.used_at as link_used_at,
+        ml.revoked_at as link_revoked_at,
+        u.id as user_id,
+        u.email as user_email,
+        u.display_name as user_display_name,
+        u.status as user_status,
+        u.created_at as user_created_at,
+        u.verified_at as user_verified_at
+      FROM magic_links ml
+      JOIN users u ON u.id = ml.user_id
+      WHERE ml.token_hash = ?
+    `).get(hashSecret(token)) as DbMagicLinkTokenRow | null;
+
+    if (
+      !row
+      || row.link_used_at
+      || row.link_revoked_at
+      || new Date(row.link_expires_at).getTime() <= Date.now()
+      || row.user_status === 'suspended'
+    ) {
+      throw new AccountError('MAGIC_LINK_INVALID', 'Magic link is invalid or expired', 401);
+    }
+
+    const now = new Date().toISOString();
+    const activated = row.user_status === 'pending';
+    let session: AccountSession | null = null;
+
+    this.db.transaction(() => {
+      const updated = this.db.prepare(`
+        UPDATE magic_links
+        SET used_at = ?
+        WHERE id = ? AND used_at IS NULL AND revoked_at IS NULL
+      `).run(now, row.link_id) as { changes: number };
+      if (updated.changes !== 1) {
+        throw new AccountError('MAGIC_LINK_INVALID', 'Magic link is invalid or expired', 401);
+      }
+      if (activated) {
+        this.db.prepare(`
+          UPDATE users
+          SET status = 'active', verified_at = ?
+          WHERE id = ? AND status = 'pending'
+        `).run(now, row.user_id);
+        this.audit(row.user_id, 'account.email_verified', 'user', row.user_id, { via: 'magic_link' }, now);
+      }
+      this.audit(row.user_id, 'account.magic_link.used', 'magic_link', row.link_id, { activated }, now);
+      session = this.createSession(row.user_id);
+    })();
+
+    const user = this.getUserById(row.user_id);
+    if (!user || !session) throw new AccountError('MAGIC_LINK_INVALID', 'Magic link is invalid or expired', 401);
+    return { user, session, activated };
   }
 
   authenticate(rawToken: string | null): AccountUser | null {
@@ -400,6 +531,11 @@ function cleanDisplayName(displayName: string | undefined, email: string): strin
   return email.split('@')[0] || 'API user';
 }
 
+function sanitizeTtlMinutes(input: number): number {
+  if (!Number.isFinite(input)) return MAGIC_LINK_TTL_MINUTES;
+  return Math.max(5, Math.min(60, Math.round(input)));
+}
+
 function fromUserRow(row: DbUserRow): AccountUser {
   return {
     id: row.id,
@@ -452,4 +588,18 @@ interface DbPaymentIntentRow {
   idempotency_key: string;
   created_at: string;
   updated_at: string;
+}
+
+interface DbMagicLinkTokenRow {
+  link_id: string;
+  link_user_id: string;
+  link_expires_at: string;
+  link_used_at: string | null;
+  link_revoked_at: string | null;
+  user_id: string;
+  user_email: string;
+  user_display_name: string;
+  user_status: string;
+  user_created_at: string;
+  user_verified_at: string | null;
 }

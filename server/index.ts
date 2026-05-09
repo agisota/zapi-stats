@@ -21,6 +21,7 @@ import { ProvisioningService } from './services/provisioning-service.ts';
 import { DvnetService } from './services/dvnet-service.ts';
 import { UsageBillingService } from './services/usage-billing-service.ts';
 import { AccountAnalyticsService } from './services/account-analytics-service.ts';
+import { createMagicLinkMailer } from './services/magic-link-mailer.ts';
 import type { Database } from 'bun:sqlite';
 
 interface CreateAppOptions {
@@ -28,6 +29,8 @@ interface CreateAppOptions {
   accountDb?: Database;
   gatewayWriteDbPath?: string | null;
   dvnetEnv?: Record<string, string | undefined>;
+  magicLinkEnv?: Record<string, string | undefined>;
+  magicLinkFetch?: (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
   enforceAccountBalance?: boolean;
 }
 
@@ -50,6 +53,7 @@ export function createApp(db: Database, logsPathOrOptions?: string | CreateAppOp
   const languageAnalyzer = new LanguageAnalyzer(db, options.logsPath);
   const toolAnalyzer = new ToolAnalyzer(db, options.logsPath);
   const dvnet = new DvnetService(options.dvnetEnv ?? {});
+  const magicLinks = createMagicLinkMailer(options.magicLinkEnv ?? process.env, options.magicLinkFetch);
   const usageBilling = new UsageBillingService(db, accountStateDb, accountService, provisioner, { enforceBalance: enforceAccountBalance });
   const accountAnalytics = new AccountAnalyticsService(db, accountStateDb);
   const authService = new AuthService(db, apiKey => {
@@ -74,7 +78,7 @@ export function createApp(db: Database, logsPathOrOptions?: string | CreateAppOp
   app.route('/api', statsRoutes(statsService, languageAnalyzer, toolAnalyzer));
   app.route('/api', analyticsRoutes(accountAnalytics));
   app.route('/api', userRoutes(statsService, authService, logReader));
-  app.route('/api', accountRoutes(accountService, provisioner, dvnet, usageBilling, accountAnalytics));
+  app.route('/api', accountRoutes(accountService, provisioner, dvnet, usageBilling, accountAnalytics, magicLinks));
   app.route('/api', supportRoutes());
   app.route('/api', skillsRoutes());
 
@@ -104,6 +108,7 @@ export function createProductionApp(db: Database, logsPath?: string, accountDb?:
     accountDb,
     gatewayWriteDbPath: process.env.OMNIROUTE_RW_DB_PATH ?? null,
     dvnetEnv: process.env,
+    magicLinkEnv: process.env,
   });
 
   // Serve static frontend in production

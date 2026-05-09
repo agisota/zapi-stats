@@ -7,8 +7,9 @@ import { DeploymentStatus } from './components/deployment/deployment-status.tsx'
 import { ModelAvailability } from './components/models/model-availability.tsx';
 import { ApiKeyModal } from './components/auth/api-key-modal.tsx';
 import { SupportModal } from './components/support/support-modal.tsx';
-import { Activity, LifeBuoy, Lock, LogOut, Sparkles, Zap } from 'lucide-react';
+import { Activity, Copy, KeyRound, LifeBuoy, Lock, LogOut, Sparkles, Zap } from 'lucide-react';
 import { displayName } from './lib/display.ts';
+import { verifyMagicLink } from './lib/api.ts';
 
 type Page = 'leaderboard' | 'dashboard' | 'skills';
 
@@ -24,7 +25,8 @@ export function App() {
   const [page, setPage] = useState<Page>(() => initialPage());
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showSupportModal, setShowSupportModal] = useState(false);
-  const { isAuthenticated, keyName, account, logout } = useAuth();
+  const [magicResult, setMagicResult] = useState<{ rawKey: string; keyPrefix: string } | { error: string } | null>(null);
+  const { isAuthenticated, keyName, account, logout, loginAccount } = useAuth();
   const activeName = displayName(keyName ?? account?.displayName ?? null);
 
   useEffect(() => {
@@ -35,6 +37,37 @@ export function App() {
     };
     document.title = titleByPage[page];
   }, [activeName, page]);
+
+  useEffect(() => {
+    const token = readMagicLinkToken();
+    if (!token) return;
+    let cancelled = false;
+    window.history.replaceState(null, '', `${window.location.pathname}${window.location.search}`);
+    verifyMagicLink(token)
+      .then(result => {
+        if (cancelled) return;
+        const key = result.data.defaultKey;
+        loginAccount(
+          result.data.sessionToken,
+          result.data.user,
+          null,
+          result.data.user.displayName,
+          key?.gatewayKeyId ?? null,
+        );
+        if (key?.rawKey) {
+          setMagicResult({ rawKey: key.rawKey, keyPrefix: key.keyPrefix });
+        }
+        setPage('dashboard');
+      })
+      .catch(error => {
+        if (cancelled) return;
+        setMagicResult({ error: error instanceof Error ? error.message : 'Magic link недействителен или истек.' });
+        setShowAuthModal(true);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [loginAccount]);
 
   return (
     <div className="app-shell min-h-screen overflow-x-hidden">
@@ -133,6 +166,54 @@ export function App() {
         />
       )}
       {showSupportModal && <SupportModal onClose={() => setShowSupportModal(false)} />}
+      {magicResult && <MagicLinkResultModal result={magicResult} onClose={() => setMagicResult(null)} />}
+    </div>
+  );
+}
+
+function readMagicLinkToken(): string | null {
+  if (typeof window === 'undefined') return null;
+  const hash = window.location.hash.replace(/^#/, '');
+  if (!hash) return null;
+  const params = new URLSearchParams(hash);
+  return params.get('token') ?? params.get('magic');
+}
+
+function MagicLinkResultModal({
+  result,
+  onClose,
+}: {
+  result: { rawKey: string; keyPrefix: string } | { error: string };
+  onClose: () => void;
+}) {
+  const isError = 'error' in result;
+  return (
+    <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm" onClick={onClose}>
+      <div className="surface-card w-full max-w-md rounded-xl border p-6 shadow-2xl" onClick={event => event.stopPropagation()}>
+        <div className="mb-4 flex items-center gap-2">
+          <KeyRound className={`h-5 w-5 ${isError ? 'text-red-300' : 'text-emerald-300'}`} />
+          <h2 className="text-lg font-semibold text-white">{isError ? 'Ссылка не сработала' : 'Email подтвержден'}</h2>
+        </div>
+        {isError ? (
+          <p className="text-sm text-red-200">{result.error}</p>
+        ) : (
+          <>
+            <p className="text-sm text-gray-400">Аккаунт активирован. Сохраните первый API key сейчас: полный ключ больше не будет показан.</p>
+            <div className="mt-4 rounded-lg border border-emerald-300/20 bg-emerald-300/8 p-3 font-mono text-xs text-emerald-100 break-all">{result.rawKey}</div>
+            <button
+              type="button"
+              onClick={() => void navigator.clipboard?.writeText(result.rawKey)}
+              className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-300/25 bg-cyan-300/10 py-2.5 text-sm font-medium text-cyan-100 transition-colors hover:bg-cyan-300/16"
+            >
+              <Copy className="h-4 w-4" />
+              Скопировать ключ
+            </button>
+          </>
+        )}
+        <button onClick={onClose} className="mt-4 w-full rounded-lg bg-cyan-600 py-2.5 font-medium text-white transition-colors hover:bg-cyan-500">
+          Открыть кабинет
+        </button>
+      </div>
     </div>
   );
 }

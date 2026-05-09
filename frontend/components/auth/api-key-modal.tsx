@@ -14,9 +14,17 @@ export function ApiKeyModal({ onClose, onSuccess }: Props) {
   const [email, setEmail] = useState('');
   const [displayName, setDisplayName] = useState('');
   const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
   const [issuedKey, setIssuedKey] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const { login, loginAccount } = useAuth();
+
+  const switchMode = (nextMode: 'key' | 'register' | 'account-login') => {
+    setMode(nextMode);
+    setError('');
+    setNotice('');
+    setIssuedKey(null);
+  };
 
   const handleKeySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +32,7 @@ export function ApiKeyModal({ onClose, onSuccess }: Props) {
 
     setLoading(true);
     setError('');
+    setNotice('');
 
     try {
       const result = await validateApiKey(key.trim());
@@ -46,6 +55,7 @@ export function ApiKeyModal({ onClose, onSuccess }: Props) {
 
     setLoading(true);
     setError('');
+    setNotice('');
     setIssuedKey(null);
 
     try {
@@ -64,12 +74,22 @@ export function ApiKeyModal({ onClose, onSuccess }: Props) {
         setIssuedKey(rawKey);
         if (!rawKey && result.data.sessionToken) onSuccess();
         if (!rawKey && !result.data.sessionToken) {
-          setError('Аккаунт создан, но для production нужна верификация email перед выдачей ключа и входом в кабинет.');
+          if (result.data.magicLinkSent) {
+            setNotice('Аккаунт создан. Мы отправили одноразовую ссылку на email; после проверки откроется кабинет.');
+          } else {
+            setError('Аккаунт создан, но production email-провайдер еще не настроен. Вход и ключ будут доступны после верификации.');
+          }
         }
       } else {
         const result = await loginAccountRequest(email.trim());
-        loginAccount(result.data.sessionToken, result.data.user);
-        onSuccess();
+        if (result.data.sessionToken && result.data.user) {
+          loginAccount(result.data.sessionToken, result.data.user);
+          onSuccess();
+        } else if (result.data.magicLinkSent) {
+          setNotice('Если аккаунт существует, мы отправили одноразовую ссылку для входа на указанный email.');
+        } else {
+          setError('Не удалось открыть аккаунт');
+        }
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Не удалось открыть аккаунт');
@@ -92,9 +112,9 @@ export function ApiKeyModal({ onClose, onSuccess }: Props) {
         </div>
 
         <div className="mb-4 grid grid-cols-3 gap-1 rounded-lg border border-[#1e293b] bg-[#0a0e1a] p-1 text-xs">
-          <button className={`rounded-md px-2 py-2 ${mode === 'key' ? 'bg-cyan-500/20 text-cyan-100' : 'text-gray-500'}`} onClick={() => setMode('key')}>API key</button>
-          <button className={`rounded-md px-2 py-2 ${mode === 'register' ? 'bg-cyan-500/20 text-cyan-100' : 'text-gray-500'}`} onClick={() => setMode('register')}>Регистрация</button>
-          <button className={`rounded-md px-2 py-2 ${mode === 'account-login' ? 'bg-cyan-500/20 text-cyan-100' : 'text-gray-500'}`} onClick={() => setMode('account-login')}>Аккаунт</button>
+          <button className={`rounded-md px-2 py-2 ${mode === 'key' ? 'bg-cyan-500/20 text-cyan-100' : 'text-gray-500'}`} onClick={() => switchMode('key')}>API key</button>
+          <button className={`rounded-md px-2 py-2 ${mode === 'register' ? 'bg-cyan-500/20 text-cyan-100' : 'text-gray-500'}`} onClick={() => switchMode('register')}>Регистрация</button>
+          <button className={`rounded-md px-2 py-2 ${mode === 'account-login' ? 'bg-cyan-500/20 text-cyan-100' : 'text-gray-500'}`} onClick={() => switchMode('account-login')}>Аккаунт</button>
         </div>
 
         {mode === 'key' ? (
@@ -112,6 +132,7 @@ export function ApiKeyModal({ onClose, onSuccess }: Props) {
             />
 
             {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
+            {notice && <p className="mt-2 rounded-lg border border-emerald-300/20 bg-emerald-300/8 px-3 py-2 text-sm text-emerald-100">{notice}</p>}
 
             <SubmitButton loading={loading} disabled={!key.trim()} text="Открыть мои логи" loadingText="Проверяем..." />
           </form>
@@ -125,8 +146,8 @@ export function ApiKeyModal({ onClose, onSuccess }: Props) {
           <form onSubmit={handleAccountSubmit}>
             <p className="text-sm text-gray-400 mb-4">
               {mode === 'register'
-                ? 'Создайте аккаунт, получите первый API key и управляйте балансом, лимитами и пополнениями.'
-                : 'Вход по email включается для production только после настройки verified magic-link провайдера.'}
+                ? 'Создайте аккаунт. В production мы сначала проверяем email одноразовой ссылкой, затем выдаем первый API key.'
+                : 'Введите email: в production придет одноразовая ссылка для входа, API key вводить не нужно.'}
             </p>
             <input
               type="email"
@@ -146,7 +167,8 @@ export function ApiKeyModal({ onClose, onSuccess }: Props) {
               />
             )}
             {error && <p className="mt-2 text-sm text-red-400">{error}</p>}
-            <SubmitButton loading={loading} disabled={!email.trim()} text={mode === 'register' ? 'Создать аккаунт и ключ' : 'Войти'} loadingText="Обрабатываем..." />
+            {notice && <p className="mt-2 rounded-lg border border-emerald-300/20 bg-emerald-300/8 px-3 py-2 text-sm text-emerald-100">{notice}</p>}
+            <SubmitButton loading={loading} disabled={!email.trim()} text={mode === 'register' ? 'Создать аккаунт' : 'Отправить ссылку'} loadingText="Обрабатываем..." />
           </form>
         )}
       </div>

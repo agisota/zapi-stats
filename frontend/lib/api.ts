@@ -111,6 +111,14 @@ export async function loginAccount(email: string) {
   });
 }
 
+export async function verifyMagicLink(token: string) {
+  return fetchJson<{ data: MagicLinkVerificationResult }>('/account/magic/verify', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token }),
+  });
+}
+
 function accountHeaders(sessionToken: string): Record<string, string> {
   return { 'X-Account-Session': sessionToken };
 }
@@ -673,11 +681,22 @@ export interface AccountRegistrationResult {
   sessionToken: string | null;
   defaultKey: (ManagedApiKey & { rawKey: string }) | null;
   verificationRequired: boolean;
+  magicLinkSent: boolean;
 }
 
 export interface AccountLoginResult {
+  user: AccountUser | null;
+  sessionToken: string | null;
+  verificationRequired: boolean;
+  magicLinkSent: boolean;
+}
+
+export interface MagicLinkVerificationResult {
   user: AccountUser;
   sessionToken: string;
+  defaultKey: (ManagedApiKey & { rawKey: string }) | null;
+  verified: boolean;
+  activated: boolean;
 }
 
 export interface AccountBalance {
