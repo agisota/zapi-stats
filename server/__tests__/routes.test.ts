@@ -36,6 +36,54 @@ describe('GET /api/health', () => {
       else process.env.API_ZED_HEALTH_URL = previousHealthUrl;
     }
   });
+
+  test('retries transient empty deployment status responses', async () => {
+    const previousHealthUrl = process.env.API_ZED_HEALTH_URL;
+    const previousModelsUrl = process.env.API_ZED_MODELS_URL;
+    const previousFetch = globalThis.fetch;
+    let healthCalls = 0;
+
+    try {
+      process.env.API_ZED_HEALTH_URL = 'http://runtime.test/health';
+      process.env.API_ZED_MODELS_URL = 'http://runtime.test/models';
+      globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+        const url = String(input);
+        if (url === 'http://runtime.test/health') {
+          healthCalls += 1;
+          if (healthCalls === 1) {
+            return new Response('', { status: 200 });
+          }
+          return Response.json({
+            status: 'healthy',
+            version: 'test-runtime',
+            activeConnections: 7,
+            providerSummary: { catalogCount: 2, configuredCount: 2, activeCount: 1 },
+            system: { uptime: 42, memoryUsage: { rss: 1024 }, nodeVersion: 'v-test' },
+          });
+        }
+        if (url === 'http://runtime.test/models') {
+          return Response.json({ data: [{ id: 'a' }, { id: 'b' }] });
+        }
+        return previousFetch(input, init);
+      }) as typeof fetch;
+
+      const { app: retryApp } = createTestApp();
+      const res = await retryApp.request('/api/deployment/status');
+      expect(res.status).toBe(200);
+      const body = await res.json();
+      expect(healthCalls).toBe(2);
+      expect(body.data.status).toBe('healthy');
+      expect(body.data.version).toBe('test-runtime');
+      expect(body.data.modelCount).toBe(2);
+      expect(body.data.error).toBeUndefined();
+    } finally {
+      globalThis.fetch = previousFetch;
+      if (previousHealthUrl === undefined) delete process.env.API_ZED_HEALTH_URL;
+      else process.env.API_ZED_HEALTH_URL = previousHealthUrl;
+      if (previousModelsUrl === undefined) delete process.env.API_ZED_MODELS_URL;
+      else process.env.API_ZED_MODELS_URL = previousModelsUrl;
+    }
+  });
 });
 
 describe('GET /api/leaderboard', () => {

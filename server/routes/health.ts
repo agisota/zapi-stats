@@ -10,18 +10,30 @@ function upstreamEnv(name: 'HEALTH_URL' | 'MODELS_URL', fallback: string): strin
     ?? fallback;
 }
 
-async function fetchJsonWithTimeout<T>(url: string, timeoutMs: number): Promise<T> {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), timeoutMs);
-  try {
-    const response = await fetch(url, { signal: controller.signal });
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
+async function fetchJsonWithTimeout<T>(url: string, timeoutMs: number, attempts = 2): Promise<T> {
+  let lastError: unknown;
+
+  for (let attempt = 0; attempt < attempts; attempt += 1) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const response = await fetch(url, { signal: controller.signal });
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`);
+      }
+      const body = await response.text();
+      if (!body.trim()) {
+        throw new Error('empty JSON response');
+      }
+      return JSON.parse(body) as T;
+    } catch (error) {
+      lastError = error;
+    } finally {
+      clearTimeout(timeout);
     }
-    return await response.json() as T;
-  } finally {
-    clearTimeout(timeout);
   }
+
+  throw lastError instanceof Error ? lastError : new Error('unknown fetch error');
 }
 
 export function healthRoutes() {
