@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "dev:server": "bun --watch server/index.ts",
+    "skills:catalog": "bun scripts/generate-skills-catalog.ts",
+    "skills:sync-archives": "bun scripts/sync-skill-archives-to-remote.ts",
     "build": "vite build",
     "start": "NODE_ENV=production bun server/index.ts",
     "test": "bun test"

@@ -160,6 +160,32 @@ describe('GET /api/stats/*', () => {
   });
 });
 
+describe('GET /api/skills', () => {
+  test('returns portable install commands without local usernames', async () => {
+    const res = await req('/api/skills');
+    expect(res.status).toBe(200);
+    const body = await json(res);
+    expect(body.data.total).toBeGreaterThan(0);
+    expect(body.data.items).toBeArray();
+    const serialized = JSON.stringify(body.data.items);
+    expect(serialized.includes('/Users/marklindgreen')).toBe(false);
+    expect(body.data.items[0].installCommand.startsWith('curl -fsSL "https://skills.api.zed.md/api/skills/')).toBe(true);
+  });
+
+  test('returns a universal installer script for a skill', async () => {
+    const listRes = await req('/api/skills');
+    const listBody = await json(listRes);
+    const first = listBody.data.items[0];
+    const res = await req(`/api/skills/${encodeURIComponent(first.id)}/install.sh`);
+    expect(res.status).toBe(200);
+    const text = await res.text();
+    expect(text).toContain('${CODEX_HOME:-$HOME/.codex}/skills/');
+    expect(text).toContain('/archive.tar.gz');
+    expect(text).toContain('--strip-components=1');
+    expect(text.includes('/Users/marklindgreen')).toBe(false);
+  });
+});
+
 describe('POST /api/auth/validate', () => {
   test('validates correct key', async () => {
     const res = await req('/api/auth/validate', {

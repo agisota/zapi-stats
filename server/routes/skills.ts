@@ -1,16 +1,25 @@
 import { Hono } from 'hono';
 import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { getRawSkillsCatalog, getSkillsCatalog } from '../services/skills-catalog.ts';
 
 type SkillAction = 'like' | 'download';
 
 const catalog = getRawSkillsCatalog();
+const publicBaseUrl = process.env.SKILLS_PUBLIC_BASE_URL ?? 'https://skills.api.zed.md';
+
+function getStateDir(): string {
+  return process.env.APP_STATE_DIR ?? '/data/zapi-stats-state';
+}
+
+function getArchiveDir(): string {
+  return process.env.SKILLS_ARCHIVE_DIR ?? join(getStateDir(), 'skill-archives');
+}
 
 async function readState(): Promise<Record<string, { likes?: number; downloads?: number }>> {
-  const stateDir = process.env.APP_STATE_DIR ?? '/data/zapi-stats-state';
   try {
-    const raw = await readFile(join(stateDir, 'skills-state.json'), 'utf8');
+    const raw = await readFile(join(getStateDir(), 'skills-state.json'), 'utf8');
     return JSON.parse(raw) as Record<string, { likes?: number; downloads?: number }>;
   } catch {
     return {};
@@ -18,9 +27,35 @@ async function readState(): Promise<Record<string, { likes?: number; downloads?:
 }
 
 async function writeState(state: Record<string, { likes?: number; downloads?: number }>): Promise<void> {
-  const stateDir = process.env.APP_STATE_DIR ?? '/data/zapi-stats-state';
+  const stateDir = getStateDir();
   await mkdir(stateDir, { recursive: true });
   await writeFile(join(stateDir, 'skills-state.json'), JSON.stringify(state, null, 2));
+}
+
+function findSkill(id: string) {
+  return catalog.find(item => item.id === id);
+}
+
+function shellQuote(value: string): string {
+  return `'${value.replace(/'/g, `'\\''`)}'`;
+}
+
+function installScriptFor(id: string): string {
+  const archiveUrl = `${publicBaseUrl}/api/skills/${encodeURIComponent(id)}/archive.tar.gz`;
+  return `#!/usr/bin/env bash
+set -euo pipefail
+
+skill_id=${shellQuote(id)}
+target="\${CODEX_HOME:-$HOME/.codex}/skills/${id}"
+tmp_dir="$(mktemp -d)"
+trap 'rm -rf "$tmp_dir"' EXIT
+
+mkdir -p "$target"
+curl -fsSL ${shellQuote(archiveUrl)} -o "$tmp_dir/skill.tar.gz"
+tar -xzf "$tmp_dir/skill.tar.gz" -C "$target" --strip-components=1
+
+printf 'Installed %s into %s\\n' "$skill_id" "$target"
+`;
 }
 
 export function skillsRoutes() {
@@ -50,6 +85,36 @@ export function skillsRoutes() {
         items,
         sources: [...new Set(catalog.map(skill => skill.source))].sort(),
         categories: [...new Set(withState.map(skill => skill.category))].sort(),
+      },
+    });
+  });
+
+  app.get('/skills/:id/install.sh', (c) => {
+    const id = c.req.param('id');
+    const skill = findSkill(id);
+    if (!skill) return c.text('Skill not found\n', 404);
+
+    return c.text(installScriptFor(skill.id), 200, {
+      'Content-Type': 'text/x-shellscript; charset=utf-8',
+      'Cache-Control': 'public, max-age=300',
+    });
+  });
+
+  app.get('/skills/:id/archive.tar.gz', (c) => {
+    const id = c.req.param('id');
+    const skill = findSkill(id);
+    if (!skill) return c.json({ error: { code: 'NOT_FOUND', message: 'Skill not found' } }, 404);
+
+    const archivePath = join(getArchiveDir(), `${skill.id}.tar.gz`);
+    if (!existsSync(archivePath)) {
+      return c.json({ error: { code: 'ARCHIVE_MISSING', message: 'Skill archive has not been synced yet' } }, 404);
+    }
+
+    return new Response(Bun.file(archivePath), {
+      headers: {
+        'Content-Type': 'application/gzip',
+        'Content-Disposition': `attachment; filename="${skill.id}.tar.gz"`,
+        'Cache-Control': 'public, max-age=3600',
       },
     });
   });
