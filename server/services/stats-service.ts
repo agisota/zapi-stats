@@ -3,6 +3,8 @@ import { calculateCost, getModelRate } from './pricing.ts';
 import { Anonymizer, resolveAnonSecret } from './anonymizer.ts';
 import { RECOVERED_HISTORY_KEY } from '../recovered-history.ts';
 
+const LIVE_STATS_CACHE_TTL_MS = 5_000;
+
 export interface LeaderboardEntry {
   name: string;
   displayName: string;
@@ -183,7 +185,7 @@ export class StatsService {
   }
 
   getLeaderboard(): LeaderboardEntry[] {
-    return this.getCached('leaderboard', 60_000, () => {
+    return this.getCached('leaderboard', LIVE_STATS_CACHE_TTL_MS, () => {
       const rows = this.db.prepare(`
         SELECT
           api_key_name as name,
@@ -330,7 +332,7 @@ export class StatsService {
   }
 
   getObservedActivity(): ObservedActivity {
-    return this.getCached('observed-activity', 60_000, () => {
+    return this.getCached('observed-activity', LIVE_STATS_CACHE_TTL_MS, () => {
       const api = this.db.prepare(`
         SELECT COUNT(*) as requests,
           COALESCE(SUM(tokens_input), 0) as tokensIn,
@@ -385,7 +387,7 @@ export class StatsService {
   }
 
   getOverview(): OverviewStats {
-    return this.getCached('overview', 60_000, () => {
+    return this.getCached('overview', LIVE_STATS_CACHE_TTL_MS, () => {
       const row = this.db.prepare(`
         SELECT
           COUNT(*) as totalRequests,
@@ -416,7 +418,7 @@ export class StatsService {
   }
 
   getModelStats(): ModelStats[] {
-    return this.getCached('models', 120_000, () => {
+    return this.getCached('models', LIVE_STATS_CACHE_TTL_MS, () => {
       const rows = this.db.prepare(`
         SELECT
           model,
@@ -480,7 +482,7 @@ export class StatsService {
   }
 
   getProviderStats(): ProviderStats[] {
-    return this.getCached('providers', 120_000, () => {
+    return this.getCached('providers', LIVE_STATS_CACHE_TTL_MS, () => {
       const rows = this.db.prepare(`
         SELECT provider,
           SUM(count) as count,
@@ -554,7 +556,7 @@ export class StatsService {
   }
 
   getHistoricalTimeline(): HistoricalTimeline {
-    return this.getCached('historical-timeline', 60_000, () => {
+    return this.getCached('historical-timeline', LIVE_STATS_CACHE_TTL_MS, () => {
       const recoveredRows = this.db.prepare(`
         SELECT strftime('%Y-%m-%dT00:00:00Z', timestamp) as bucket,
           COUNT(*) as requests, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut

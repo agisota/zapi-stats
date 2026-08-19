@@ -121,14 +121,26 @@ describe('StatsService', () => {
       expect(alice.lastSeen).toBe('2026-04-08T13:00:00Z');
     });
 
-    test('caches results', () => {
-      const lb1 = stats.getLeaderboard();
-      db.prepare(`
-        INSERT INTO usage_history (provider, model, api_key_id, api_key_name, tokens_input, tokens_output, status, success, latency_ms, ttft_ms, timestamp)
-        VALUES ('claude', 'claude-opus-4-6', 'key-1', 'alice', 99999, 99999, 'ok', 1, 100, 10, '2026-04-09T00:00:00Z')
-      `).run();
-      const lb2 = stats.getLeaderboard();
-      expect(lb2).toBe(lb1);
+    test('refreshes live aggregates after five seconds', () => {
+      const originalNow = Date.now;
+      let now = 1_000_000;
+      Date.now = () => now;
+      try {
+        const lb1 = stats.getLeaderboard();
+        const initialRequests = lb1.find(entry => entry.name === alias('alice'))?.requests;
+        db.prepare(`
+          INSERT INTO usage_history (provider, model, api_key_id, api_key_name, tokens_input, tokens_output, status, success, latency_ms, ttft_ms, timestamp)
+          VALUES ('claude', 'claude-opus-4-6', 'key-1', 'alice', 99999, 99999, 'ok', 1, 100, 10, '2026-04-09T00:00:00Z')
+        `).run();
+        expect(stats.getLeaderboard()).toBe(lb1);
+
+        now += 5_000;
+        const lb2 = stats.getLeaderboard();
+        expect(lb2).not.toBe(lb1);
+        expect(lb2.find(entry => entry.name === alias('alice'))?.requests).toBe((initialRequests ?? 0) + 1);
+      } finally {
+        Date.now = originalNow;
+      }
     });
   });
 
