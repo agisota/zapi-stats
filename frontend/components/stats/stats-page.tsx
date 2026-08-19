@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getModelStats, getProviderStats, getTimeline } from '../../lib/api.ts';
+import { getModelStats, getObservedActivity, getOverview, getProviderStats, getTimeline } from '../../lib/api.ts';
 import { formatNumber, formatCost, formatLatency, formatPercent } from '../../lib/format.ts';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
 import { BarChart3, Globe, Clock } from 'lucide-react';
@@ -7,12 +7,89 @@ import { BarChart3, Globe, Clock } from 'lucide-react';
 const COLORS = ['#06b6d4', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444', '#ec4899', '#6366f1', '#14b8a6'];
 
 export function StatsPage() {
+  const { data: overview } = useQuery({ queryKey: ['overview'], queryFn: getOverview });
+  const { data: observed } = useQuery({ queryKey: ['observed-activity'], queryFn: getObservedActivity });
   const { data: models } = useQuery({ queryKey: ['models'], queryFn: getModelStats });
   const { data: providers } = useQuery({ queryKey: ['providers'], queryFn: getProviderStats });
   const { data: timeline } = useQuery({ queryKey: ['timeline', '7d'], queryFn: () => getTimeline('7d') });
 
   return (
     <div className="space-y-6">
+      {overview?.data && (
+        <div className="bg-[#111827] border border-cyan-900/60 rounded-xl p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <h3 className="font-semibold text-white">Recovered API history</h3>
+              <p className="text-xs text-gray-500 mt-1">
+                Sanitized historical usage included in the API totals.
+              </p>
+            </div>
+            <div className="text-right">
+              <div className="text-xs uppercase tracking-wider text-gray-500">Recovered requests</div>
+              <div className="text-2xl font-semibold text-cyan-300">{formatNumber(overview.data.recoveredHistory.rows)}</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mt-5 text-sm">
+            <ObservedMetric label="API requests total" value={formatNumber(overview.data.totalRequests)} />
+            <ObservedMetric label="API input tokens total" value={formatNumber(overview.data.totalTokensIn)} />
+            <ObservedMetric
+              label="Recovered period"
+              value={`${formatObservedDate(overview.data.recoveredHistory.firstSeen)} — ${formatObservedDate(overview.data.recoveredHistory.lastSeen)}`}
+            />
+          </div>
+        </div>
+      )}
+      {observed?.data && (
+        <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-6">
+          <div className="flex flex-wrap items-start justify-between gap-4 mb-5">
+            <div>
+              <h3 className="font-semibold text-white">Observed Activity</h3>
+              <p className="text-xs text-gray-500 mt-1">{observed.data.note}</p>
+              {(observed.data.telemetry.firstSeen || observed.data.telemetry.lastSeen) && (
+                <p className="text-xs text-gray-500 mt-2">
+                  Telemetry coverage: {formatObservedDate(observed.data.telemetry.firstSeen)} — {formatObservedDate(observed.data.telemetry.lastSeen)}
+                </p>
+              )}
+            </div>
+            <div className="text-right">
+              <div className="text-xs uppercase tracking-wider text-gray-500">Combined observed events</div>
+              <div className="text-2xl font-semibold text-cyan-300">{formatNumber(observed.data.observedEventsTotal)}</div>
+            </div>
+          </div>
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 text-sm">
+            <ObservedMetric label="OmniRoute API requests" value={formatNumber(observed.data.api.requests)} />
+            <ObservedMetric label="Telemetry events" value={formatNumber(observed.data.telemetry.events)} />
+            <ObservedMetric label="Observed tokens" value={formatNumber(observed.data.observedTokensTotal)} />
+            <ObservedMetric label="API cost" value={formatCost(observed.data.api.cost)} />
+            <ObservedMetric label="Recorded telemetry cost" value={formatCost(observed.data.telemetry.recordedCost)} />
+          </div>
+          {observed.data.telemetry.lanes.length > 0 && (
+            <div className="mt-5 overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="text-xs text-gray-500 uppercase tracking-wider">
+                    <th className="py-2 text-left">Telemetry lane</th>
+                    <th className="py-2 text-right">Events</th>
+                    <th className="py-2 text-right">Tokens</th>
+                    <th className="py-2 text-right">Recorded cost</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#1e293b]">
+                  {observed.data.telemetry.lanes.map(lane => (
+                    <tr key={lane.lane}>
+                      <td className="py-2 text-gray-300">{lane.lane}</td>
+                      <td className="py-2 text-right font-mono text-gray-300">{formatNumber(lane.events)}</td>
+                      <td className="py-2 text-right font-mono text-gray-300">{formatNumber(lane.totalTokens)}</td>
+                      <td className="py-2 text-right font-mono text-amber-400">{formatCost(lane.recordedCost)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Timeline */}
       {timeline?.data && timeline.data.length > 0 && (
         <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-6">
@@ -145,6 +222,21 @@ export function StatsPage() {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+function formatObservedDate(value: string | null): string {
+  if (!value) return 'unknown';
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return date.toLocaleString('ru-RU', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'UTC' });
+}
+
+function ObservedMetric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg bg-[#0a0e1a] border border-[#1e293b] p-3">
+      <div className="text-xs text-gray-500">{label}</div>
+      <div className="mt-1 font-mono text-gray-200">{value}</div>
     </div>
   );
 }

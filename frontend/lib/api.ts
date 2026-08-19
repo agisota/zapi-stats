@@ -18,6 +18,10 @@ export async function getOverview() {
   return fetchJson<{ data: OverviewStats }>('/stats/overview');
 }
 
+export async function getObservedActivity() {
+  return fetchJson<{ data: ObservedActivity }>('/stats/observed-activity');
+}
+
 export async function getModelStats() {
   return fetchJson<{ data: ModelStat[] }>('/stats/models');
 }
@@ -99,6 +103,12 @@ export interface LeaderboardEntry {
   dailyActivity: number[];
 }
 
+export interface RecoveredHistorySummary {
+  rows: number;
+  firstSeen: string | null;
+  lastSeen: string | null;
+}
+
 export interface OverviewStats {
   totalRequests: number;
   totalTokensIn: number;
@@ -107,6 +117,44 @@ export interface OverviewStats {
   activeKeys: number;
   uniqueModels: number;
   uniqueProviders: number;
+  recoveredHistory: RecoveredHistorySummary;
+}
+
+export interface ObservedTelemetryLane {
+  lane: string;
+  events: number;
+  tokensIn: number;
+  tokensOut: number;
+  totalTokens: number;
+  recordedCost: number;
+  firstSeen: string | null;
+  lastSeen: string | null;
+}
+
+export interface ObservedActivity {
+  api: {
+    requests: number;
+    tokensIn: number;
+    tokensOut: number;
+    cost: number;
+    firstSeen: string | null;
+    lastSeen: string | null;
+  };
+  telemetry: {
+    events: number;
+    tokensIn: number;
+    tokensOut: number;
+    totalTokens: number;
+    recordedCost: number;
+    firstSeen: string | null;
+    lastSeen: string | null;
+    lanes: ObservedTelemetryLane[];
+  };
+  observedEventsTotal: number;
+  observedTokensIn: number;
+  observedTokensOut: number;
+  observedTokensTotal: number;
+  note: string;
 }
 
 export interface ModelStat {

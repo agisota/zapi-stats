@@ -9,7 +9,7 @@ import { Activity, BarChart3, Lock, LogOut, Zap } from 'lucide-react';
 type Page = 'leaderboard' | 'stats' | 'dashboard';
 
 export function App() {
-  const [page, setPage] = useState<Page>('leaderboard');
+  const [page, setPage] = useState<Page>('stats');
   const [showAuthModal, setShowAuthModal] = useState(false);
   const { isAuthenticated, keyName, logout } = useAuth();
 

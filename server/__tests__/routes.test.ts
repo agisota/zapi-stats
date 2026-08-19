@@ -1,5 +1,9 @@
 import { test, expect, describe } from 'bun:test';
 import { createTestApp } from './fixtures/test-app.ts';
+import { Anonymizer, resolveAnonSecret } from '../services/anonymizer.ts';
+
+const alias = (name: string) => new Anonymizer(resolveAnonSecret()).alias(name);
+
 
 const { app } = createTestApp();
 
@@ -29,7 +33,7 @@ describe('GET /api/leaderboard', () => {
     const body = await res.json();
     expect(body.data).toBeArray();
     expect(body.data.length).toBe(3);
-    expect(body.data[0].name).toBe('alice');
+    expect(body.data[0].name).toBe(alias('alice'));
   });
 
   test('includes extended metrics and displayName', async () => {
@@ -37,7 +41,7 @@ describe('GET /api/leaderboard', () => {
     const body = await res.json();
     const alice = body.data[0];
     expect(alice.cost).toBeGreaterThan(0);
-    expect(alice.displayName).toBe('alice');
+    expect(alice.displayName).toBe(alias('alice'));
     expect(alice.topModel).toBe('claude-opus-4-6');
     expect(alice.successRate).toBeCloseTo(0.75, 2);
     expect(alice.errorCount).toBe(1);
@@ -58,20 +62,18 @@ describe('GET /api/stats/*', () => {
     expect(body.data.totalCost).toBeGreaterThan(0);
   });
 
-  test('models returns breakdown', async () => {
+  test('models suppresses breakdown below the three-key privacy threshold', async () => {
     const res = await req('/api/stats/models');
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.data).toBeArray();
-    expect(body.data[0].model).toBe('claude-opus-4-6');
+    expect(body.data).toEqual([]);
   });
 
-  test('providers returns breakdown', async () => {
+  test('providers suppresses breakdown below the three-key privacy threshold', async () => {
     const res = await req('/api/stats/providers');
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.data).toBeArray();
-    expect(body.data.length).toBe(4);
+    expect(body.data).toEqual([]);
   });
 
   test('timeline returns data points', async () => {
@@ -81,11 +83,11 @@ describe('GET /api/stats/*', () => {
     expect(body.data).toBeArray();
   });
 
-  test('user/:name returns public stats', async () => {
-    const res = await req('/api/stats/user/alice');
+  test('user/:name returns public stats by alias', async () => {
+    const res = await req(`/api/stats/user/${alias('alice')}`);
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.data.name).toBe('alice');
+    expect(body.data.name).toBe(alias('alice'));
     expect(body.data.requests).toBe(4);
     expect(body.data.models).toBeArray();
   });
@@ -106,7 +108,7 @@ describe('POST /api/auth/validate', () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.valid).toBe(true);
-    expect(body.keyName).toBe('alice');
+    expect(body.keyName).toBe(alias('alice'));
   });
 
   test('rejects invalid key', async () => {
@@ -137,7 +139,7 @@ describe('GET /api/user/* (authenticated)', () => {
     const res = await req('/api/user/stats', { headers: authHeaders });
     expect(res.status).toBe(200);
     const body = await res.json();
-    expect(body.data.name).toBe('alice');
+    expect(body.data.name).toBe(alias('alice'));
   });
 
   test('returns user models', async () => {

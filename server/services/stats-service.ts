@@ -1,6 +1,7 @@
 import type { Database } from 'bun:sqlite';
 import { calculateCost, getModelRate } from './pricing.ts';
-import { getDisplayName } from './display-names.ts';
+import { Anonymizer, resolveAnonSecret } from './anonymizer.ts';
+import { RECOVERED_HISTORY_KEY } from '../recovered-history.ts';
 
 export interface LeaderboardEntry {
   name: string;
@@ -40,6 +41,12 @@ export interface LeaderboardEntry {
   dailyActivity: number[];
 }
 
+export interface RecoveredHistorySummary {
+  rows: number;
+  firstSeen: string | null;
+  lastSeen: string | null;
+}
+
 export interface OverviewStats {
   totalRequests: number;
   totalTokensIn: number;
@@ -48,6 +55,7 @@ export interface OverviewStats {
   activeKeys: number;
   uniqueModels: number;
   uniqueProviders: number;
+  recoveredHistory: RecoveredHistorySummary;
 }
 
 export interface ModelStats {
@@ -76,6 +84,44 @@ export interface TimelinePoint {
   cost: number;
 }
 
+export interface ObservedTelemetryLane {
+  lane: string;
+  events: number;
+  tokensIn: number;
+  tokensOut: number;
+  totalTokens: number;
+  recordedCost: number;
+  firstSeen: string | null;
+  lastSeen: string | null;
+}
+
+export interface ObservedActivity {
+  api: {
+    requests: number;
+    tokensIn: number;
+    tokensOut: number;
+    cost: number;
+    firstSeen: string | null;
+    lastSeen: string | null;
+  };
+  telemetry: {
+    events: number;
+    tokensIn: number;
+    tokensOut: number;
+    totalTokens: number;
+    recordedCost: number;
+    firstSeen: string | null;
+    lastSeen: string | null;
+    lanes: ObservedTelemetryLane[];
+  };
+  observedEventsTotal: number;
+  observedTokensIn: number;
+  observedTokensOut: number;
+  observedTokensTotal: number;
+  note: string;
+}
+
+
 export interface UserPublicStats {
   name: string;
   displayName: string;
@@ -98,10 +144,12 @@ interface CacheEntry<T> {
 
 export class StatsService {
   private db: Database;
+  private anonymizer: Anonymizer;
   private cache = new Map<string, CacheEntry<unknown>>();
 
-  constructor(db: Database) {
+  constructor(db: Database, anonymizer = new Anonymizer(resolveAnonSecret())) {
     this.db = db;
+    this.anonymizer = anonymizer;
   }
 
   private getCached<T>(key: string, ttlMs: number, fn: () => T): T {
@@ -140,10 +188,10 @@ export class StatsService {
           MAX(timestamp) as lastSeen,
           COUNT(DISTINCT DATE(timestamp)) as activeDays
         FROM usage_history
-        WHERE api_key_name IS NOT NULL AND api_key_name != ''
+        WHERE api_key_name IS NOT NULL AND api_key_name != '' AND api_key_name != ?
         GROUP BY api_key_name
         ORDER BY requests DESC
-      `).all() as Array<{
+      `).all(RECOVERED_HISTORY_KEY) as Array<{
         name: string;
         requests: number;
         tokensIn: number;
@@ -194,9 +242,10 @@ export class StatsService {
           .slice(0, 4);
         const { avgSessionMessages, longestSessionMessages } = this.computeSessionStats(timestampRows);
 
+        const alias = this.anonymizer.alias(row.name);
         return {
-          name: row.name,
-          displayName: getDisplayName(row.name),
+          name: alias,
+          displayName: alias,
           requests: row.requests,
           tokensIn: row.tokensIn,
           tokensOut: row.tokensOut,
@@ -265,6 +314,61 @@ export class StatsService {
     });
   }
 
+  getObservedActivity(): ObservedActivity {
+    return this.getCached('observed-activity', 60_000, () => {
+      const api = this.db.prepare(`
+        SELECT COUNT(*) as requests,
+          COALESCE(SUM(tokens_input), 0) as tokensIn,
+          COALESCE(SUM(tokens_output), 0) as tokensOut,
+          MIN(timestamp) as firstSeen,
+          MAX(timestamp) as lastSeen
+        FROM usage_history
+      `).get() as ObservedActivity['api'];
+
+      const hasTelemetry = Boolean(this.db.prepare(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'recovery_telemetry_events'"
+      ).get());
+
+      const telemetry = hasTelemetry
+        ? this.db.prepare(`
+            SELECT COUNT(*) as events,
+              COALESCE(SUM(input_tokens), 0) as tokensIn,
+              COALESCE(SUM(output_tokens), 0) as tokensOut,
+              COALESCE(SUM(total_tokens), 0) as totalTokens,
+              COALESCE(SUM(recorded_cost_usd), 0) as recordedCost,
+              MIN(observed_at) as firstSeen,
+              MAX(observed_at) as lastSeen
+            FROM recovery_telemetry_events
+          `).get() as Omit<ObservedActivity['telemetry'], 'lanes'>
+        : { events: 0, tokensIn: 0, tokensOut: 0, totalTokens: 0, recordedCost: 0, firstSeen: null, lastSeen: null };
+
+      const lanes = hasTelemetry
+        ? this.db.prepare(`
+            SELECT source_lane as lane, COUNT(*) as events,
+              COALESCE(SUM(input_tokens), 0) as tokensIn,
+              COALESCE(SUM(output_tokens), 0) as tokensOut,
+              COALESCE(SUM(total_tokens), 0) as totalTokens,
+              COALESCE(SUM(recorded_cost_usd), 0) as recordedCost,
+              MIN(observed_at) as firstSeen,
+              MAX(observed_at) as lastSeen
+            FROM recovery_telemetry_events
+            GROUP BY source_lane
+            ORDER BY source_lane ASC
+          `).all() as ObservedTelemetryLane[]
+        : [];
+
+      return {
+        api: { ...api, cost: this.calculateTotalCost() },
+        telemetry: { ...telemetry, lanes },
+        observedEventsTotal: api.requests + telemetry.events,
+        observedTokensIn: api.tokensIn + telemetry.tokensIn,
+        observedTokensOut: api.tokensOut + telemetry.tokensOut,
+        observedTokensTotal: api.tokensIn + api.tokensOut + telemetry.totalTokens,
+        note: 'Observed activity is not equivalent to OmniRoute API requests.',
+      };
+    });
+  }
+
   getOverview(): OverviewStats {
     return this.getCached('overview', 60_000, () => {
       const row = this.db.prepare(`
@@ -272,11 +376,11 @@ export class StatsService {
           COUNT(*) as totalRequests,
           SUM(tokens_input) as totalTokensIn,
           SUM(tokens_output) as totalTokensOut,
-          COUNT(DISTINCT api_key_name) as activeKeys,
+          COUNT(DISTINCT CASE WHEN api_key_name IS NOT NULL AND api_key_name != '' AND api_key_name != ? THEN api_key_name END) as activeKeys,
           COUNT(DISTINCT model) as uniqueModels,
           COUNT(DISTINCT provider) as uniqueProviders
         FROM usage_history
-      `).get() as {
+      `).get(RECOVERED_HISTORY_KEY) as {
         totalRequests: number;
         totalTokensIn: number;
         totalTokensOut: number;
@@ -285,22 +389,47 @@ export class StatsService {
         uniqueProviders: number;
       };
 
+      const recoveredHistory = this.db.prepare(`
+        SELECT COUNT(*) as rows, MIN(timestamp) as firstSeen, MAX(timestamp) as lastSeen
+        FROM usage_history
+        WHERE api_key_name = ?
+      `).get(RECOVERED_HISTORY_KEY) as RecoveredHistorySummary;
+
       const totalCost = this.calculateTotalCost();
-      return { ...row, totalCost };
+      return { ...row, totalCost, recoveredHistory };
     });
   }
 
   getModelStats(): ModelStats[] {
     return this.getCached('models', 120_000, () => {
       const rows = this.db.prepare(`
-        SELECT model, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut, AVG(latency_ms) as avgLatency
-        FROM usage_history GROUP BY model ORDER BY count DESC
-      `).all() as Array<{ model: string; count: number; tokensIn: number; tokensOut: number; avgLatency: number }>;
+        SELECT model,
+          SUM(count) as count,
+          SUM(tokensIn) as tokensIn,
+          SUM(tokensOut) as tokensOut,
+          SUM(avgLatency * count) / SUM(count) as avgLatency
+        FROM (
+          SELECT model, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut, AVG(latency_ms) as avgLatency
+          FROM usage_history
+          WHERE api_key_name IS NULL OR api_key_name != ?
+          GROUP BY model
+          HAVING COUNT(DISTINCT api_key_name) >= 3
+
+          UNION ALL
+
+          SELECT model, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut, AVG(latency_ms) as avgLatency
+          FROM usage_history
+          WHERE api_key_name = ?
+          GROUP BY model
+        )
+        GROUP BY model
+        ORDER BY count DESC
+      `).all(RECOVERED_HISTORY_KEY, RECOVERED_HISTORY_KEY) as Array<{ model: string; count: number; tokensIn: number; tokensOut: number; avgLatency: number }>;
 
       return rows.map(r => ({
         ...r,
         avgLatency: Math.round(r.avgLatency),
-        cost: this.calculateModelCost(r.model),
+        cost: calculateCost(r.model, r.tokensIn, r.tokensOut),
       }));
     });
   }
@@ -308,10 +437,30 @@ export class StatsService {
   getProviderStats(): ProviderStats[] {
     return this.getCached('providers', 120_000, () => {
       const rows = this.db.prepare(`
-        SELECT provider, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut,
-          SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successes
-        FROM usage_history GROUP BY provider ORDER BY count DESC
-      `).all() as Array<{ provider: string; count: number; tokensIn: number; tokensOut: number; successes: number }>;
+        SELECT provider,
+          SUM(count) as count,
+          SUM(tokensIn) as tokensIn,
+          SUM(tokensOut) as tokensOut,
+          SUM(successes) as successes
+        FROM (
+          SELECT provider, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut,
+            SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successes
+          FROM usage_history
+          WHERE api_key_name IS NULL OR api_key_name != ?
+          GROUP BY provider
+          HAVING COUNT(DISTINCT api_key_name) >= 3
+
+          UNION ALL
+
+          SELECT provider, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut,
+            SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successes
+          FROM usage_history
+          WHERE api_key_name = ?
+          GROUP BY provider
+        )
+        GROUP BY provider
+        ORDER BY count DESC
+      `).all(RECOVERED_HISTORY_KEY, RECOVERED_HISTORY_KEY) as Array<{ provider: string; count: number; tokensIn: number; tokensOut: number; successes: number }>;
 
       return rows.map(r => ({
         provider: r.provider,
@@ -329,10 +478,26 @@ export class StatsService {
     const since = new Date(Date.now() - hours * 3600_000).toISOString();
 
     const rows = this.db.prepare(`
-      SELECT strftime('%Y-%m-%dT%H:00:00Z', timestamp) as bucket, COUNT(*) as requests,
-        SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut
-      FROM usage_history WHERE timestamp >= ? GROUP BY bucket ORDER BY bucket ASC
-    `).all(since) as Array<{ bucket: string; requests: number; tokensIn: number; tokensOut: number }>;
+      SELECT bucket, SUM(requests) as requests, SUM(tokensIn) as tokensIn, SUM(tokensOut) as tokensOut
+      FROM (
+        SELECT strftime('%Y-%m-%dT%H:00:00Z', timestamp) as bucket, COUNT(*) as requests,
+          SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut
+        FROM usage_history
+        WHERE timestamp >= ? AND (api_key_name IS NULL OR api_key_name != ?)
+        GROUP BY bucket
+        HAVING COUNT(DISTINCT api_key_name) >= 3
+
+        UNION ALL
+
+        SELECT strftime('%Y-%m-%dT%H:00:00Z', timestamp) as bucket, COUNT(*) as requests,
+          SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut
+        FROM usage_history
+        WHERE timestamp >= ? AND api_key_name = ?
+        GROUP BY bucket
+      )
+      GROUP BY bucket
+      ORDER BY bucket ASC
+    `).all(since, RECOVERED_HISTORY_KEY, since, RECOVERED_HISTORY_KEY) as Array<{ bucket: string; requests: number; tokensIn: number; tokensOut: number }>;
 
     return rows.map(r => ({
       timestamp: r.bucket,
@@ -343,7 +508,25 @@ export class StatsService {
     }));
   }
 
-  getUserPublicStats(name: string): UserPublicStats | null {
+  resolveAlias(alias: string): string | null {
+    const rows = this.db.prepare(
+      "SELECT DISTINCT api_key_name as name FROM usage_history WHERE api_key_name IS NOT NULL AND api_key_name != '' AND api_key_name != ?"
+    ).all(RECOVERED_HISTORY_KEY) as Array<{ name: string }>;
+    return rows.find(row => this.anonymizer.alias(row.name) === alias)?.name ?? null;
+  }
+
+  getUserPublicStats(alias: string): UserPublicStats | null {
+    const name = this.resolveAlias(alias);
+    return name ? this.getUserStatsForKey(name) : null;
+  }
+
+  getAuthenticatedUserStats(name: string): UserPublicStats | null {
+    return this.getUserStatsForKey(name);
+  }
+
+  private getUserStatsForKey(name: string): UserPublicStats | null {
+    if (name === RECOVERED_HISTORY_KEY) return null;
+
     const row = this.db.prepare(`
       SELECT api_key_name as name, COUNT(*) as requests, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut,
         AVG(latency_ms) as avgLatency, SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successes,
@@ -361,9 +544,10 @@ export class StatsService {
       'SELECT provider, COUNT(*) as count, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut, SUM(CASE WHEN success=1 THEN 1 ELSE 0 END) as successes FROM usage_history WHERE api_key_name = ? GROUP BY provider ORDER BY count DESC'
     ).all(name) as Array<{ provider: string; count: number; tokensIn: number; tokensOut: number; successes: number }>;
 
+    const alias = this.anonymizer.alias(row.name);
     return {
-      name: row.name,
-      displayName: getDisplayName(row.name),
+      name: alias,
+      displayName: alias,
       requests: row.requests,
       tokensIn: row.tokensIn,
       tokensOut: row.tokensOut,

@@ -1,7 +1,7 @@
 # OmniRoute production recovery integration design
 
 Date: 2026-08-11
-Status: design approved for the C-safe combined metric; implementation not started.
+Status: implemented and production-verified for the C-safe combined metric and the approved sanitized April–June API-history merge.
 
 ## Goal
 
@@ -12,7 +12,7 @@ The current production database is `/srv/omniroute/data/storage.sqlite` on `rox-
 ## Non-goals
 
 - Do not convert client/runtime observations into `usage_history` rows.
-- Do not rewrite or backfill authoritative server request history.
+- Do not rewrite or backfill authoritative server request history; the separately approved sanitized April–June `usage_history` projection is an additive recovered-history merge, not an authoritative rewrite.
 - Do not combine telemetry cost with OmniRoute API cost.
 - Do not expose source file paths, prompts, responses, request bodies, credentials, cookies, API-key values, or per-user client identifiers.
 - Do not claim that a client event is an OmniRoute API request.
@@ -43,7 +43,7 @@ Metadata-only events, with a unique provenance key:
 
 - `id` INTEGER PRIMARY KEY AUTOINCREMENT
 - `batch_id` TEXT NOT NULL REFERENCES `recovery_import_batches(batch_id)`
-- `source_lane` TEXT NOT NULL (`codex`, `claude`, `omp`, `opencode`)
+- `source_lane` TEXT NOT NULL (`codex`, `claude`, `claude-drive`, `omp`, `opencode`, `openrouter`)
 - `source_event_id` TEXT NOT NULL
 - `observed_at` TEXT NOT NULL
 - `model` TEXT
@@ -86,6 +86,13 @@ Add a clearly labeled “Observed activity” section to the public statistics p
 
 Existing leaderboard, model, provider, timeline, and user statistics remain API-only and unchanged.
 
+## Operator access
+
+View the recovered values at `https://stats.rox.one`, on the **Observed Activity** section of the statistics page. The same aggregate is available at `/api/stats/observed-activity`. The page keeps authoritative OmniRoute API requests and costs separate from recovered telemetry, and shows telemetry lane totals plus coverage dates. Leaderboard, model, provider, timeline, and user statistics remain API-only.
+
+The production import contains the original 335772 metadata-only events across `omp`, `claude`, `codex`, and `opencode`, plus separately bound Drive batches for `claude-drive` and `openrouter`. It does not expose raw event rows, source paths, prompts, responses, credentials, cookies, or API-key values.
+
+
 ## Import and deployment flow
 
 1. Build and test the dashboard locally against an in-memory SQLite fixture containing both existing `usage_history` and recovery tables.
@@ -97,7 +104,7 @@ Existing leaderboard, model, provider, timeline, and user statistics remain API-
 7. Verify `/api/stats/observed-activity`, `/api/stats/overview`, existing leaderboard/model/provider endpoints, SQLite integrity, row counts, and idempotent re-import behavior.
 8. Roll back by restoring the pre-mutation database backup and the prior stats image if any check fails.
 
-The live write requires a final point-of-risk confirmation with the exact production host, database path, batch digest, and expected imported row count. No production mutation is part of this design approval.
+The live write was approved at point of risk, completed on `rox-omniroute-primary`, and verified with a checksummed pre-mutation backup, SQLite integrity check, row counts, API smoke checks, and importer idempotency checks.
 
 ## Security and correctness
 
@@ -107,6 +114,15 @@ The live write requires a final point-of-risk confirmation with the exact produc
 - Existing API totals cannot be changed by telemetry import.
 - The recovered server projection is not imported into `usage_history`: current production already covers its authoritative window, and inserting it would double-count.
 - GCS early `call_logs` are retained as recovery evidence but are not promoted to API usage because the dashboard's authoritative aggregates are based on `usage_history`.
+
+## Drive recovery additions
+
+The authenticated Drive sweep found two substantive, structured metadata sources:
+
+- `openrouter_activity_2026-01-27.csv`: 367 generation rows from 2026-01-14 through 2026-01-26, 21,192,328 normalized tokens, and $0.486359 reported generation cost. It is imported as the separate `openrouter` lane; the export's API-key name, user, and raw request fields are excluded.
+- `.claude 2` project JSONL: 2,389 files scanned, 13,992 assistant usage records from 2026-01-15 through 2026-01-16, 1,667,781,970 normalized tokens, and no inferred cost. It is imported as the separate `claude-drive` lane; raw prompts, responses, session IDs, and paths are excluded.
+
+The Drive Claude CSV has two zero-cost rows, the JSON usage export has zero requests, and both organization usage CSVs are header-only; they remain catalogued evidence and are not imported as zero-valued events. Large session/log files without structured usage metadata remain provenance-only.
 
 ## Verification
 
@@ -120,3 +136,15 @@ Focused checks must prove:
 - API request/cost totals are byte-for-byte unchanged before vs after import;
 - API overview remains healthy on the live dashboard;
 - raw prompts, responses, bodies, secrets, cookies, source paths, and API-key values are absent from the production tables and endpoint response.
+
+Verification result: production contains three import batches with 350131 recovery events; the two Drive retries added zero rows. `/api/health`, `/api/stats/observed-activity`, and `/api/stats/overview` returned successfully after deployment, SQLite integrity returned `ok`, and the recovered telemetry remains separate from `usage_history`.
+
+## Amendment: sanitized recovered API-history merge
+
+The approved API-history recovery source is `/Users/marklindgreen/Projects/zed_learnings/omni-logs/omni_live.sqlite`: 246,549 `usage_history` rows spanning `2026-04-15T15:58:20.526Z` through `2026-06-15T07:53:22.004Z`. The source SHA-256 is `5f706a44d09e0d482c8413b55bae7e619e032c950875686a3a0d248a6df6d2b8`.
+
+Before import, `scripts/project-sanitized-usage.ts` writes a separate projection. The projection contains only `source_row_id`, provider/model, token counters, status/success, latency/TTFT, error code, combo strategy, and timestamp. It contains no `api_keys` table, API-key identifiers/names, connection IDs, account labels, request/response bodies, credentials, cookies, or raw logs. The durable projection currently has 246,549 rows, the same timestamp window, and SHA-256 `bafa927d6f4cbe2a07091af318feeef756a39ec75f6b36097cf0bab1ee8f8f6a`.
+
+`scripts/import-usage-projection.ts` imports only the projection into `usage_history`, using `api_key_name = "__recovered_history__"`, `api_key_id = NULL`, and `combo_strategy = "recovered"`. It creates `usage_projection_import_batches` with a unique source digest, source metadata, row count, timestamp bounds, and notes. The importer verifies the exact projection digest before opening the target, rejects malformed rows and any timestamp overlap with existing `usage_history`, commits the batch and rows atomically, and makes an exact same-batch retry a no-op.
+
+Production import completed on `rox-omniroute-primary` using a checksummed pre-mutation backup at `/srv/omniroute/data/db_backups/storage-pre-recovered-api-20260813T000000Z.sqlite` (SHA-256 `4a62e33e8bd328d09302d849ae06f54327d9ce0876723791ac6336ae8858d4ab`). The batch recorded 246,549 rows with the expected bounds and digest. Post-import `PRAGMA integrity_check` returned `ok`; recovered rows matched all source counts and token sums; the stats container was deployed as a production-compatible `linux/amd64` image and reported healthy; `/api/health`, `/api/stats/overview`, `/api/stats/models`, `/api/stats/providers`, `/api/leaderboard`, and synthetic-user access were smoke-checked. Exact local importer tests and the production batch uniqueness provide idempotency coverage. Temporary projection/import files were removed from production after import.

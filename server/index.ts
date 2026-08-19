@@ -11,13 +11,15 @@ import { userRoutes } from './routes/user.ts';
 import { LogReader } from './services/log-reader.ts';
 import { LanguageAnalyzer } from './services/language-analyzer.ts';
 import { ToolAnalyzer } from './services/tool-analyzer.ts';
+import { Anonymizer, resolveAnonSecret } from './services/anonymizer.ts';
 import type { Database } from 'bun:sqlite';
 
-export function createApp(db: Database, logsPath?: string) {
+export function createApp(db: Database, logsPath?: string, anonSecret = resolveAnonSecret()) {
   const app = new Hono();
 
   // Services
-  const statsService = new StatsService(db);
+  const anonymizer = new Anonymizer(anonSecret);
+  const statsService = new StatsService(db, anonymizer);
   const authService = new AuthService(db);
   const logReader = logsPath ? new LogReader(logsPath) : undefined;
   const languageAnalyzer = logsPath ? new LanguageAnalyzer(logsPath) : undefined;
@@ -31,7 +33,7 @@ export function createApp(db: Database, logsPath?: string) {
   app.route('/api', healthRoutes());
   app.route('/api', leaderboardRoutes(statsService));
   app.route('/api', statsRoutes(statsService, languageAnalyzer, toolAnalyzer));
-  app.route('/api', userRoutes(statsService, authService, logReader));
+  app.route('/api', userRoutes(statsService, authService, anonymizer, logReader));
 
   return app;
 }

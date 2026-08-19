@@ -3,6 +3,7 @@ import type { StatsService } from '../services/stats-service.ts';
 import type { AuthService, ApiKeyInfo } from '../services/auth-service.ts';
 import type { LogReader } from '../services/log-reader.ts';
 import { authMiddleware } from '../middleware/auth.ts';
+import type { Anonymizer } from '../services/anonymizer.ts';
 
 type AuthEnv = {
   Variables: {
@@ -10,7 +11,7 @@ type AuthEnv = {
   };
 };
 
-export function userRoutes(statsService: StatsService, authService: AuthService, logReader?: LogReader) {
+export function userRoutes(statsService: StatsService, authService: AuthService, anonymizer: Anonymizer, logReader?: LogReader) {
   const app = new Hono<AuthEnv>();
 
   // Auth validation endpoint (no middleware needed)
@@ -29,7 +30,7 @@ export function userRoutes(statsService: StatsService, authService: AuthService,
 
     return c.json({
       valid: true,
-      keyName: keyInfo.name,
+      keyName: anonymizer.alias(keyInfo.name),
       keyId: keyInfo.id,
       noLog: keyInfo.noLog,
     });
@@ -41,7 +42,7 @@ export function userRoutes(statsService: StatsService, authService: AuthService,
 
   authed.get('/stats', (c) => {
     const info = c.get('apiKeyInfo');
-    const data = statsService.getUserPublicStats(info.name);
+    const data = statsService.getAuthenticatedUserStats(info.name);
     if (!data) {
       return c.json({ error: { code: 'NO_DATA', message: 'No usage data found' } }, 404);
     }
@@ -50,7 +51,7 @@ export function userRoutes(statsService: StatsService, authService: AuthService,
 
   authed.get('/models', (c) => {
     const info = c.get('apiKeyInfo');
-    const data = statsService.getUserPublicStats(info.name);
+    const data = statsService.getAuthenticatedUserStats(info.name);
     return c.json({ data: data?.models ?? [] });
   });
 
@@ -68,8 +69,9 @@ export function userRoutes(statsService: StatsService, authService: AuthService,
       const model = c.req.query('model') ?? undefined;
       const provider = c.req.query('provider') ?? undefined;
 
-      const data = await logReader.getUserLogs(info.name, { cursor, limit, date, model, provider });
-      return c.json({ data });
+      const page = await logReader.getUserLogs(info.name, { cursor, limit, date, model, provider });
+      const logs = page.logs.map(({ apiKeyName: _, error: __, ...entry }) => entry);
+      return c.json({ data: { ...page, logs } });
     });
 
     authed.get('/logs/:id', async (c) => {
@@ -90,7 +92,16 @@ export function userRoutes(statsService: StatsService, authService: AuthService,
         return c.json({ error: { code: 'FORBIDDEN', message: 'Access denied' } }, 403);
       }
 
-      return c.json({ data: detail });
+      const {
+        id, timestamp, model, provider, status, duration, tokensIn, tokensOut,
+        sourceFormat, targetFormat, method, path,
+      } = detail;
+      return c.json({
+        data: {
+          id, timestamp, model, provider, status, duration, tokensIn, tokensOut,
+          sourceFormat, targetFormat, method, path,
+        },
+      });
     });
   }
 
