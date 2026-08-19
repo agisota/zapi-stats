@@ -540,6 +540,12 @@ export class StatsService {
         ORDER BY bucket ASC
       `).all(RECOVERED_HISTORY_KEY) as Array<Omit<TimelinePoint, 'timestamp' | 'cost'> & { bucket: string }>;
 
+      const firstCurrentSourceDay = this.db.prepare(`
+        SELECT MIN(strftime('%Y-%m-%dT00:00:00Z', timestamp)) as bucket
+        FROM usage_history
+        WHERE api_key_name IS NOT NULL AND api_key_name != '' AND api_key_name != ?
+      `).get(RECOVERED_HISTORY_KEY) as { bucket: string | null };
+
       const pointsByDay = new Map<string, TimelinePoint>();
       for (const row of [...recoveredRows, ...currentRows]) {
         const point = pointsByDay.get(row.bucket);
@@ -559,7 +565,7 @@ export class StatsService {
       }
 
       const lastRecovered = recoveredRows.at(-1)?.bucket;
-      const firstCurrent = currentRows[0]?.bucket;
+      const firstCurrent = firstCurrentSourceDay.bucket ?? undefined;
       const gaps: HistoricalTimelineGap[] = [];
       if (lastRecovered && firstCurrent) {
         const start = new Date(lastRecovered);

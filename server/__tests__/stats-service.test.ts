@@ -312,7 +312,7 @@ describe('StatsService', () => {
       expect(timeline.some(point => point.tokensIn >= 500 && point.tokensOut >= 50)).toBe(true);
     });
 
-    test('returns combined daily history and a labelled gap without synthetic zero days', () => {
+    test('uses source coverage rather than the public privacy threshold to bound a labelled gap', () => {
       insertRecoveredHistory();
       insertPublicAggregateRows();
 
@@ -324,10 +324,11 @@ describe('StatsService', () => {
       ]);
       expect(historical.gaps).toEqual([{
         start: '2026-01-16T00:00:00Z',
-        end: '2026-04-08T00:00:00Z',
+        end: '2026-04-06T00:00:00Z',
         label: 'Missing historical data',
       }]);
       expect(historical.points.some(point => point.timestamp >= historical.gaps[0]!.start && point.timestamp <= historical.gaps[0]!.end)).toBe(false);
+      expect(historical.points.some(point => point.timestamp === '2026-04-07T00:00:00Z')).toBe(false);
       expect(JSON.stringify(historical)).not.toContain(RECOVERED_HISTORY_KEY);
     });
   });

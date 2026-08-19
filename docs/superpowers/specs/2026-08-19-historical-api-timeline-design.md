@@ -51,7 +51,7 @@ The existing `/api/stats/timeline?period=…` response remains unchanged for exi
 2. Preserve the existing public privacy rule for non-recovered data: a daily bucket is public only when it has at least three distinct API keys.
 3. Include recovered rows through the reserved recovered-history marker, independent of the three-key threshold, matching current overview/model/provider/timeline semantics.
 4. Return one combined point per eligible day, summing recovered and current rows only if they ever share a day.
-5. Derive the confirmed gap from the terminal recovered day and first public current day. Do not infer gaps before the first recovered day or after the latest current day.
+5. Derive the confirmed gap from the terminal recovered day and the first non-recovered server-history day, independent of public aggregation eligibility. A privacy-suppressed day must not be labelled missing historical data.
 6. Cache with the existing `StatsService` cache pattern.
 
 ## Frontend behavior
