@@ -1,17 +1,69 @@
+import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { getModelStats, getObservedActivity, getOverview, getProviderStats, getTimeline } from '../../lib/api.ts';
+import { getHistoricalTimeline, getModelStats, getObservedActivity, getOverview, getProviderStats, getTimeline } from '../../lib/api.ts';
 import { formatNumber, formatCost, formatLatency, formatPercent } from '../../lib/format.ts';
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, AreaChart, Area, ReferenceArea } from 'recharts';
 import { BarChart3, Globe, Clock } from 'lucide-react';
 
 const COLORS = ['#06b6d4', '#8b5cf6', '#f59e0b', '#10b981', '#ef4444', '#ec4899', '#6366f1', '#14b8a6'];
 
+type TimelineMode = '7d' | '30d' | 'all';
+
+interface TimelineChartPoint {
+  timestamp: string;
+  requests: number | null;
+  tokensIn: number | null;
+  tokensOut: number | null;
+}
+
+function TimelineTooltip({ active, payload, label }: {
+  active?: boolean;
+  payload?: Array<{ payload?: TimelineChartPoint }>;
+  label?: string;
+}) {
+  const point = payload?.[0]?.payload;
+  if (!active || !point || point.requests === null) return null;
+
+  return (
+    <div className="rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-xs shadow-xl">
+      <p className="mb-1 text-slate-400">{formatObservedDate(label ?? point.timestamp)}</p>
+      <p className="text-cyan-300">Requests: {formatNumber(point.requests)}</p>
+      <p className="text-slate-300">Input: {formatNumber(point.tokensIn ?? 0)}</p>
+      <p className="text-slate-300">Output: {formatNumber(point.tokensOut ?? 0)}</p>
+    </div>
+  );
+}
+
 export function StatsPage() {
+  const [timelineMode, setTimelineMode] = useState<TimelineMode>('7d');
   const { data: overview } = useQuery({ queryKey: ['overview'], queryFn: getOverview });
   const { data: observed } = useQuery({ queryKey: ['observed-activity'], queryFn: getObservedActivity });
   const { data: models } = useQuery({ queryKey: ['models'], queryFn: getModelStats });
   const { data: providers } = useQuery({ queryKey: ['providers'], queryFn: getProviderStats });
-  const { data: timeline } = useQuery({ queryKey: ['timeline', '7d'], queryFn: () => getTimeline('7d') });
+  const { data: timeline } = useQuery({
+    queryKey: ['timeline', timelineMode],
+    queryFn: () => getTimeline(timelineMode),
+    enabled: timelineMode !== 'all',
+  });
+  const { data: historicalTimeline } = useQuery({
+    queryKey: ['historical-timeline'],
+    queryFn: getHistoricalTimeline,
+    enabled: timelineMode === 'all',
+  });
+
+  const historicalChartData: TimelineChartPoint[] = historicalTimeline?.data
+    ? [
+        ...historicalTimeline.data.points,
+        ...historicalTimeline.data.gaps.flatMap(gap => [
+          { timestamp: gap.start, requests: null, tokensIn: null, tokensOut: null },
+          { timestamp: gap.end, requests: null, tokensIn: null, tokensOut: null },
+        ]),
+      ].sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+    : [];
+  const timelineChartData: TimelineChartPoint[] = timelineMode === 'all'
+    ? historicalChartData
+    : timeline?.data ?? [];
+  const timelineGaps = timelineMode === 'all' ? historicalTimeline?.data.gaps ?? [] : [];
 
   return (
     <div className="space-y-6">
@@ -91,14 +143,31 @@ export function StatsPage() {
       )}
 
       {/* Timeline */}
-      {timeline?.data && timeline.data.length > 0 && (
+      {timelineChartData.length > 0 && (
         <div className="bg-[#111827] border border-[#1e293b] rounded-xl p-6">
-          <div className="flex items-center gap-2 mb-4">
-            <Clock className="w-5 h-5 text-cyan-400" />
-            <h3 className="font-semibold text-white">Request Timeline (7d)</h3>
+          <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div className="flex items-center gap-2">
+              <Clock className="w-5 h-5 text-cyan-400" />
+              <h3 className="font-semibold text-white">Request Timeline ({timelineMode === 'all' ? 'All history' : timelineMode})</h3>
+            </div>
+            <div className="flex rounded-lg border border-slate-700 p-1 text-xs">
+              {(['7d', '30d', 'all'] as const).map(mode => (
+                <button
+                  key={mode}
+                  type="button"
+                  onClick={() => setTimelineMode(mode)}
+                  className={`rounded-md px-3 py-1.5 transition-colors ${timelineMode === mode ? 'bg-cyan-500/20 text-cyan-200' : 'text-slate-400 hover:text-slate-200'}`}
+                >
+                  {mode === 'all' ? 'All history' : mode}
+                </button>
+              ))}
+            </div>
           </div>
+          {timelineMode === 'all' && timelineGaps.length > 0 && (
+            <p className="mb-4 text-xs text-amber-300">The shaded interval is missing historical data, not zero traffic.</p>
+          )}
           <ResponsiveContainer width="100%" height={250}>
-            <AreaChart data={timeline.data}>
+            <AreaChart data={timelineChartData}>
               <defs>
                 <linearGradient id="colorReq" x1="0" y1="0" x2="0" y2="1">
                   <stop offset="5%" stopColor="#06b6d4" stopOpacity={0.3} />
@@ -107,12 +176,18 @@ export function StatsPage() {
               </defs>
               <XAxis dataKey="timestamp" tickFormatter={t => new Date(t).toLocaleDateString('ru', { day: '2-digit', month: '2-digit' })} stroke="#64748b" fontSize={11} />
               <YAxis stroke="#64748b" fontSize={11} />
-              <Tooltip
-                contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px' }}
-                labelStyle={{ color: '#94a3b8' }}
-                itemStyle={{ color: '#06b6d4' }}
-              />
-              <Area type="monotone" dataKey="requests" stroke="#06b6d4" fill="url(#colorReq)" strokeWidth={2} />
+              <Tooltip content={<TimelineTooltip />} />
+              {timelineGaps.map(gap => (
+                <ReferenceArea
+                  key={`${gap.start}-${gap.end}`}
+                  x1={gap.start}
+                  x2={gap.end}
+                  fill="#f59e0b"
+                  fillOpacity={0.14}
+                  label={{ value: gap.label, position: 'insideTop', fill: '#fbbf24', fontSize: 11 }}
+                />
+              ))}
+              <Area type="monotone" dataKey="requests" stroke="#06b6d4" fill="url(#colorReq)" strokeWidth={2} connectNulls={false} />
             </AreaChart>
           </ResponsiveContainer>
         </div>

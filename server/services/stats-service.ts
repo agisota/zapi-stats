@@ -84,6 +84,17 @@ export interface TimelinePoint {
   cost: number;
 }
 
+export interface HistoricalTimelineGap {
+  start: string;
+  end: string;
+  label: string;
+}
+
+export interface HistoricalTimeline {
+  points: TimelinePoint[];
+  gaps: HistoricalTimelineGap[];
+}
+
 export interface ObservedTelemetryLane {
   lane: string;
   events: number;
@@ -506,6 +517,69 @@ export class StatsService {
       tokensOut: r.tokensOut,
       cost: 0,
     }));
+  }
+
+  getHistoricalTimeline(): HistoricalTimeline {
+    return this.getCached('historical-timeline', 60_000, () => {
+      const recoveredRows = this.db.prepare(`
+        SELECT strftime('%Y-%m-%dT00:00:00Z', timestamp) as bucket,
+          COUNT(*) as requests, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut
+        FROM usage_history
+        WHERE api_key_name = ?
+        GROUP BY bucket
+        ORDER BY bucket ASC
+      `).all(RECOVERED_HISTORY_KEY) as Array<Omit<TimelinePoint, 'timestamp' | 'cost'> & { bucket: string }>;
+
+      const currentRows = this.db.prepare(`
+        SELECT strftime('%Y-%m-%dT00:00:00Z', timestamp) as bucket,
+          COUNT(*) as requests, SUM(tokens_input) as tokensIn, SUM(tokens_output) as tokensOut
+        FROM usage_history
+        WHERE api_key_name IS NOT NULL AND api_key_name != '' AND api_key_name != ?
+        GROUP BY bucket
+        HAVING COUNT(DISTINCT api_key_name) >= 3
+        ORDER BY bucket ASC
+      `).all(RECOVERED_HISTORY_KEY) as Array<Omit<TimelinePoint, 'timestamp' | 'cost'> & { bucket: string }>;
+
+      const pointsByDay = new Map<string, TimelinePoint>();
+      for (const row of [...recoveredRows, ...currentRows]) {
+        const point = pointsByDay.get(row.bucket);
+        if (point) {
+          point.requests += row.requests;
+          point.tokensIn += row.tokensIn;
+          point.tokensOut += row.tokensOut;
+          continue;
+        }
+        pointsByDay.set(row.bucket, {
+          timestamp: row.bucket,
+          requests: row.requests,
+          tokensIn: row.tokensIn,
+          tokensOut: row.tokensOut,
+          cost: 0,
+        });
+      }
+
+      const lastRecovered = recoveredRows.at(-1)?.bucket;
+      const firstCurrent = currentRows[0]?.bucket;
+      const gaps: HistoricalTimelineGap[] = [];
+      if (lastRecovered && firstCurrent) {
+        const start = new Date(lastRecovered);
+        start.setUTCDate(start.getUTCDate() + 1);
+        const end = new Date(firstCurrent);
+        end.setUTCDate(end.getUTCDate() - 1);
+        if (start <= end) {
+          gaps.push({
+            start: start.toISOString().replace('.000', ''),
+            end: end.toISOString().replace('.000', ''),
+            label: 'Missing historical data',
+          });
+        }
+      }
+
+      return {
+        points: [...pointsByDay.values()].sort((a, b) => a.timestamp.localeCompare(b.timestamp)),
+        gaps,
+      };
+    });
   }
 
   resolveAlias(alias: string): string | null {

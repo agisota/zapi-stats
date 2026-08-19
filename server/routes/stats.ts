@@ -33,6 +33,11 @@ export function statsRoutes(statsService: StatsService, languageAnalyzer?: Langu
     return c.json({ data });
   });
 
+  app.get('/stats/historical-timeline', (c) => {
+    const data = statsService.getHistoricalTimeline();
+    return c.json({ data });
+  });
+
   app.get('/stats/user/:name', (c) => {
     const alias = c.req.param('name');
     const data = statsService.getUserPublicStats(alias);

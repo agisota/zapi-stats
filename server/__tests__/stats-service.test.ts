@@ -311,5 +311,24 @@ describe('StatsService', () => {
       expect(recoveredRequests).toBeGreaterThanOrEqual(1);
       expect(timeline.some(point => point.tokensIn >= 500 && point.tokensOut >= 50)).toBe(true);
     });
+
+    test('returns combined daily history and a labelled gap without synthetic zero days', () => {
+      insertRecoveredHistory();
+      insertPublicAggregateRows();
+
+      const historical = stats.getHistoricalTimeline();
+      expect(historical.points).toEqual([
+        { timestamp: '2026-01-02T00:00:00Z', requests: 1, tokensIn: 100000, tokensOut: 1000, cost: 0 },
+        { timestamp: '2026-01-15T00:00:00Z', requests: 1, tokensIn: 40000, tokensOut: 800, cost: 0 },
+        { timestamp: '2026-04-09T00:00:00Z', requests: 3, tokensIn: 3000, tokensOut: 300, cost: 0 },
+      ]);
+      expect(historical.gaps).toEqual([{
+        start: '2026-01-16T00:00:00Z',
+        end: '2026-04-08T00:00:00Z',
+        label: 'Missing historical data',
+      }]);
+      expect(historical.points.some(point => point.timestamp >= historical.gaps[0]!.start && point.timestamp <= historical.gaps[0]!.end)).toBe(false);
+      expect(JSON.stringify(historical)).not.toContain(RECOVERED_HISTORY_KEY);
+    });
   });
 });

@@ -34,6 +34,10 @@ export async function getTimeline(period: string = '24h') {
   return fetchJson<{ data: TimelinePoint[] }>(`/stats/timeline?period=${period}`);
 }
 
+export async function getHistoricalTimeline() {
+  return fetchJson<{ data: HistoricalTimeline }>('/stats/historical-timeline');
+}
+
 export async function getUserPublicStats(name: string) {
   return fetchJson<{ data: UserPublicStats }>(`/stats/user/${encodeURIComponent(name)}`);
 }
@@ -181,6 +185,17 @@ export interface TimelinePoint {
   tokensIn: number;
   tokensOut: number;
   cost: number;
+}
+
+export interface HistoricalTimelineGap {
+  start: string;
+  end: string;
+  label: string;
+}
+
+export interface HistoricalTimeline {
+  points: TimelinePoint[];
+  gaps: HistoricalTimelineGap[];
 }
 
 export interface UserProfile {

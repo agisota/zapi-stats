@@ -83,6 +83,12 @@ describe('GET /api/stats/*', () => {
     expect(body.data).toBeArray();
   });
 
+  test('historical timeline returns the public metadata-only shape', async () => {
+    const res = await req('/api/stats/historical-timeline');
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ data: { points: [], gaps: [] } });
+  });
+
   test('user/:name returns public stats by alias', async () => {
     const res = await req(`/api/stats/user/${alias('alice')}`);
     expect(res.status).toBe(200);
