@@ -34,6 +34,7 @@ interface CreateAppOptions {
   magicLinkFetch?: (input: string | URL | Request, init?: RequestInit) => Promise<Response>;
   enforceAccountBalance?: boolean;
   anonSecret?: string;
+  enableAccounts?: boolean;
 }
 
 export function createApp(db: Database, logsPathOrOptions?: string | CreateAppOptions, accountDbOrAnonSecret?: Database | string) {
@@ -81,9 +82,11 @@ export function createApp(db: Database, logsPathOrOptions?: string | CreateAppOp
   app.route('/api', healthRoutes());
   app.route('/api', leaderboardRoutes(statsService));
   app.route('/api', statsRoutes(statsService, languageAnalyzer, toolAnalyzer));
-  app.route('/api', analyticsRoutes(accountAnalytics));
+  if (options.enableAccounts !== false) {
+    app.route('/api', analyticsRoutes(accountAnalytics));
+    app.route('/api', accountRoutes(accountService, provisioner, dvnet, usageBilling, accountAnalytics, magicLinks));
+  }
   app.route('/api', userRoutes(statsService, authService, anonymizer, logReader));
-  app.route('/api', accountRoutes(accountService, provisioner, dvnet, usageBilling, accountAnalytics, magicLinks));
   app.route('/api', supportRoutes());
   app.route('/api', skillsRoutes());
 
@@ -111,6 +114,7 @@ export function createProductionApp(db: Database, logsPath?: string, accountDb?:
   const app = createApp(db, {
     logsPath,
     accountDb,
+    enableAccounts: accountDb !== undefined,
     gatewayWriteDbPath: process.env.OMNIROUTE_RW_DB_PATH ?? null,
     dvnetEnv: process.env,
     magicLinkEnv: process.env,
@@ -137,12 +141,13 @@ async function startServer() {
   const { createDb } = await import('./db.ts');
   const dbPath = process.env.DB_PATH ?? '/data/omniroute/storage.sqlite';
   const logsPath = process.env.LOGS_PATH ?? '/data/omniroute/call_logs';
-  const accountDbPath = process.env.ACCOUNT_DB_PATH ?? `${process.env.APP_STATE_DIR ?? '/data/zapi-stats-state'}/account.sqlite`;
+  const accountDbPath = process.env.ACCOUNT_DB_PATH
+    ?? (process.env.APP_STATE_DIR ? `${process.env.APP_STATE_DIR}/account.sqlite` : undefined);
   const port = parseInt(process.env.PORT ?? '20129', 10);
   const hostname = process.env.BIND_HOST ?? process.env.HOST ?? '0.0.0.0';
 
   const db = createDb(dbPath);
-  const accountDb = createAccountDb(accountDbPath);
+  const accountDb = accountDbPath ? createAccountDb(accountDbPath) : undefined;
   const app = createProductionApp(db, logsPath, accountDb);
 
   console.log(`API ZED Stats running on http://${hostname}:${port}`);

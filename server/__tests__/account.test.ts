@@ -7,6 +7,19 @@ import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
+describe('account deployment gate', () => {
+  test('does not expose account endpoints without configured persistent account state', async () => {
+    const { app } = createTestApp({ enableAccounts: false });
+    const response = await app.request('/api/account/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: 'disabled@example.com', displayName: 'Disabled' }),
+    });
+
+    expect(response.status).toBe(404);
+  });
+});
+
 const { app } = createTestApp();
 let requestSeq = 1;
 
