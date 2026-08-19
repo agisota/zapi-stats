@@ -102,8 +102,8 @@ const SEED_USAGE = [
   { provider: 'claude', model: 'claude-opus-4-6', keyId: 'key-1', keyName: 'alice', tokensIn: 5000, tokensOut: 0, latency: 500, ttft: 0, success: 0, errorCode: '429', timestamp: '2026-04-08T13:00:00Z' },
 ] as const;
 
-export function createTestDb(): Database {
-  const db = new Database(':memory:');
+export function createTestDb(path = ':memory:'): Database {
+  const db = new Database(path);
   db.exec(SCHEMA);
 
   const insertKey = db.prepare(

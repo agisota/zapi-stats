@@ -24,6 +24,70 @@ describe('GET /api/health', () => {
     expect(body.status).toBe('ok');
     expect(body.uptime).toBeGreaterThanOrEqual(0);
   });
+
+  test('returns degraded deployment status as data', async () => {
+    const previousHealthUrl = process.env.API_ZED_HEALTH_URL;
+    try {
+      process.env.API_ZED_HEALTH_URL = 'http://127.0.0.1:9/unreachable';
+      const { app: degradedApp } = createTestApp();
+      const res = await degradedApp.request('/api/deployment/status');
+      expect(res.status).toBe(200);
+      const body = await res.json();
+      expect(body.data.status).toBe('unreachable');
+      expect(body.data.error).toBeString();
+    } finally {
+      if (previousHealthUrl === undefined) delete process.env.API_ZED_HEALTH_URL;
+      else process.env.API_ZED_HEALTH_URL = previousHealthUrl;
+    }
+  });
+
+  test('retries transient empty deployment status responses', async () => {
+    const previousHealthUrl = process.env.API_ZED_HEALTH_URL;
+    const previousModelsUrl = process.env.API_ZED_MODELS_URL;
+    const previousFetch = globalThis.fetch;
+    let healthCalls = 0;
+
+    try {
+      process.env.API_ZED_HEALTH_URL = 'http://runtime.test/health';
+      process.env.API_ZED_MODELS_URL = 'http://runtime.test/models';
+      globalThis.fetch = (async (input: string | URL | Request, init?: RequestInit) => {
+        const url = String(input);
+        if (url === 'http://runtime.test/health') {
+          healthCalls += 1;
+          if (healthCalls === 1) {
+            return new Response('', { status: 200 });
+          }
+          return Response.json({
+            status: 'healthy',
+            version: 'test-runtime',
+            activeConnections: 7,
+            providerSummary: { catalogCount: 2, configuredCount: 2, activeCount: 1 },
+            system: { uptime: 42, memoryUsage: { rss: 1024 }, nodeVersion: 'v-test' },
+          });
+        }
+        if (url === 'http://runtime.test/models') {
+          return Response.json({ data: [{ id: 'a' }, { id: 'b' }] });
+        }
+        return previousFetch(input, init);
+      }) as typeof fetch;
+
+      const { app: retryApp } = createTestApp();
+      const res = await retryApp.request('/api/deployment/status');
+      expect(res.status).toBe(200);
+      const body = await res.json();
+      expect(healthCalls).toBe(2);
+      expect(body.data.status).toBe('healthy');
+      expect(body.data.version).toBe('test-runtime');
+      expect(body.data.modelCount).toBe(2);
+      expect(body.data.error).toBeUndefined();
+    } finally {
+      globalThis.fetch = previousFetch;
+      if (previousHealthUrl === undefined) delete process.env.API_ZED_HEALTH_URL;
+      else process.env.API_ZED_HEALTH_URL = previousHealthUrl;
+      if (previousModelsUrl === undefined) delete process.env.API_ZED_MODELS_URL;
+      else process.env.API_ZED_MODELS_URL = previousModelsUrl;
+    }
+  });
 });
 
 describe('GET /api/leaderboard', () => {
@@ -101,6 +165,32 @@ describe('GET /api/stats/*', () => {
   test('user/:name returns 404 for unknown', async () => {
     const res = await req('/api/stats/user/nobody');
     expect(res.status).toBe(404);
+  });
+});
+
+describe('GET /api/skills', () => {
+  test('returns portable install commands without local usernames', async () => {
+    const res = await req('/api/skills');
+    expect(res.status).toBe(200);
+    const body = await json(res);
+    expect(body.data.total).toBeGreaterThan(0);
+    expect(body.data.items).toBeArray();
+    const serialized = JSON.stringify(body.data.items);
+    expect(serialized.includes('/Users/marklindgreen')).toBe(false);
+    expect(body.data.items[0].installCommand.startsWith('curl -fsSL "https://skills.api.zed.md/api/skills/')).toBe(true);
+  });
+
+  test('returns a universal installer script for a skill', async () => {
+    const listRes = await req('/api/skills');
+    const listBody = await json(listRes);
+    const first = listBody.data.items[0];
+    const res = await req(`/api/skills/${encodeURIComponent(first.id)}/install.sh`);
+    expect(res.status).toBe(200);
+    const text = await res.text();
+    expect(text).toContain('${CODEX_HOME:-$HOME/.codex}/skills/');
+    expect(text).toContain('/archive.tar.gz');
+    expect(text).toContain('--strip-components=1');
+    expect(text.includes('/Users/marklindgreen')).toBe(false);
   });
 });
 

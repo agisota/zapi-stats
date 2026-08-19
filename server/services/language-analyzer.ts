@@ -1,5 +1,5 @@
-import { readdir } from 'node:fs/promises';
-import { join } from 'node:path';
+import type { Database } from 'bun:sqlite';
+import { ArtifactReader, collectPromptTexts } from './artifact-reader.ts';
 
 export interface LanguageStats {
   englishPercent: number;
@@ -35,14 +35,14 @@ function detectLanguage(text: string): { en: number; ru: number; other: number }
 }
 
 export class LanguageAnalyzer {
-  private logsPath: string;
+  private artifactReader: ArtifactReader;
   private cache = new Map<string, { data: LanguageStats; expiry: number }>();
 
-  constructor(logsPath: string) {
-    this.logsPath = logsPath;
+  constructor(db: Database, logsPath?: string) {
+    this.artifactReader = new ArtifactReader(db, logsPath);
   }
 
-  async getUserLanguageStats(apiKeyName: string, sampleSize = 50): Promise<LanguageStats> {
+  async getUserLanguageStats(apiKeyName: string, sampleSize = 160): Promise<LanguageStats> {
     const cached = this.cache.get(apiKeyName);
     if (cached && cached.expiry > Date.now()) return cached.data;
 
@@ -52,58 +52,18 @@ export class LanguageAnalyzer {
     let sampledMessages = 0;
     let sampledRequests = 0;
 
-    outer:
-    try {
-      const dates = await readdir(this.logsPath);
-      const sortedDates = dates.filter(d => /^\d{4}-\d{2}-\d{2}$/.test(d)).sort().reverse();
-
-      for (const date of sortedDates) {
-        const dayPath = join(this.logsPath, date);
-        let files: string[];
-        try {
-          files = await readdir(dayPath);
-        } catch {
-          continue;
-        }
-        const sorted = files.filter(f => f.endsWith('.json')).sort().reverse();
-
-        for (const file of sorted) {
-          if (sampledRequests >= sampleSize) break outer;
-
-          try {
-            const content = await Bun.file(join(dayPath, file)).json();
-            if (content.apiKeyName !== apiKeyName) continue;
-
-            sampledRequests++;
-            const messages: Array<{ role: string; content: unknown }> = content.requestBody?.messages ?? [];
-
-            for (const msg of messages) {
-              if (msg.role !== 'user') continue;
-
-              const text = typeof msg.content === 'string'
-                ? msg.content
-                : Array.isArray(msg.content)
-                  ? (msg.content as Array<{ type: string; text?: string }>)
-                      .filter(b => b.type === 'text')
-                      .map(b => b.text ?? '')
-                      .join(' ')
-                  : '';
-
-              if (text.length < 10) continue;
-
-              const lang = detectLanguage(text);
-              totalEn += lang.en;
-              totalRu += lang.ru;
-              totalOther += lang.other;
-              sampledMessages++;
-            }
-          } catch {
-            continue;
-          }
-        }
+    const records = await this.artifactReader.getUserArtifacts(apiKeyName, sampleSize);
+    for (const record of records) {
+      sampledRequests++;
+      const texts = collectPromptTexts(record.payload, record.row.requestSummary);
+      for (const text of texts) {
+        const lang = detectLanguage(text);
+        if (lang.en + lang.ru + lang.other === 0) continue;
+        totalEn += lang.en;
+        totalRu += lang.ru;
+        totalOther += lang.other;
+        sampledMessages++;
       }
-    } catch {
-      // logsPath not available — return zero stats
     }
 
     const total = totalEn + totalRu + totalOther;

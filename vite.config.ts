@@ -11,10 +11,12 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-charts': ['recharts'],
-          'vendor-query': ['@tanstack/react-query'],
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return undefined;
+          if (id.includes('/react/') || id.includes('/react-dom/')) return 'vendor-react';
+          if (id.includes('/recharts/')) return 'vendor-charts';
+          if (id.includes('/@tanstack/react-query/')) return 'vendor-query';
+          return undefined;
         },
       },
     },
